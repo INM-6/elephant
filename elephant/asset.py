@@ -136,7 +136,7 @@ def _quantities_almost_equal(x, y):
 
     Returns
     -------
-    arr : ndarray of bool
+    arr : np.ndarray
         an array of bools, which is True at any position where x-y is almost
         zero
     """
@@ -158,19 +158,19 @@ def _transactions(spiketrains, binsize, t_start=None, t_stop=None, ids=None):
 
     Parameters
     ----------
-    spiketrains: list of neo.SpikeTrain
+    spiketrains : list of neo.SpikeTrain
         A list of `neo.SpikeTrain` objects, or list of pairs
         (Train_ID, `neo.SpikeTrain`), where Train_ID can be any hashable object
-    binsize: pq.Quantity
+    binsize : pq.Quantity
         Width of each time bin. Time is binned to determine synchrony.
-    t_start: pq.Quantity, optional
+    t_start : pq.Quantity, optional
         The starting time. Only spikes occurring at times `t >= t_start` are
         considered; the first transaction contains spikes falling into the
         time segment `[t_start, t_start+binsize]`.
         If `None`, takes the value of `spiketrain.t_start`, common for all
         input `spiketrains` (raises ValueError if it's not the case).
         Default: None
-    t_stop: pq.Quantity, optional
+    t_stop : pq.Quantity, optional
         The ending time. Only spikes occurring at times `t < t_stop` are
         considered.
         If `None`, takes the value of `spiketrain.t_stop`, common for all
@@ -281,8 +281,8 @@ def intersection_matrix(
         size of the time bins used to define synchronous spikes in the given
         SpikeTrains.
     spiketrains_y : list of neo.SpikeTrain, optional
-        list of SpikeTrains for the second time dimension
-        if unspecified, spiketrains is used for both
+        A list of SpikeTrains for the second time dimension.
+        If unspecified, `spiketrains` is used for both.
         Default: None
     t_start_x : pq.Quantity, optional
         start time of the binning for the first axis of the intersection
@@ -322,13 +322,13 @@ def intersection_matrix(
 
     Returns
     -------
-    imat : np.ndarray of float
-        the intersection matrix of a list of spike trains. Has shape (n,n),
-        where n is the number of bins time was discretized in.
-    x_edges : np.ndarray
+    imat : (n,n) np.ndarray
+        the intersection matrix (of type float) of a list of spike trains. Has
+        the shape (n,n), where n is the number of bins time was discretized in.
+    x_edges : (n,n) np.ndarray
         edges of the bins used for the horizontal axis of imat. If imat is
         a matrix of shape (n, n), x_edges has length n+1
-    y_edges : np.ndarray
+    y_edges : (n,n) np.ndarray
         edges of the bins used for the vertical axis of imat. If imat is
         a matrix of shape (n, n), y_edges has length n+1
     """
@@ -469,10 +469,11 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
 
     Parameters
     ----------
-    x : numpy.ndarray
+    x : np.ndarray
         array of abscissa of all points among which to compute the distance
-    y : numpy.ndarray (same shape as x)
+    y : np.ndarray
         array of ordinates of all points among which to compute the distance
+        (same shape as `x`).
     stretch : float
         maximum stretching factor, applied if the line connecting the points
         has inclination 90 + ref_angle
@@ -480,9 +481,9 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
         reference angle, i.e. inclination along which the stretching factor
         is 1.
 
-    Output
-    ------
-    D : numpy.ndarray
+    Returns
+    -------
+    D : np.ndarray
         square matrix of distances between all pairs of points. If x and y
         have shape (n, ) then D has shape (n, n).
     """
@@ -553,7 +554,7 @@ def cluster_matrix_entries(mat, eps=10, min_neighbors=2, stretch=5):
 
     Parameters
     ----------
-    mat : numpy.ndarray
+    mat : np.ndarray
         a matrix whose elements with positive values are to be clustered.
     eps : float >=0, optional
         the maximum distance for two elements in mat to be part of the same
@@ -571,11 +572,11 @@ def cluster_matrix_entries(mat, eps=10, min_neighbors=2, stretch=5):
 
     Returns
     -------
-    cmat : numpy.ndarray of integers
+    cmat : np.ndarray
         a matrix with the same shape of mat, each of whose elements is either
             * a positive int (cluster id) if the element is part of a cluster
-            * 0 if the corresponding element in mat was non-positive
-            * -1 if the element does not belong to any cluster
+            * `0` if the corresponding element in mat was non-positive
+            * `-1` if the element does not belong to any cluster
     """
 
     # Don't do anything if mat is identically zero
@@ -629,33 +630,22 @@ def probability_matrix_montecarlo(
 
     Parameters
     ----------
-    spiketrains : list of neo.SpikeTrains
+    spiketrains : list of neo.SpikeTrain
         list of spike trains for which to compute the probability matrix
-    binsize : quantities.Quantity
+    binsize : pq.Quantity
         width of the time bins used to compute the probability matrix
-    dt : quantities.Quantity
-        time span for which to consider the given SpikeTrains
-    t_start_x : pq.Quantity, optional
-        start time of the binning for the first axis of the intersection
-        matrix, respectively.
+    spiketrains_y : list of neo.SpikeTrain, optional
+        A list of SpikeTrains for the second time dimension.
+        If unspecified, `spiketrains` is used for both.
+    t_start_x, t_start_y : pq.Quantity, optional
+        start time of the binning for the first and second axes of the
+        intersection matrix, respectively.
         If None (default) the attribute t_start of the SpikeTrains is used
         (if the same for all spike trains).
         Default: None
-    t_start_y : pq.Quantity, optional
-        start time of the binning for the second axis of the intersection
-        matrix
-        If None (default) the attribute t_start of the SpikeTrains is used
-        (if the same for all spike trains).
-        Default: None
-    t_stop_x : pq.Quantity, optional
-        stop time of the binning for the first axis of the intersection
-        matrix, respectively.
-        If None (default) the attribute t_stop of the SpikeTrains is used
-        (if the same for all spike trains).
-        Default: None
-    t_stop_y : pq.Quantity, optional
-        stop time of the binning for the second axis of the intersection
-        matrix
+    t_stop_x, t_stop_y : pq.Quantity, optional
+        stop time of the binning for the first and second axes of the
+        intersection matrix, respectively.
         If None (default) the attribute t_stop of the SpikeTrains is used
         (if the same for all spike trains).
         Default: None
@@ -672,7 +662,7 @@ def probability_matrix_montecarlo(
             * 'isi_shuffling': see spike_train_surrogates.isi_shuffling()
 
         Default: 'dither_spike_train'
-    j : quantities.Quantity, optional
+    j : pq.Quantity, optional
         For methods shifting spike times randomly around their original time
         (spike dithering, train shifting) or replacing them randomly within a
         certain window (spike jittering), j represents the size of that
@@ -693,13 +683,13 @@ def probability_matrix_montecarlo(
         estimated probability of having an overlap between bins i and j
         STRICTLY LOWER than the observed overlap, under the null hypothesis
         of independence of the input spike trains.
-    imat : np.ndarray of float
-        the intersection matrix of a list of spike trains. Has shape (n,n),
-        where n is the number of bins time was discretized in.
-    x_edges : np.ndarray
+    imat : (n,n) np.ndarray
+        the intersection matrix (of type float) of a list of spike trains. Has
+        the shape (n,n), where n is the number of bins time was discretized in.
+    x_edges : (n,n) np.ndarray
         edges of the bins used for the horizontal axis of imat. If imat is
         a matrix of shape (n, n), x_edges has length n+1
-    y_edges : np.ndarray
+    y_edges : (n,n) np.ndarray
         edges of the bins used for the vertical axis of imat. If imat is
         a matrix of shape (n, n), y_edges has length n+1
 
@@ -838,38 +828,29 @@ def probability_matrix_analytical(
     spiketrains : list of neo.SpikeTrains
         list of spike trains for whose intersection matrix to compute the
         p-values
-    binsize : quantities.Quantity
+    binsize : pq.Quantity
         width of the time bins used to compute the probability matrix
-    t_start_x : pq.Quantity, optional
-        start time of the binning for the first axis of the intersection
-        matrix, respectively.
+    spiketrains_y : list of neo.SpikeTrain, optional
+        A list of SpikeTrains for the second time dimension.
+        If unspecified, `spiketrains` is used for both.
+    t_start_x, t_start_y : pq.Quantity, optional
+        start time of the binning for the first and second axes of the
+        intersection matrix, respectively.
         If None (default) the attribute t_start of the SpikeTrains is used
         (if the same for all spike trains).
         Default: None
-    t_start_y : pq.Quantity, optional
-        start time of the binning for the second axis of the intersection
-        matrix
-        If None (default) the attribute t_start of the SpikeTrains is used
-        (if the same for all spike trains).
-        Default: None
-    t_stop_x : pq.Quantity, optional
-        stop time of the binning for the first axis of the intersection
-        matrix, respectively.
+    t_stop_x, t_stop_y : pq.Quantity, optional
+        stop time of the binning for the first and second axes of the
+        intersection matrix, respectively.
         If None (default) the attribute t_stop of the SpikeTrains is used
         (if the same for all spike trains).
         Default: None
-    t_stop_y : pq.Quantity, optional
-        stop time of the binning for the second axis of the intersection
-        matrix
-        If None (default) the attribute t_stop of the SpikeTrains is used
-        (if the same for all spike trains).
-        Default: None
-    fir_rates: list of neo.AnalogSignals or 'estimate', optional
+    fir_rates_x, fir_rates_y : list of neo.AnalogSignal or 'estimate', optional
         if a list, fir_rate[i] is the firing rate of the spike train
         spiketrains[i]. If 'estimate', firing rates are estimated by simple
         boxcar kernel convolution, with specified kernel width (see below)
         Default: 'estimate'
-    kernel_width : quantities.Quantity, optional
+    kernel_width : pq.Quantity, optional
         total width of the kernel used to estimate the rate profiles when
         fir_rates='estimate'.
         Default: 100 * pq.ms
@@ -879,18 +860,18 @@ def probability_matrix_analytical(
 
     Returns
     -------
-    pmat : numpy.ndarray
+    pmat : np.ndarray
         the cumulative probability matrix. pmat[i, j] represents the
         estimated probability of having an overlap between bins i and j
         STRICTLY LOWER THAN the observed overlap, under the null hypothesis
         of independence of the input spike trains.
-    imat : np.ndarray of float
-        the intersection matrix of a list of spike trains. Has shape (n,n),
-        where n is the number of bins time was discretized in.
-    x_edges : numpy.ndarray
+    imat : (n,n) np.ndarray
+        the intersection matrix (of type float) of a list of spike trains. Has
+        the shape (n,n), where n is the number of bins time was discretized in.
+    x_edges : (n,n) np.ndarray
         edges of the bins used for the horizontal axis of pmat. If pmat is
         a matrix of shape (n, n), x_edges has length n+1
-    y_edges : numpy.ndarray
+    y_edges : (n,n) np.ndarray
         edges of the bins used for the vertical axis of pmat. If pmat is
         a matrix of shape (n, n), y_edges has length n+1
     """
@@ -1030,18 +1011,18 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
 
     .. centered::  jsf(u_i) = Prob(U_{n-k} >= u_ijk, k=0,1,..., d-1).
 
-
-    Arguments
-    ---------
-    u : numpy.ndarray of shape (A, d)
+    Parameters
+    ----------
+    u : (A,d) np.ndarray
         2D matrix of floats between 0 and 1.
         Each row u_i is an array of length d, considered a set of
         `d` largest order statistics extracted from a sample of `n` random
         variables whose cdf is F(x)=x for each x.
         The routine computes the joint cumulative probability of the `d`
         values in u_ij, for each i and j.
-    alpha : float in [0, 1)
-        range where the values of `u` are assumed to vary.
+    alpha : float
+        Float value in [0, 1).
+        The range where the values of `u` are assumed to vary.
         alpha is 0 in the standard ASSET analysis.
     n : int
         size of the sample where the d largest order statistics u_ij are
@@ -1049,7 +1030,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
 
     Returns
     -------
-    S : numpy.ndarray of shape (A, )
+    S : (A,) np.ndarray
         matrix of joint survival probabilities. s_ij is the joint survival
         probability of the values {u_ijk, k=0, ..., d-1}.
         Note: the joint probability matrix computed for the ASSET analysis
@@ -1162,9 +1143,9 @@ def _pmat_neighbors(mat, filter_shape, nr_largest):
     mat[i, j] and aligned along the diagonal.
     If mat is symmetric, only the triangle below the diagonal is considered.
 
-    Arguments
-    ---------
-    mat : ndarray
+    Parameters
+    ----------
+    mat : np.ndarray
         a square matrix of real-valued elements
 
     filter_shape : tuple
@@ -1177,7 +1158,7 @@ def _pmat_neighbors(mat, filter_shape, nr_largest):
 
     Returns
     -------
-    L : ndarray
+    L : np.ndarray
         a matrix of shape (nr_largest, l, w) containing along the first
         dimension lmat[:, i, j] the largest neighbors of mat[i, j]
 
@@ -1247,7 +1228,7 @@ def joint_probability_matrix(
 
     Parameters
     ----------
-    pmat : ndarray
+    pmat : np.ndarray
         a square matrix of cumulative probability values between alpha and 1.
         The values are assumed to be uniformly distibuted in the said range
     filter_shape : tuple
@@ -1268,7 +1249,7 @@ def joint_probability_matrix(
 
     Returns
     -------
-    jmat : numpy.ndarray
+    jmat : np.ndarray
         joint probability matrix associated to pmat
 
 
@@ -1333,9 +1314,9 @@ def extract_sse(spiketrains, binsize, cmat, spiketrains_y=None,
     spiketrains : list of neo.SpikeTrain
         the spike trains analyzed for repeated sequences of synchronous
         events.
-    binsize : quantities.Quantity
+    binsize : pq.Quantity
         the binsize used in the computation of cmat
-    cmat: numpy.ndarray
+    cmat: (n,n) np.ndarray
         matrix of shape (n, n), where n is the length of x_edges and
         y_edges, representing the cluster matrix in worms analysis
         (see: cluster_matrix_entries())
@@ -1439,7 +1420,7 @@ def sse_intersection(sse1, sse2, intersection='linkwise'):
 
     Parameters
     ----------
-    sse1, sse2 : each a dict
+    sse1, sse2 : dict
         each is a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
     intersection : str, optional
@@ -1502,7 +1483,7 @@ def sse_difference(sse1, sse2, difference='linkwise'):
 
     Parameters
     ----------
-    sse1, sse2 : each a dict
+    sse1, sse2 : dict
         a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
 
@@ -1585,7 +1566,7 @@ def sse_isequal(sse1, sse2):
 
     Parameters
     ----------
-    sse1, sse2 : each a dict
+    sse1, sse2 : dict
         a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
 
@@ -1620,7 +1601,7 @@ def sse_isdisjoint(sse1, sse2):
 
     Parameters
     ----------
-    sse1, sse2 : each a dictionary
+    sse1, sse2 : dict
         a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
 
@@ -1664,7 +1645,7 @@ def sse_issub(sse1, sse2):
 
     Parameters
     ----------
-    sse1, sse2 : each a dict
+    sse1, sse2 : dict
         a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
 
@@ -1714,7 +1695,7 @@ def sse_issuper(sse1, sse2):
 
     Parameters
     ----------
-    sse1, sse2 : each a dict
+    sse1, sse2 : dict
         a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
 
@@ -1744,7 +1725,7 @@ def sse_overlap(sse1, sse2):
 
     Parameters
     ----------
-    sse1, sse2 : each a dict
+    sse1, sse2 : dict
         a dictionary of pixel positions (i, j) as keys, and sets S of
         synchronous events as values (see above).
 
