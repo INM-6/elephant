@@ -253,6 +253,7 @@ class AssetTestCase(unittest.TestCase):
                           t_stop_x=5 * pq.ms)
 
 
+@unittest.skipUnless(HAVE_SKLEARN, 'requires sklearn')
 class AssetTestIntegration(unittest.TestCase):
     def setUp(self):
         # common for all tests
