@@ -376,8 +376,9 @@ def intersection_matrix(
     bsts_y = bsts_y.to_sparse_array()
 
     # Compute the number of spikes in each bin, for both time axes
-    spikes_per_bin_x = bsts_x.sum(axis=0)
-    spikes_per_bin_y = bsts_y.sum(axis=0)
+    # 'A1' property returns self as a flattened ndarray.
+    spikes_per_bin_x = bsts_x.sum(axis=0).A1
+    spikes_per_bin_y = bsts_y.sum(axis=0).A1
 
     # Compute the intersection matrix imat
     imat = bsts_x.T.dot(bsts_y).toarray().astype(np.float32)
@@ -387,27 +388,21 @@ def intersection_matrix(
             norm_coef = 1.
         elif norm == 1:
             norm_coef = np.minimum(
-                spikes_per_bin_x[:, ii], spikes_per_bin_y)
+                spikes_per_bin_x[ii], spikes_per_bin_y)
         elif norm == 2:
             norm_coef = np.sqrt(
-                spikes_per_bin_x[:, ii] * spikes_per_bin_y)
+                spikes_per_bin_x[ii] * spikes_per_bin_y)
         elif norm == 3:
             norm_coef = np.array([(bsts_x[:, ii]
                                    + bsts_y[:, jj]).count_nonzero()
                                   for jj in range(bsts_y.shape[1])])
-        # ignore division by zero warnings
-        # we deal with the affected values below
-        with warnings.catch_warnings():
-            warnings.simplefilter('ignore', RuntimeWarning)
-            imat[ii, :] = imat[ii, :] / norm_coef
 
-    # If normalization required, for each j such that bsts_y[j] is
-    # identically 0 the code above sets imat[:, j] to identically nan.
-    # Substitute 0s instead. Then refill the main diagonal with 1s.
-    if norm and norm >= 0.5:
-        ybins_equal_0 = np.where(spikes_per_bin_y == 0)[0]
-        for y_id in ybins_equal_0:
-            imat[:, y_id] = 0
+        # If normalization required, for each j such that bsts_y[j] is
+        # identically 0 the code above sets imat[:, j] to identically nan.
+        # Substitute 0s instead.
+        imat[ii, :] = np.divide(imat[ii, :], norm_coef,
+                                out=np.zeros(imat.shape[1], dtype=np.float32),
+                                where=norm_coef != 0)
 
     # Return the intersection matrix and the edges of the bins used for the
     # x and y axes, respectively.
@@ -602,7 +597,7 @@ def cluster_matrix_entries(mat, eps=10, min_neighbors=2, stretch=5):
     # * i = 1 to k if it belongs to a cluster i,
     # * 0 if it is not significant,
     # * -1 if it is significant but does not belong to any cluster
-    cluster_mat = np.zeros_like(mat, dtype=int)
+    cluster_mat = np.zeros_like(mat, dtype=np.int32)
     cluster_mat[xpos_sgnf, ypos_sgnf] = \
         config * (config == -1) + (config + 1) * (config >= 0)
 
@@ -725,8 +720,7 @@ def probability_matrix_montecarlo(
     # Compute the p-value matrix pmat; pmat[i, j] counts the fraction of
     # surrogate data whose intersection value at (i, j) is lower than or
     # equal to that of the original data
-    # TODO: replace with np.int32
-    pmat = np.zeros(imat.shape, dtype=int)
+    pmat = np.zeros(imat.shape, dtype=np.int32)
 
     for surr_id in trange(n_surr, desc="pmat_bootstrap", disable=not verbose):
         if mpi_accelerated and surr_id % size != rank:
@@ -750,7 +744,7 @@ def probability_matrix_montecarlo(
             t_start_x=t_start_x, t_start_y=t_start_y, t_stop_x=t_stop_x,
             t_stop_y=t_stop_y)
 
-        pmat += (imat_surr <= imat - 1)
+        pmat += (imat_surr <= (imat - 1))
 
         del imat_surr
 
@@ -991,7 +985,7 @@ def probability_matrix_analytical(
     Mu = np.sum(spike_prob_mats, axis=0)
 
     # Compute the probability matrix obtained from imat using the Poisson pdfs
-    pmat = np.zeros(imat.shape)
+    pmat = np.zeros(imat.shape, dtype=np.float32)
 
     for i in range(imat.shape[0]):
         if mpi_accelerated and i % size != rank:
@@ -1086,8 +1080,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
     log_1 = np.log(1.)
 
     # prepare arrays for usage inside the loop
-    # TODO replace with np.int32
-    di_scratch = np.empty_like(du, dtype=np.int)
+    di_scratch = np.empty_like(du, dtype=np.int32)
     log_du_scratch = np.empty_like(log_du)
 
     # precompute log(factorial)s
@@ -1098,7 +1091,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
     # only loop over the indices and do all du entries at once
     # using matrix algebra
     # initialise probabilities to 0
-    P_total = np.zeros((du.shape[0]), dtype=np.float32)
+    P_total = np.zeros(du.shape[0], dtype=np.float32)
     iter_id = 0
     for matrix_entries in tqdm(itertools.product(*lists),
                                total=it_todo,
@@ -1119,8 +1112,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
         di = -np.diff(matrix_entries, prepend=n, append=0)
 
         # reshape the matrix to be compatible with du
-        for idx, current_di in enumerate(di):
-            di_scratch[:, idx].fill(current_di)
+        di_scratch[:, range(len(di))] = di
 
         # use precomputed factorials
         sum_log_di_factorial = log_factorial[di].sum()
@@ -1144,7 +1136,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
         P_total += np.exp(logP + logK)
 
     if mpi_accelerated:
-        totals = np.zeros((du.shape[0]), dtype=np.float32)
+        totals = np.zeros(du.shape[0], dtype=np.float32)
 
         # exchange all the results
         comm.Allreduce(
@@ -1314,9 +1306,7 @@ def joint_probability_matrix(
     # find all unique sets of values in pmat_neighb
     # and store the corresponding indices
     # flatten the second and third dimension in order to use np.unique
-    num_p_vals = np.prod(pmat.shape)
-    pmat_neighb = pmat_neighb.reshape(nr_largest,
-                                      num_p_vals).T
+    pmat_neighb = pmat_neighb.reshape(nr_largest, pmat.size).T
     pmat_neighb, pmat_neighb_indices = np.unique(pmat_neighb, axis=0,
                                                  return_inverse=True)
 
@@ -1325,7 +1315,7 @@ def joint_probability_matrix(
     jpvmat = _jsf_uniform_orderstat_3d(pmat_neighb, alpha, n, verbose=verbose)
 
     # restore the original shape using the stored indices
-    jpvmat = jpvmat[pmat_neighb_indices].reshape((pmat.shape))
+    jpvmat = jpvmat[pmat_neighb_indices].reshape(pmat.shape)
 
     return 1. - jpvmat
 
