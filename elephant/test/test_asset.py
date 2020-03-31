@@ -74,13 +74,13 @@ class AssetTestCase(unittest.TestCase):
         diff_ab_linkwise = {(1, 2): set([3]), (3, 4): set([5, 6])}
         diff_ba_linkwise = {(1, 2): set([5]), (5, 6): set([0, 2])}
         self.assertEqual(
-            asset.sse_difference(a, b, 'pixelwise'), diff_ab_pixelwise)
+            asset.synchronous_events_difference(a, b, 'pixelwise'), diff_ab_pixelwise)
         self.assertEqual(
-            asset.sse_difference(b, a, 'pixelwise'), diff_ba_pixelwise)
+            asset.synchronous_events_difference(b, a, 'pixelwise'), diff_ba_pixelwise)
         self.assertEqual(
-            asset.sse_difference(a, b, 'linkwise'), diff_ab_linkwise)
+            asset.synchronous_events_difference(a, b, 'linkwise'), diff_ab_linkwise)
         self.assertEqual(
-            asset.sse_difference(b, a, 'linkwise'), diff_ba_linkwise)
+            asset.synchronous_events_difference(b, a, 'linkwise'), diff_ba_linkwise)
 
     def test_sse_intersection(self):
         a = {(1, 2): set([1, 2, 3]), (3, 4): set([5, 6]), (6, 7): set([0, 1])}
@@ -90,35 +90,35 @@ class AssetTestCase(unittest.TestCase):
         inters_ab_linkwise = {(1, 2): set([1, 2]), (6, 7): set([0, 1])}
         inters_ba_linkwise = {(1, 2): set([1, 2]), (6, 7): set([0, 1])}
         self.assertEqual(
-            asset.sse_intersection(a, b, 'pixelwise'), inters_ab_pixelwise)
+            asset.synchronous_events_intersection(a, b, 'pixelwise'), inters_ab_pixelwise)
         self.assertEqual(
-            asset.sse_intersection(b, a, 'pixelwise'), inters_ba_pixelwise)
+            asset.synchronous_events_intersection(b, a, 'pixelwise'), inters_ba_pixelwise)
         self.assertEqual(
-            asset.sse_intersection(a, b, 'linkwise'), inters_ab_linkwise)
+            asset.synchronous_events_intersection(a, b, 'linkwise'), inters_ab_linkwise)
         self.assertEqual(
-            asset.sse_intersection(b, a, 'linkwise'), inters_ba_linkwise)
+            asset.synchronous_events_intersection(b, a, 'linkwise'), inters_ba_linkwise)
 
     def test_sse_relations(self):
         a = {(1, 2): set([1, 2, 3]), (3, 4): set([5, 6]), (6, 7): set([0, 1])}
         b = {(1, 2): set([1, 2, 5]), (5, 6): set([0, 2]), (6, 7): set([0, 1])}
         c = {(5, 6): set([0, 2])}
         d = {(3, 4): set([0, 1]), (5, 6): set([0, 1, 2])}
-        self.assertTrue(asset.sse_isequal({}, {}))
-        self.assertTrue(asset.sse_isequal(a, a))
-        self.assertFalse(asset.sse_isequal(b, c))
-        self.assertTrue(asset.sse_isdisjoint(a, c))
-        self.assertTrue(asset.sse_isdisjoint(a, d))
-        self.assertFalse(asset.sse_isdisjoint(a, b))
-        self.assertFalse(asset.sse_isdisjoint({}, {}))
-        self.assertTrue(asset.sse_issub(c, b))
-        self.assertTrue(asset.sse_issub(c, d))
-        self.assertFalse(asset.sse_issub(a, d))
-        self.assertFalse(asset.sse_issub(a, b))
-        self.assertTrue(asset.sse_issuper(b, c))
-        self.assertTrue(asset.sse_issuper(d, c))
-        self.assertFalse(asset.sse_issuper(a, b))
-        self.assertTrue(asset.sse_overlap(a, b))
-        self.assertFalse(asset.sse_overlap(c, d))
+        self.assertTrue(asset.synchronous_events_is_equal({}, {}))
+        self.assertTrue(asset.synchronous_events_is_equal(a, a))
+        self.assertFalse(asset.synchronous_events_is_equal(b, c))
+        self.assertTrue(asset.synchronous_events_is_disjoint(a, c))
+        self.assertTrue(asset.synchronous_events_is_disjoint(a, d))
+        self.assertFalse(asset.synchronous_events_is_disjoint(a, b))
+        self.assertFalse(asset.synchronous_events_is_disjoint({}, {}))
+        self.assertTrue(asset.synchronous_events_is_subsequence(c, b))
+        self.assertTrue(asset.synchronous_events_is_subsequence(c, d))
+        self.assertFalse(asset.synchronous_events_is_subsequence(a, d))
+        self.assertFalse(asset.synchronous_events_is_subsequence(a, b))
+        self.assertTrue(asset.synchronous_events_contains_all(b, c))
+        self.assertTrue(asset.synchronous_events_contains_all(d, c))
+        self.assertFalse(asset.synchronous_events_contains_all(a, b))
+        self.assertTrue(asset.synchronous_events_is_overlap(a, b))
+        self.assertFalse(asset.synchronous_events_is_overlap(c, d))
 
     def test_mask_matrix(self):
         mat1 = np.array([[0, 1], [1, 2]])
@@ -324,8 +324,8 @@ class AssetTestIntegration(unittest.TestCase):
                 spiketrains,
                 spiketrains_y=spiketrains_y,
                 binsize=self.binsize,
-                fir_rates_x=_get_rates(spiketrains),
-                fir_rates_y=_get_rates(spiketrains_y))
+                firing_rates_x=_get_rates(spiketrains),
+                firing_rates_y=_get_rates(spiketrains_y))
         assert_array_almost_equal(pmat, pmat_as_rates)
         assert_array_almost_equal(imat, imat_as_rates)
         assert_array_almost_equal(x_bins, x_bins_as_rates)
@@ -336,7 +336,7 @@ class AssetTestIntegration(unittest.TestCase):
             asset.probability_matrix_montecarlo(
                 spiketrains,
                 spiketrains_y=spiketrains_y,
-                j=jitter,
+                jitter=jitter,
                 binsize=self.binsize,
                 n_surr=n_surr,
                 surr_method='dither_spikes')
@@ -348,7 +348,7 @@ class AssetTestIntegration(unittest.TestCase):
         # calculate joint probability matrix
         jmat = asset.joint_probability_matrix(pmat,
                                               filter_shape=filter_shape,
-                                              nr_largest=nr_largest,
+                                              n_largest=nr_largest,
                                               verbose=True)
         # test joint probability matrix
         assert_array_equal(np.where(jmat > 0.98), index_proba['high'])
@@ -367,8 +367,8 @@ class AssetTestIntegration(unittest.TestCase):
                                             stretch=stretch)
 
         # extract sses and test them
-        sses = asset.extract_sse(spiketrains, self.binsize, cmat,
-                                 spiketrains_y)
+        sses = asset.extract_synchronous_events(spiketrains, self.binsize, cmat,
+                                                spiketrains_y)
         self.assertDictEqual(sses, expected_sses)
 
     def test_integration(self):
