@@ -373,6 +373,11 @@ class AssetTestIntegration(unittest.TestCase):
         self.assertDictEqual(sses, expected_sses)
 
     def test_integration(self):
+        """
+        The test is written according to the notebook (for developers only):
+        https://github.com/INM-6/elephant-tutorials/blob/master/
+        simple_test_asset.ipynb
+        """
         # define parameters
         np.random.seed(1)
         size_group = 3

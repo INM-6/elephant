@@ -771,13 +771,13 @@ def _rate_of_binned_spiketrain(binned_spiketrains, kernel_width,
     return rate
 
 
-def _interpolate_signals(signals, sampling_times, verbose=False):
+def _interpolate_firing_rates(firing_rates, sampling_times, verbose=False):
     """Interpolate signals at given sampling times.
     """
     # Reshape all signals to one-dimensional array object (e.g. AnalogSignal)
-    for i, signal in enumerate(signals):
+    for i, signal in enumerate(firing_rates):
         if signal.ndim == 2:
-            signals[i] = signal.flatten()
+            firing_rates[i] = signal.flatten()
         elif signal.ndim > 2:
             raise ValueError('elements in fir_rates must have 2 dimensions')
 
@@ -787,7 +787,7 @@ def _interpolate_signals(signals, sampling_times, verbose=False):
     # Interpolate in the time bins
     interpolated_signal = np.vstack([_analog_signal_step_interp(
                                 signal, sampling_times).rescale('Hz').magnitude
-                            for signal in signals]) * pq.Hz
+                                     for signal in firing_rates]) * pq.Hz
 
     return interpolated_signal
 
@@ -911,8 +911,8 @@ def probability_matrix_analytical(
     # If rates provided as lists of AnalogSignals, create time slices for both
     # axes, interpolate in the time bins of interest and convert to Quantity
     elif isinstance(firing_rates_x, list):
-        fir_rate_x = _interpolate_signals(firing_rates_x, bsts_x.bin_edges[:-1],
-                                          verbose)
+        fir_rate_x = _interpolate_firing_rates(firing_rates_x, bsts_x.bin_edges[:-1],
+                                               verbose)
 
     else:
         raise ValueError('fir_rates_x must be a list or the string "estimate"')
@@ -927,8 +927,8 @@ def probability_matrix_analytical(
     # If rates provided as lists of AnalogSignals, create time slices for both
     # axes, interpolate in the time bins of interest and convert to Quantity
     elif isinstance(firing_rates_y, list):
-        fir_rate_y = _interpolate_signals(firing_rates_y, bsts_y.bin_edges[:-1],
-                                          verbose)
+        fir_rate_y = _interpolate_firing_rates(firing_rates_y, bsts_y.bin_edges[:-1],
+                                               verbose)
 
     else:
         raise ValueError('fir_rates_y must be a list or the string "estimate"')
