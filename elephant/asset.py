@@ -39,7 +39,9 @@ steps:
 
 References:
 
-[1] Torre, Canova, Denker, Gerstein, Helias, Gruen (submitted)
+[1] E. Torre, C. Canova, M. Denker, G. Gerstein, M. Helias, & S. Grün, "ASSET:
+    Analysis of Sequences of Synchronous Events in Massively Parallel Spike
+    Trains," PLoS Comput Biol, v. 12, n. 7, p. e1004939, 2016.
 """
 from __future__ import division, print_function, unicode_literals
 
@@ -118,7 +120,7 @@ def _signals_same_tstop(signals):
 
 def _quantities_almost_equal(x, y):
     """
-    Returns True if two quantities are almost equal, i.e. if `x - y` is
+    Returns True if two quantities are almost equal, i.e., if `x - y` is
     "very close to 0" (not larger than machine precision for floats).
 
     Parameters
@@ -154,8 +156,8 @@ def _transactions(spiketrains, binsize, t_start=None, t_stop=None, ids=None):
     of spikes in `spiketrains` falling into that bin.
 
     To compute each transaction, the spike trains are binned (with adjacent
-    exclusive binning) and clipped (i.e. spikes from the same train falling
-    in the same bin are counted as one event). The list of spike ids within
+    exclusive binning) and clipped (i.e., spikes from the same train falling
+    in the same bin are counted as one event). The list of spike IDs within
     each bin form the corresponding transaction.
 
     Parameters
@@ -187,7 +189,7 @@ def _transactions(spiketrains, binsize, t_start=None, t_stop=None, ids=None):
     -------
     list of list
         A list of transactions, where each transaction corresponds to a time
-        bin and represents the list of spike train ids having a spike in that
+        bin and represents the list of spike train IDs having a spike in that
         time bin.
         
     Raises
@@ -304,7 +306,7 @@ def intersection_matrix(
         Default: None.
     norm : int, optional
         The normalization type to be applied to each entry `M[i,j]` of the
-        intersection matrix `M`. Given the sets `s_i` and `s_j` of neuron ids in the
+        intersection matrix `M`. Given the sets `s_i` and `s_j` of neuron IDs in the
         bins `i` and `j` respectively, the normalisation coefficient can be:
 
             * norm = 0 or None: no normalisation (row counts)
@@ -420,7 +422,7 @@ def mask_matrices(matrices, thresholds):
     matrices : list of np.ndarray
         The matrices which are compared to the respective thresholds to
         build the mask. All matrices must have the same shape.
-        Typically, it is the list `[pmat, jmat]`, i.e. the (cumulative) probability and joint
+        Typically, it is the list `[pmat, jmat]`, i.e., the (cumulative) probability and joint
         probability matrices.
     thresholds : list of float
         The significance thresholds for each matrix in `matrices`.
@@ -459,13 +461,13 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
     distance among each of them.
     
     The classical euclidean distance `d` between points `(x1, y1)` and `(x2, y2)`,
-    i.e. :math:`\sqrt((x1-x2)^2 + (y1-y2)^2)`, is multiplied by a factor
+    i.e., :math:`\sqrt((x1-x2)^2 + (y1-y2)^2)`, is multiplied by a factor
     .. math::
 
             1 + (stretch - 1.) * \abs(\sin(ref_angle - \theta)),
 
     where :math:`\theta` is the angle between the points and the 45 degree direction
-    (i.e. the line `y = x`).
+    (i.e., the line `y = x`).
     
     The stretching factor thus steadily varies between 1 (if the line
     connecting `(x1, y1)` and `(x2, y2)` has inclination `ref_angle`) and `stretch`
@@ -482,8 +484,8 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
         Maximum stretching factor, applied if the line connecting the points
         has inclination `90 + ref_angle`.
     ref_angle : float
-        Reference angle, i.e. the inclination along which the stretching factor
-        is 1.
+        Reference angle in degrees (i.e., the inclination along which the stretching factor
+        is 1).
 
     Returns
     -------
@@ -580,7 +582,7 @@ def cluster_matrix_entries(mask_matrix, eps=10, min_neighbors=2, stretch=5):
     cluster_mat : np.ndarray
         A matrix with the same shape of `mask_matrix`, each of whose elements is either:
         
-            * a positive int (cluster ID) if the element is part of a cluster;
+            * a positive integer (cluster ID) if the element is part of a cluster;
             * `0` if the corresponding element in `mask_matrix` was non-positive;
             * `-1` if the element does not belong to any cluster.
             
@@ -831,7 +833,7 @@ def probability_matrix_analytical(
     input spike trains are independent and Poisson. It works as follows:
 
         * Bin each spike train at the specified `binsize`: this yields a binary
-          array of `1`s (spike in bin) and `0`s (no spike in bin; clipping used);
+          array of 1s (spike in bin) and 0s (no spike in bin; clipping used);
         * If required, estimate the rate profile of each spike train by
           convolving the binned array with a boxcar kernel of user-defined
           length;
@@ -1183,7 +1185,7 @@ def _pmat_neighbors(mat, filter_shape, n_largest):
     Returns
     -------
     lmat : np.ndarray
-        A matrix of shape `(nr_largest, l, w)` containing along the first
+        A matrix of shape `(n_largest, l, w)` containing along the first
         dimension `lmat[:, i, j]` the largest neighbors of `mat[i, j]`.
         
     Raises
@@ -1194,8 +1196,8 @@ def _pmat_neighbors(mat, filter_shape, n_largest):
     Warns
     -----
     UserWarning
-        If both entries in `filter_shape` are not odd values, i.e., the kernel is not centered on
-        the datapoint used in the calculation.
+        If both entries in `filter_shape` are not odd values (i.e., the kernel
+        is not centered on the data point used in the calculation).
 
     """
     l, w = filter_shape
@@ -1255,7 +1257,7 @@ def joint_probability_matrix(
     `jmat[i, j]` is the joint p-value of the largest neighbors of `pmat[i, j]`.
 
     The values of `pmat` are assumed to be uniformly distributed in the range
-    `[alpha, 1]` (`alpha=0` by default). Centered a rectangular kernel of shape
+    [`alpha`, 1] (`alpha=0` by default). Centered a rectangular kernel of shape
     `filter_shape=(l, w)` around each entry `pmat[i, j]`, aligned along the
     diagonal where `pmat[i, j]` lies into, extracts the `n_largest` values
     falling within the kernel and computes their joint p-value `jmat[i, j]`
@@ -1273,10 +1275,10 @@ def joint_probability_matrix(
         If None, the filter length `l` of `filter_shape` is used.
         Default: None.
     alpha : float, optional
-        The left end of the range `[alpha, 1]`.
+        The left end of the range [`alpha`, 1].
         Default: 0.
     p_value_min : float, optional
-        The minimum p-value in range `[0, 1)` for individual entries in `pmat`. Each `pmat[i, j]` is
+        The minimum p-value in range [0, 1) for individual entries in `pmat`. Each `pmat[i, j]` is
         set to `min(pmat[i, j], 1-p_value_min)` to avoid that a single highly
         significant value in `pmat` (extreme case: `pmat[i, j] = 1`) yields
         joint significance of itself and its neighbors.
@@ -1293,21 +1295,22 @@ def joint_probability_matrix(
 
     References
     ----------
-    .. [1] Torre et al (in prep) ...
+    .. [1] E. Torre, C. Canova, M. Denker, G. Gerstein, M. Helias, & S. Grün,
+           "ASSET: Analysis of Sequences of Synchronous Events in Massively
+           Parallel Spike Trains," PLoS Comput Biol, v. 12, n. 7, p. e1004939,
+           2016.
 
     Examples
     --------
-    Assuming to have a list `sts` of parallel spike trains over 1s recording,
-    the following code computes the intersection/probability/joint-prob
+    Assuming to have a list `sts` of parallel spike trains over 1 s recording,
+    the following code computes the intersection/probability/joint-probability
     matrices `imat`/`pmat`/`jmat` using a bin width of 5 ms:
 
     >>> import quantities as pq
     >>> from elephant import asset
-    >>> T = 1 * pq.s
     >>> binsize = 5 * pq.ms
-    >>> imat, xedges, yedges = asset.intersection_matrix(sts,
-    ...                        binsize=binsize, dt=T)
-    >>> pmat = asset.probability_matrix_analytical(sts, binsize, dt=T)
+    >>> imat, pmat, xedges, yedges = asset.probability_matrix_analytical(
+    ...     sts, binsize)
     >>> jmat = asset.joint_probability_matrix(pmat, filter_shape=(fl, fw))
 
     """
@@ -1353,7 +1356,7 @@ def extract_synchronous_events(spiketrains, binsize, cmat, spiketrains_y=None,
         The spike trains analyzed for repeated sequences of synchronous
         events.
     binsize : pq.Quantity
-        The binsize used in the computation of the cluster matrix `cmat`.
+        The bin size used in the computation of the cluster matrix `cmat`.
     cmat: (n,n) np.ndarray
         The matrix representing the cluster matrix in worms analysis.
         (see :func:`cluster_matrix_entries`).
@@ -1376,14 +1379,14 @@ def extract_synchronous_events(spiketrains, binsize, cmat, spiketrains_y=None,
         .. centered:: D = {1: D1, 2: D2, ..., K: DK}
 
         Each sub-dictionary `Dk` represents the k-th diagonal structure
-        (i.e. the k-th cluster) in `cmat`, and is of the form
+        (i.e., the k-th cluster) in `cmat`, and is of the form
 
         .. centered:: Dk = {(i1, j1): S1, (i2, j2): S2, ..., (iL, jL): SL}.
 
-        The keys `(i, j)` represent the positions (time bin ids) of all
-        elements in `cmat` that compose the SSE, i.e. that take value `l` (and
+        The keys `(i, j)` represent the positions (time bin IDs) of all
+        elements in `cmat` that compose the SSE (i.e., that take value `l` and
         therefore belong to the same cluster), and the values `Sk` are sets of
-        neuron ids representing a repeated synchronous event (i.e. spiking
+        neuron IDs representing a repeated synchronous event (i.e., spiking
         at time bins `i` and `j`).
     """
 
@@ -1606,8 +1609,8 @@ def synchronous_events_is_equal(sse1, sse2):
     
     `sse1` is strictly contained in `sse2` if all its pixels are pixels of `sse2`,
     if its associated events are subsets of the corresponding events
-    in `sse2`, and if `sse2` contains events, or neuron ids in some event, which
-    do not belong to `sse1` (i.e. `sse1` and `sse2` are not identical).
+    in `sse2`, and if `sse2` contains events, or neuron IDs in some event, which
+    do not belong to `sse1` (i.e., `sse1` and `sse2` are not identical).
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
 
@@ -1696,7 +1699,7 @@ def synchronous_events_is_subsequence(sse1, sse2):
     `sse1` is strictly contained in `sse2` if all its pixels are pixels of `sse2`,
     if its associated events are subsets of the corresponding events
     in `sse2`, and if `sse2` contains non-empty events, or neuron IDs in some
-    event, which do not belong to `sse1` (i.e. `sse1` and `sse2` are not identical).
+    event, which do not belong to `sse1` (i.e., `sse1` and `sse2` are not identical).
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
             
@@ -1754,7 +1757,7 @@ def synchronous_events_contains_all(sse1, sse2):
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
     
-    ..centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
+    .. centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
     
     where each `i`, `j` is an integer and each `S` is a set of neuron IDs.
 
@@ -1793,7 +1796,7 @@ def synchronous_events_is_overlap(sse1, sse2):
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
     
-    ..centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
+    .. centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
     
     where each `i`, `j` is an integer and each `S` is a set of neuron IDs.
 
