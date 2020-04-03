@@ -1460,7 +1460,7 @@ class ASSET(object):
         return pmat
 
     def joint_probability_matrix(self,
-                                 pmat=None, filter_shape=(7, 3),
+                                 pmat=None, filter_shape=(5, 1),
                                  n_largest=None, alpha=0, min_p_value=1e-5):
         """
         Map a probability matrix `pmat` to a joint probability matrix `jmat`, where
