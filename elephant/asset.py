@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 ASSET is a statistical method [1]_ for the detection of repeating sequences
 of synchronous spiking events in parallel spike trains.
