@@ -1754,7 +1754,7 @@ class ASSET(object):
             diag_id = 0
             tracts_y = tracts_x
         else:
-            if _quantities_almost_equal(self.t_start_x, self.t_start_y):
+            if self.is_symmetric():
                 diag_id = 0
                 tracts_y = tracts_x
             else:

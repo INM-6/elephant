@@ -123,13 +123,20 @@ class AssetTestCase(unittest.TestCase):
     def test_mask_matrix(self):
         mat1 = np.array([[0, 1], [1, 2]])
         mat2 = np.array([[2, 1], [1, 3]])
-        mask_1_2 = asset.mask_matrices([mat1, mat2], [1, 2])
+
+        # asset mask_matrices() is asset-specific, requires spike trains, and
+        # should not be used outside of the asset scope
+        spiketrain_not_used = neo.SpikeTrain([1.] * pq.s, t_stop=2 * pq.s)
+        asset_obj = asset.ASSET([spiketrain_not_used])
+
+        mask_1_2 = asset_obj.mask_matrices([mat1, mat2], [1, 2])
         mask_1_2_correct = np.array([[False, False], [False, True]])
         self.assertTrue(np.all(mask_1_2 == mask_1_2_correct))
         self.assertIsInstance(mask_1_2[0, 0], np.bool_)
 
-        self.assertRaises(ValueError, asset.mask_matrices, [], [])
-        self.assertRaises(ValueError, asset.mask_matrices, [np.arange(5)], [])
+        self.assertRaises(ValueError, asset_obj.mask_matrices, [], [])
+        self.assertRaises(ValueError, asset_obj.mask_matrices,
+                          [np.arange(5)], [])
 
     def test_cluster_matrix_entries(self):
         # test with symmetric matrix
@@ -137,7 +144,13 @@ class AssetTestCase(unittest.TestCase):
                         [0, 0, 0, 1],
                         [1, 0, 0, 0],
                         [0, 1, 0, 0]])
-        clustered = asset.cluster_matrix_entries(
+
+        # asset cluster_matrix_entries() is asset-specific, requires spike
+        # trains, and should not be used outside of the asset scope
+        spiketrain_not_used = neo.SpikeTrain([1.] * pq.s, t_stop=2 * pq.s)
+        asset_obj = asset.ASSET([spiketrain_not_used])
+
+        clustered = asset_obj.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=2, stretch=1)
         correct = np.array([[0, 0, 1, 0],
                             [0, 0, 0, 1],
@@ -150,7 +163,7 @@ class AssetTestCase(unittest.TestCase):
                         [0, 0, 1, 0],
                         [1, 0, 0, 1],
                         [0, 1, 0, 0]])
-        clustered = asset.cluster_matrix_entries(
+        clustered = asset_obj.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=3, stretch=1)
         correct = np.array([[0, 1, 0, 0],
                             [0, 0, 1, 0],
@@ -163,7 +176,7 @@ class AssetTestCase(unittest.TestCase):
                         [0, 0, 1, 0],
                         [1, 0, 0, 1],
                         [0, 1, 0, 0]])
-        clustered = asset.cluster_matrix_entries(
+        clustered = asset_obj.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=2, stretch=1)
         correct = np.array([[0, 1, 0, 0],
                             [0, 0, 1, 0],
@@ -172,7 +185,7 @@ class AssetTestCase(unittest.TestCase):
         assert_array_equal(clustered, correct)
 
         mat = np.zeros((4, 4))
-        clustered = asset.cluster_matrix_entries(
+        clustered = asset_obj.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=2, stretch=1)
         correct = mat
         assert_array_equal(clustered, correct)
@@ -182,33 +195,40 @@ class AssetTestCase(unittest.TestCase):
         st2 = neo.SpikeTrain([1, 3, 4] * pq.ms, t_stop=6 * pq.ms)
         st3 = neo.SpikeTrain([2, 5] * pq.ms, t_start=1 * pq.ms,
                              t_stop=6 * pq.ms)
-        binsize = 1 * pq.ms
+        bin_size = 1 * pq.ms
+
+        asset_obj_same_t_start_stop = asset.ASSET(
+            [st1, st2], bin_size=bin_size, t_stop_x=5 * pq.ms,
+            t_stop_y=5 * pq.ms)
 
         # Check that the routine works for correct input...
         # ...same t_start, t_stop on both time axes
-        imat_1_2, xedges, yedges = asset.intersection_matrix(
-            [st1, st2], binsize, t_stop_x=5 * pq.ms, t_stop_y=5 * pq.ms)
+        imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
+            [st1, st2])
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 2., 1., 1., 2.],
                                  [0., 1., 1., 0., 1.],
                                  [0., 1., 0., 1., 1.],
                                  [0., 2., 1., 1., 2.]])
-        self.assertTrue(np.all(xedges == np.arange(6) * pq.ms))  # correct bins
-        self.assertTrue(np.all(yedges == np.arange(6) * pq.ms))  # correct bins
-        self.assertTrue(np.all(imat_1_2 == trueimat_1_2))  # correct matrix
+        assert_array_equal(asset_obj_same_t_start_stop.x_edges, np.arange(6) * pq.ms)  # correct bins
+        assert_array_equal(asset_obj_same_t_start_stop.y_edges, np.arange(6) * pq.ms)  # correct bins
+        assert_array_equal(imat_1_2, trueimat_1_2)  # correct matrix
         # ...different t_start, t_stop on the two time axes
-        imat_1_2, xedges, yedges = asset.intersection_matrix(
-            [st1, st2], binsize, t_start_y=6 * pq.ms,
-            spiketrains_y=[st + 6 * pq.ms for st in [st1, st2]],
-            t_stop_x=5 * pq.ms, t_stop_y=11 * pq.ms)
-        self.assertTrue(np.all(xedges == np.arange(6) * pq.ms))  # correct bins
-        assert_array_almost_equal(yedges, np.arange(6, 12) * pq.ms)
+        asset_obj_different_t_start_stop = asset.ASSET(
+            [st1, st2], spiketrains_y=[st + 6 * pq.ms for st in [st1, st2]],
+            bin_size=bin_size, t_start_y=6 * pq.ms, t_stop_x=5 * pq.ms,
+            t_stop_y=11 * pq.ms)
+        imat_1_2 = asset_obj_different_t_start_stop.intersection_matrix(
+            asset_obj_different_t_start_stop.spiketrains,
+            asset_obj_different_t_start_stop.spiketrains_y
+        )
+        assert_array_equal(asset_obj_different_t_start_stop.x_edges, np.arange(6) * pq.ms)  # correct bins
+        assert_array_equal(asset_obj_different_t_start_stop.y_edges, np.arange(6, 12) * pq.ms)
         self.assertTrue(np.all(imat_1_2 == trueimat_1_2))  # correct matrix
 
         # test with norm=1
-        imat_1_2, xedges, yedges = asset.intersection_matrix(
-            [st1, st2], binsize, t_stop_x=5 * pq.ms, t_stop_y=5 * pq.ms,
-            norm=1)
+        imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
+            [st1, st2], normalization=1)
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., 1., 1., 1.],
                                  [0., 1., 1., 0., 1.],
@@ -217,9 +237,8 @@ class AssetTestCase(unittest.TestCase):
         assert_array_equal(imat_1_2, trueimat_1_2)
 
         # test with norm=2
-        imat_1_2, xedges, yedges = asset.intersection_matrix(
-            [st1, st2], binsize, t_stop_x=5 * pq.ms, t_stop_y=5 * pq.ms,
-            norm=2)
+        imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
+            [st1, st2], normalization=2)
         sq = np.sqrt(2) / 2.
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., sq, sq, 1.],
@@ -229,9 +248,8 @@ class AssetTestCase(unittest.TestCase):
         assert_array_almost_equal(imat_1_2, trueimat_1_2)
 
         # test with norm=3
-        imat_1_2, xedges, yedges = asset.intersection_matrix(
-            [st1, st2], binsize, t_stop_x=5 * pq.ms, t_stop_y=5 * pq.ms,
-            norm=3)
+        imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
+            [st1, st2], normalization=3)
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., .5, .5, 1.],
                                  [0., .5, 1., 0., .5],
@@ -241,15 +259,15 @@ class AssetTestCase(unittest.TestCase):
 
         # Check that errors are raised correctly...
         # ...for partially overlapping time intervals
-        self.assertRaises(ValueError, asset.intersection_matrix,
-                          spiketrains=[st1, st2], binsize=binsize,
+        self.assertRaises(ValueError, asset.ASSET,
+                          spiketrains=[st1, st2], bin_size=bin_size,
                           t_start_y=1 * pq.ms)
         # ...for different SpikeTrain's t_starts
-        self.assertRaises(ValueError, asset.intersection_matrix,
-                          spiketrains=[st1, st3], binsize=binsize)
+        self.assertRaises(ValueError, asset.ASSET,
+                          spiketrains=[st1, st3], bin_size=bin_size)
         # ...for different SpikeTrain's t_stops
-        self.assertRaises(ValueError, asset.intersection_matrix,
-                          spiketrains=[st1, st2], binsize=binsize,
+        self.assertRaises(ValueError, asset.ASSET,
+                          spiketrains=[st1, st2], bin_size=bin_size,
                           t_stop_x=5 * pq.ms)
 
 
