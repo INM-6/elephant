@@ -257,7 +257,7 @@ class AssetTestCase(unittest.TestCase):
 class AssetTestIntegration(unittest.TestCase):
     def setUp(self):
         # common for all tests
-        self.binsize = 3 * pq.ms
+        self.bin_size = 3 * pq.ms
 
     def test_probability_matrix_symmetric(self):
         np.random.seed(1)
@@ -271,29 +271,33 @@ class AssetTestIntegration(unittest.TestCase):
             spiketrains.append(st)
             spiketrains_copy.append(st.copy())
 
-        pmat, imat, x_bins, y_bins = asset.probability_matrix_analytical(
-            spiketrains,
-            binsize=self.binsize,
+        asset_obj = asset.ASSET(spiketrains, bin_size=self.bin_size)
+        asset_obj_symmetric = asset.ASSET(spiketrains,
+                                          spiketrains_y=spiketrains_copy,
+                                          bin_size=self.bin_size)
+
+        imat = asset_obj.intersection_matrix(spiketrains)
+        pmat = asset_obj.probability_matrix_analytical(
             kernel_width=kernel_width)
 
-        pmat_copy, imat_copy, x_bins_copy, y_bins_copy = \
-            asset.probability_matrix_analytical(
-                spiketrains,
-                spiketrains_y=spiketrains,
-                binsize=self.binsize,
+        imat_symm = asset_obj_symmetric.intersection_matrix(spiketrains,
+                                                            spiketrains_copy)
+        pmat_symm = asset_obj_symmetric.probability_matrix_analytical(
                 kernel_width=kernel_width)
 
-        assert_array_almost_equal(pmat, pmat_copy)
-        assert_array_almost_equal(imat, imat_copy)
-        assert_array_almost_equal(x_bins, x_bins_copy)
-        assert_array_almost_equal(y_bins, y_bins_copy)
+        assert_array_almost_equal(pmat, pmat_symm)
+        assert_array_almost_equal(imat, imat_symm)
+        assert_array_almost_equal(asset_obj.x_edges,
+                                  asset_obj_symmetric.x_edges)
+        assert_array_almost_equal(asset_obj.y_edges,
+                                  asset_obj_symmetric.y_edges)
 
     def _test_integration_subtest(self, spiketrains, spiketrains_y,
                                   indices_pmat, index_proba, expected_sses):
         # define parameters
         random.seed(1)
         kernel_width = 9 * pq.ms
-        jitter = 9 * pq.ms
+        surrogate_dt = 9 * pq.ms
         alpha = 0.9
         filter_shape = (5, 1)
         nr_largest = 3
@@ -312,33 +316,25 @@ class AssetTestIntegration(unittest.TestCase):
                 for st in _spiketrains]
             return rates
 
+        asset_obj = asset.ASSET(spiketrains, spiketrains_y,
+                                bin_size=self.bin_size)
+
+        # calculate the intersection matrix
+        imat = asset_obj.intersection_matrix(spiketrains, spiketrains_y)
+
         # calculate probability matrix analytical
-        pmat, imat, x_bins, y_bins = asset.probability_matrix_analytical(
-            spiketrains,
-            spiketrains_y=spiketrains_y,
-            binsize=self.binsize,
+        pmat = asset_obj.probability_matrix_analytical(imat,
             kernel_width=kernel_width)
 
         # check if pmat is the same when rates are provided
-        pmat_as_rates, imat_as_rates, x_bins_as_rates, y_bins_as_rates = \
-            asset.probability_matrix_analytical(
-                spiketrains,
-                spiketrains_y=spiketrains_y,
-                binsize=self.binsize,
+        pmat_as_rates = asset_obj.probability_matrix_analytical(imat,
                 firing_rates_x=_get_rates(spiketrains),
                 firing_rates_y=_get_rates(spiketrains_y))
         assert_array_almost_equal(pmat, pmat_as_rates)
-        assert_array_almost_equal(imat, imat_as_rates)
-        assert_array_almost_equal(x_bins, x_bins_as_rates)
-        assert_array_almost_equal(y_bins, y_bins_as_rates)
 
         # calculate probability matrix montecarlo
-        pmat_montecarlo, imat, x_bins, y_bins = \
-            asset.probability_matrix_montecarlo(
-                spiketrains,
-                spiketrains_y=spiketrains_y,
-                jitter=jitter,
-                binsize=self.binsize,
+        pmat_montecarlo = asset_obj.probability_matrix_montecarlo(imat,
+                surrogate_dt=surrogate_dt,
                 n_surrogates=n_surr,
                 surrogate_method='dither_spikes')
 
@@ -347,10 +343,9 @@ class AssetTestIntegration(unittest.TestCase):
         assert_array_equal(np.where(pmat_montecarlo > alpha),
                            indices_pmat)
         # calculate joint probability matrix
-        jmat = asset.joint_probability_matrix(pmat,
+        jmat = asset_obj.joint_probability_matrix(pmat,
                                               filter_shape=filter_shape,
-                                              n_largest=nr_largest,
-                                              verbose=True)
+                                              n_largest=nr_largest)
         # test joint probability matrix
         assert_array_equal(np.where(jmat > 0.98), index_proba['high'])
         assert_array_equal(np.where(jmat > 0.9), index_proba['medium'])
@@ -361,15 +356,14 @@ class AssetTestIntegration(unittest.TestCase):
         self.assertTrue(np.all(jmat[mask_zeros] == 0))
 
         # calculate mask matrix and cluster matrix
-        mmat = asset.mask_matrices([pmat, jmat], [alpha, alpha])
-        cmat = asset.cluster_matrix_entries(mmat,
+        mmat = asset_obj.mask_matrices([pmat, jmat], [alpha, alpha])
+        cmat = asset_obj.cluster_matrix_entries(mmat,
                                             eps=eps,
                                             min_neighbors=min_neighbors,
                                             stretch=stretch)
 
         # extract sses and test them
-        sses = asset.extract_synchronous_events(spiketrains, self.binsize, cmat,
-                                                spiketrains_y)
+        sses = asset_obj.extract_synchronous_events(cmat)
         self.assertDictEqual(sses, expected_sses)
 
     def test_integration(self):
@@ -387,9 +381,9 @@ class AssetTestIntegration(unittest.TestCase):
         bins_between_sses = 3
         time_between_sses = 9 * pq.ms
         # ground truth for pmats
-        starting_bin_1 = int((delay / self.binsize).magnitude.item())
+        starting_bin_1 = int((delay / self.bin_size).magnitude.item())
         starting_bin_2 = int(
-            (2 * delay / self.binsize + time_between_sses / self.binsize
+            (2 * delay / self.bin_size + time_between_sses / self.bin_size
              ).magnitude.item())
         indices_pmat_1 = np.arange(starting_bin_1, starting_bin_1 + size_sse)
         indices_pmat_2 = np.arange(starting_bin_2,
@@ -400,7 +394,7 @@ class AssetTestIntegration(unittest.TestCase):
         spiketrains = [neo.SpikeTrain([index_spiketrain,
                                        index_spiketrain +
                                        size_sse +
-                                       bins_between_sses] * self.binsize
+                                       bins_between_sses] * self.bin_size
                                       + delay + 1 * pq.ms,
                                       t_stop=T)
                        for index_group in range(size_group)
@@ -431,23 +425,23 @@ class AssetTestIntegration(unittest.TestCase):
         size_group = 3
         size_sse = 3
         delay = 18 * pq.ms
-        T = 4 * delay + 2 * size_sse * self.binsize
+        T = 4 * delay + 2 * size_sse * self.bin_size
         time_between_sses = 2 * delay
         # ground truth for pmats
-        starting_bin = int((delay / self.binsize).magnitude.item())
+        starting_bin = int((delay / self.bin_size).magnitude.item())
         indices_pmat_1 = np.arange(starting_bin, starting_bin + size_sse)
         indices_pmat = (indices_pmat_1, indices_pmat_1)
         # generate spike trains
         spiketrains = [
-            neo.SpikeTrain([index_spiketrain] * self.binsize + delay,
+            neo.SpikeTrain([index_spiketrain] * self.bin_size + delay,
                            t_start=0 * pq.ms,
-                           t_stop=2 * delay + size_sse * self.binsize)
+                           t_stop=2 * delay + size_sse * self.bin_size)
             for index_group in range(size_group)
             for index_spiketrain in range(size_sse)]
         spiketrains_y = [
-            neo.SpikeTrain([index_spiketrain] * self.binsize + delay +
-                           time_between_sses + size_sse * self.binsize,
-                           t_start=size_sse * self.binsize + 2 * delay,
+            neo.SpikeTrain([index_spiketrain] * self.bin_size + delay +
+                           time_between_sses + size_sse * self.bin_size,
+                           t_start=size_sse * self.bin_size + 2 * delay,
                            t_stop=T)
             for index_group in range(size_group)
             for index_spiketrain in range(size_sse)]
