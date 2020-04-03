@@ -339,8 +339,8 @@ class AssetTestIntegration(unittest.TestCase):
                 spiketrains_y=spiketrains_y,
                 jitter=jitter,
                 binsize=self.binsize,
-                n_surr=n_surr,
-                surr_method='dither_spikes')
+                n_surrogates=n_surr,
+                surrogate_method='dither_spikes')
 
         # test probability matrices
         assert_array_equal(np.where(pmat > alpha), indices_pmat)

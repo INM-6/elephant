@@ -1,5 +1,5 @@
 """
-ASSET is a statistical method [1] for the detection of repeating sequences
+ASSET is a statistical method [1]_ for the detection of repeating sequences
 of synchronous spiking events in parallel spike trains.
 Given a list `sts` of spike trains, the analysis comprises the following
 steps:
@@ -7,12 +7,12 @@ steps:
 1) Build the intersection matrix `imat` (optional) and the associated
    probability matrix `pmat` with the desired bin size:
 
-       >>> binsize = 5 * pq.ms
-       >>> dt = 1 * pq.s
-       >>> imat, x_edges, y_edges = intersection_matrix(sts, binsize,
-       ...                                              dt, norm=2)
-       >>> imat, pmat, x_edges, y_edges = probability_matrix_analytical(
-       ...        sts, binsize, dt)
+   >>> bin_size = 5 * pq.ms
+   >>> dt = 1 * pq.s
+   >>> imat, x_edges, y_edges = intersection_matrix(sts, bin_size,
+   ...                                              dt, norm=2)
+   >>> imat, pmat, x_edges, y_edges = probability_matrix_analytical(
+   ...        sts, bin_size, dt)
 
 2) Compute the joint probability matrix jmat, using a suitable filter:
 
@@ -37,11 +37,11 @@ steps:
 
        >>> extract_synchronous_events(sts, x_edges, y_edges, cmat)
 
-References:
-
-[1] E. Torre, C. Canova, M. Denker, G. Gerstein, M. Helias, & S. Grün, "ASSET:
-    Analysis of Sequences of Synchronous Events in Massively Parallel Spike
-    Trains," PLoS Comput Biol, v. 12, n. 7, p. e1004939, 2016.
+References
+----------
+.. [1] E. Torre, C. Canova, M. Denker, G. Gerstein, M. Helias, & S. Grün,
+    "ASSET Analysis of Sequences of Synchronous Events in Massively Parallel
+    Spike Trains," PLoS Comput Biol, v. 12, n. 7, p. e1004939, 2016.
 """
 from __future__ import division, print_function, unicode_literals
 
@@ -77,8 +77,9 @@ except ImportError:
 
 def _signals_same_attribute(signals, attr_name):
     """
-    Check whether a list of signals (`neo.AnalogSignal` or `neo.SpikeTrain`) have same
-    attribute `attr_name`. If so, return that value. Otherwise, raise ValueError.
+    Check whether a list of signals (`neo.AnalogSignal` or `neo.SpikeTrain`)
+    have same attribute `attr_name`. If so, return that value. Otherwise,
+    raise ValueError.
 
     Parameters
     ----------
@@ -95,7 +96,7 @@ def _signals_same_attribute(signals, attr_name):
     ------
     ValueError
         If `signals` is an empty list.
-        
+
         If `signals` have different `attr_name` attribute values.
     """
     if len(signals) == 0:
@@ -129,8 +130,8 @@ def _quantities_almost_equal(x, y):
         First Quantity to compare.
     y : pq.Quantity
         Second Quantity to compare. Must have same unit type as `x`, but not
-        necessarily the same shape. Any shapes of `x` and `y` for which `x - y` can
-        be calculated are permitted.
+        necessarily the same shape. Any shapes of `x` and `y` for which `x - y`
+        can be calculated are permitted.
 
     Returns
     -------
@@ -164,7 +165,8 @@ def _transactions(spiketrains, binsize, t_start=None, t_stop=None, ids=None):
     ----------
     spiketrains : list of neo.SpikeTrain or list of tuple
         A list of `neo.SpikeTrain` objects, or list of pairs
-        (Train_ID, `neo.SpikeTrain`), where `Train_ID` can be any hashable object.
+        (Train_ID, `neo.SpikeTrain`), where `Train_ID` can be any hashable
+        object.
     binsize : pq.Quantity
         Width of each time bin. Time is binned to determine synchrony.
     t_start : pq.Quantity, optional
@@ -182,7 +184,8 @@ def _transactions(spiketrains, binsize, t_start=None, t_stop=None, ids=None):
         Default: None.
     ids : list of int, optional
         List of spike train IDs.
-        If None, the IDs `0` to `N-1` are used, where `N` is the number of input spike trains.
+        If None, the IDs `0` to `N-1` are used, where `N` is the number of
+        input spike trains.
         Default: None.
 
     Returns
@@ -191,11 +194,12 @@ def _transactions(spiketrains, binsize, t_start=None, t_stop=None, ids=None):
         A list of transactions, where each transaction corresponds to a time
         bin and represents the list of spike train IDs having a spike in that
         time bin.
-        
+
     Raises
     ------
     TypeError
-        If `spiketrains` is not a list of `neo.SpikeTrain` or a list of tuples (id, `neo.SpikeTrain`).
+        If `spiketrains` is not a list of `neo.SpikeTrain` or a list of tuples
+        (id, `neo.SpikeTrain`).
     """
 
     if all(isinstance(st, neo.SpikeTrain) for st in spiketrains):
@@ -232,9 +236,10 @@ def _analog_signal_step_interp(signal, times):
     """
     Compute the step-wise interpolation of a signal at desired times.
 
-    Given a signal (e.g. a `neo.AnalogSignal`) `s` taking value `s[t0]` and `s[t1]`
-    at two consecutive time points `t0` and `t1` (`t0 < t1`), the value of the
-    step-wise interpolation at time `t: t0 <= t < t1` is given by `s[t] = s[t0]`.
+    Given a signal (e.g. a `neo.AnalogSignal`) `s` taking values `s[t0]` and
+    `s[t1]` at two consecutive time points `t0` and `t1` (`t0 < t1`), the value
+    of the step-wise interpolation at time `t: t0 <= t < t1` is given by
+    `s[t] = s[t0]`.
 
     Parameters
     ----------
@@ -279,7 +284,7 @@ def intersection_matrix(
     intersection matrix `M` of the two binned data, where `M[i,j]` is the overlap
     of bin `i` in the first binned data and bin `j` in the second binned data
     (i.e., the number of spike trains spiking at both bin `i` and bin `j`).
-    
+
     The matrix entries can be normalized to values between `0` and `1` via
     different normalizations (see "Parameters" section).
 
@@ -327,12 +332,12 @@ def intersection_matrix(
     y_edges : (n+1) pq.Quantity
         The edges of the bins used for the vertical axis of `imat`. If `imat` is
         a matrix of shape `(n, n)`, `y_edges` has length `n + 1`.
-        
+
     Raises
     ------
     ValueError
         If the start times are not perfectly aligned.
-        
+
     """
 
     if spiketrains_y is None:
@@ -398,6 +403,8 @@ def intersection_matrix(
             norm_coef = np.array([(bsts_x[:, ii]
                                    + bsts_y[:, jj]).count_nonzero()
                                   for jj in range(bsts_y.shape[1])])
+        else:
+            raise ValueError("Invalid parameter 'norm': {}".format(norm))
 
         # If normalization required, for each j such that bsts_y[j] is
         # identically 0 the code above sets imat[:, j] to identically nan.
@@ -459,7 +466,7 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
     Given a list of points on the real plane, identified by their absciss `x`
     and ordinate `y`, compute a stretched transformation of the Euclidean
     distance among each of them.
-    
+
     The classical euclidean distance `d` between points `(x1, y1)` and `(x2, y2)`,
     i.e., :math:`\sqrt((x1-x2)^2 + (y1-y2)^2)`, is multiplied by a factor
     .. math::
@@ -468,7 +475,7 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
 
     where :math:`\theta` is the angle between the points and the 45 degree direction
     (i.e., the line `y = x`).
-    
+
     The stretching factor thus steadily varies between 1 (if the line
     connecting `(x1, y1)` and `(x2, y2)` has inclination `ref_angle`) and `stretch`
     (if that line has inclination `90 + ref_angle`).
@@ -491,7 +498,7 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
     -------
     D : (n,n) np.ndarray
         Square matrix of distances between all pairs of points.
-        
+
     """
     alpha = np.deg2rad(ref_angle)  # reference angle in radians
 
@@ -581,15 +588,15 @@ def cluster_matrix_entries(mask_matrix, eps=10, min_neighbors=2, stretch=5):
     -------
     cluster_mat : np.ndarray
         A matrix with the same shape of `mask_matrix`, each of whose elements is either:
-        
+
             * a positive integer (cluster ID) if the element is part of a cluster;
             * `0` if the corresponding element in `mask_matrix` was non-positive;
             * `-1` if the element does not belong to any cluster.
-            
+
     See Also
     --------
     sklearn.cluster.DBSCAN
-    
+
     """
 
     # Don't do anything if mat is identically zero
@@ -621,14 +628,14 @@ def cluster_matrix_entries(mask_matrix, eps=10, min_neighbors=2, stretch=5):
 def probability_matrix_montecarlo(
         spiketrains, binsize, spiketrains_y=None,
         t_start_x=None, t_start_y=None, t_stop_x=None, t_stop_y=None,
-        surr_method='dither_spike_train', jitter=None, n_surr=100,
+        surrogate_method='dither_spike_train', jitter=None, n_surrogates=100,
         verbose=False):
     """
     Given a list of parallel spike trains, estimate the cumulative probability
     of each entry in their intersection matrix (see
     :func:`intersection_matrix`) by a Monte Carlo approach using surrogate
     data.
-    
+
     Contrarily to the analytical version (see :func:`probability_matrix_analytical`)
     the Monte Carlo one does not incorporate the assumptions of Poissonianity
     in the null hypothesis.
@@ -666,28 +673,22 @@ def probability_matrix_montecarlo(
         If None, the attribute `t_stop` of the spike trains is used
         (if the same for all spike trains).
         Default: None.
-    surr_method : {'dither_spike_train', 'spike_dithering', 'spike_jittering',
-                   'spike_time_rand', 'isi_shuffling'}, optional
-        The method to use to generate surrogate spike trains. Can be one of:
-
-            * 'dither_spike_train': see :func:`spike_train_surrogates.train_shifting`
-                                    [dt needed]
-            * 'spike_dithering': see :func:`spike_train_surrogates.spike_dithering`
-                                 [dt needed]
-            * 'spike_jittering': see :func:`spike_train_surrogates.spike_jittering`
-                                 [dt needed]
-            * 'spike_time_rand': see :func:`spike_train_surrogates.spike_time_rand`
-            * 'isi_shuffling': see :func:`spike_train_surrogates.isi_shuffling`
-            # FIXME: cannot find these functions
-
+    surrogate_method : {'dither_spike_train', 'dither_spikes', 'jitter_spikes',
+                       'randomise_spikes', 'shuffle_isis',
+                       'joint_isi_dithering'}, optional
+        The method to generate surrogate spike trains. Refer to the
+        :func:`spike_train_surrogates.surrogates` documentation for more
+        information about each surrogate method. Note that some of these
+        methods need `jitter` parameter, others ignore it.
         Default: 'dither_spike_train'.
     jitter : pq.Quantity, optional
-        For surrogate methods shifting spike times randomly around their original time
-        ('dither_spike_train', 'spike_dithering') or replacing them randomly within a
-        certain window ('spike_jittering'), `jitter` represents the size of that
-        shift / window. For other methods, `jitter` is ignored.
+        For surrogate methods shifting spike times randomly around their
+        original time ('dither_spike_train', 'dither_spikes') or replacing them
+        randomly within a certain window ('jitter_spikes'), `jitter` represents
+        the size of that shift (window). For other methods, `jitter` is
+        ignored.
         Default: None.
-    n_surr : int, optional
+    n_surrogates : int, optional
         The number of spike train surrogates to generate for the bootstrap
         procedure.
         Default: 100.
@@ -703,19 +704,20 @@ def probability_matrix_montecarlo(
         STRICTLY LOWER than the observed overlap, under the null hypothesis
         of independence of the input spike trains.
     imat : (n,n) np.ndarray
-        The intersection matrix (of type `float`) of a list of spike trains. It has
-        the shape `(n, n)`, where `n` is the number of bins that time was discretized in.
+        The intersection matrix (of type `float`) of a list of spike trains. It
+        has the shape `(n, n)`, where `n` is the number of bins that time was
+        discretized in.
     x_edges : (n+1) pq.Quantity
-        The edges of the bins used for the horizontal axis of `imat`. If `imat` is
-        a matrix of shape `(n, n)`, `x_edges` has length `n + 1`.
+        The edges of the bins used for the horizontal axis of `imat`. If `imat`
+        is a matrix of shape `(n, n)`, `x_edges` has length `n + 1`.
     y_edges : (n+1) pq.Quantity
-        The edges of the bins used for the vertical axis of `imat`. If `imat` is
-        a matrix of shape `(n, n)`, `y_edges` has length `n + 1`.
+        The edges of the bins used for the vertical axis of `imat`. If `imat`
+        is a matrix of shape `(n, n)`, `y_edges` has length `n + 1`.
 
     See Also
     --------
     probability_matrix_analytical : for analytical derivation of the matrix
-    
+
     """
 
     # Compute the intersection matrix of the original data
@@ -732,11 +734,11 @@ def probability_matrix_montecarlo(
     # equal to that of the original data
     pmat = np.zeros(imat.shape, dtype=np.int32)
 
-    for surr_id in trange(n_surr, desc="pmat_bootstrap", disable=not verbose):
+    for surr_id in trange(n_surrogates, desc="pmat_bootstrap", disable=not verbose):
         if mpi_accelerated and surr_id % size != rank:
             continue
         surrs = [spike_train_surrogates.surrogates(st, n=1,
-                                                   surr_method=surr_method,
+                                                   surr_method=surrogate_method,
                                                    dt=jitter, decimals=None,
                                                    edges=True)[0]
                  for st in spiketrains]
@@ -745,9 +747,9 @@ def probability_matrix_montecarlo(
             surrs_y = surrs
         else:
             surrs_y = [spike_train_surrogates.surrogates(
-                           st, n=1, surr_method=surr_method, dt=jitter,
-                           decimals=None, edges=True)[0]
-                       for st in spiketrains]
+                st, n=1, surr_method=surrogate_method, dt=jitter,
+                decimals=None, edges=True)[0]
+                for st in spiketrains]
 
         imat_surr, xx, yy = intersection_matrix(  # compute the related imat
             surrs, binsize=binsize, spiketrains_y=surrs_y,
@@ -761,7 +763,7 @@ def probability_matrix_montecarlo(
     if mpi_accelerated:
         pmat = comm.allreduce(pmat, op=MPI.SUM)
 
-    pmat = pmat * 1. / n_surr
+    pmat = pmat * 1. / n_surrogates
 
     if symmetric:
         np.fill_diagonal(pmat, 0.5)
@@ -814,8 +816,8 @@ def _interpolate_signals(signals, sampling_times, verbose=False):
 
     # Interpolate in the time bins
     interpolated_signal = np.vstack([_analog_signal_step_interp(
-                                signal, sampling_times).rescale('Hz').magnitude
-                            for signal in signals]) * pq.Hz
+        signal, sampling_times).rescale('Hz').magnitude
+        for signal in signals]) * pq.Hz
 
     return interpolated_signal
 
@@ -941,8 +943,8 @@ def probability_matrix_analytical(
     # If rates provided as lists of AnalogSignals, create time slices for both
     # axes, interpolate in the time bins of interest and convert to Quantity
     elif isinstance(firing_rates_x, list):
-        fir_rate_x = _interpolate_signals(firing_rates_x, bsts_x.bin_edges[:-1],
-                                          verbose)
+        fir_rate_x = _interpolate_signals(
+            firing_rates_x, bsts_x.bin_edges[:-1], verbose)
 
     else:
         raise ValueError('fir_rates_x must be a list or the string "estimate"')
@@ -957,8 +959,8 @@ def probability_matrix_analytical(
     # If rates provided as lists of AnalogSignals, create time slices for both
     # axes, interpolate in the time bins of interest and convert to Quantity
     elif isinstance(firing_rates_y, list):
-        fir_rate_y = _interpolate_signals(firing_rates_y, bsts_y.bin_edges[:-1],
-                                          verbose)
+        fir_rate_y = _interpolate_signals(
+            firing_rates_y, bsts_y.bin_edges[:-1], verbose)
 
     else:
         raise ValueError('fir_rates_y must be a list or the string "estimate"')
@@ -1054,7 +1056,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
         assumed to have been sampled from.
     verbose : bool
         If True, print messages during the computation.
-        Default: False. 
+        Default: False.
 
     Returns
     -------
@@ -1159,7 +1161,7 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
     return P_total
 
 
-def _pmat_neighbors(mat, filter_shape, n_largest):
+def _pmat_neighbors(mat, filter_shape, n_largest, verbose):
     """
     Build the 3D matrix `L` of largest neighbors of elements in a 2D matrix `mat`.
 
@@ -1169,7 +1171,7 @@ def _pmat_neighbors(mat, filter_shape, n_largest):
     The zone around `mat[i, j]` where largest neighbors are collected from is
     a rectangular area (kernel) of shape `(l, w) = filter_shape` centered around
     `mat[i, j]` and aligned along the diagonal.
-    
+
     If `mat` is symmetric, only the triangle below the diagonal is considered.
 
     Parameters
@@ -1181,18 +1183,20 @@ def _pmat_neighbors(mat, filter_shape, n_largest):
     n_largest : int
         The number of largest neighbors to collect for each entry in `mat`.
         If None, the filter length `l` in `filter_shape` is used.
+    verbose : bool
+        Show the progress bar or not.
 
     Returns
     -------
     lmat : np.ndarray
         A matrix of shape `(n_largest, l, w)` containing along the first
         dimension `lmat[:, i, j]` the largest neighbors of `mat[i, j]`.
-        
+
     Raises
     ------
     AssertionError
         If `filter_shape[1]` is not lower than `filter_shape[0]`.
-        
+
     Warns
     -----
     UserWarning
@@ -1230,16 +1234,16 @@ def _pmat_neighbors(mat, filter_shape, n_largest):
     # if the matrix is symmetric do not use kernel positions intersected
     # by the diagonal
     if symmetric:
-        bin_range_y = trange(l, N_bin_y - l + 1)
+        bin_range_y = trange(l, N_bin_y - l + 1, disable=not verbose)
     else:
-        bin_range_y = trange(N_bin_y - l + 1)
-        bin_range_x = trange(N_bin_x - l + 1)
+        bin_range_y = trange(N_bin_y - l + 1, disable=not verbose)
+        bin_range_x = trange(N_bin_x - l + 1, disable=not verbose)
 
     # compute matrix of largest values
     for y in bin_range_y:
         if symmetric:
             # x range depends on y position
-            bin_range_x = trange(y - l + 1)
+            bin_range_x = trange(y - l + 1, disable=not verbose)
         for x in bin_range_x:
             patch = mat[y: y + l, x: x + l]
             mskd = np.multiply(filt, patch)
@@ -1320,7 +1324,7 @@ def joint_probability_matrix(
     # Find for each P_ij in the probability matrix its neighbors and maximize
     # them by the maximum value 1-p_value_min
     pmat_neighb = _pmat_neighbors(
-        pmat, filter_shape=filter_shape, n_largest=n_largest)
+        pmat, filter_shape=filter_shape, n_largest=n_largest, verbose=verbose)
 
     pmat_neighb = np.minimum(pmat_neighb, 1. - p_value_min)
 
@@ -1444,7 +1448,7 @@ def synchronous_events_intersection(sse1, sse2, intersection='linkwise'):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of positions `(iK, jK)` of matrix entries and
     associated synchronous events `SK`, finds the intersection among them.
-    
+
     The intersection can be performed 'pixelwise' or 'linkwise'.
 
         * if 'pixelwise', it yields a new SSE which retains only events in `sse1`
@@ -1509,7 +1513,7 @@ def synchronous_events_difference(sse1, sse2, difference='linkwise'):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of pixel positions and associated synchronous events
     (see below), computes the difference between `sse1` and `sse2`.
-    
+
     The difference can be performed 'pixelwise' or 'linkwise':
 
         * if 'pixelwise', it yields a new SSE which contains all (and only) the
@@ -1591,7 +1595,7 @@ def _remove_empty_events(sse):
     See Also
     --------
     extract_synchronous_events : extract SSEs from given spike trains
-    
+
 """
     sse_new = sse.copy()
     for pixel, link in sse.items():
@@ -1606,7 +1610,7 @@ def synchronous_events_is_equal(sse1, sse2):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of pixel positions and associated synchronous events
     (see below), determines whether `sse1` is strictly contained in `sse2`.
-    
+
     `sse1` is strictly contained in `sse2` if all its pixels are pixels of `sse2`,
     if its associated events are subsets of the corresponding events
     in `sse2`, and if `sse2` contains events, or neuron IDs in some event, which
@@ -1647,7 +1651,7 @@ def synchronous_events_is_disjoint(sse1, sse2):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of pixel positions and associated synchronous events
     (see below), determines whether `sse1` and `sse2` are disjoint.
-    
+
     Two SSEs are disjoint if they don't share pixels, or if the events
     associated to common pixels are disjoint.
 
@@ -1695,16 +1699,16 @@ def synchronous_events_is_subsequence(sse1, sse2):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of pixel positions and associated synchronous events
     (see below), determines whether `sse1` is strictly contained in `sse2`.
-    
+
     `sse1` is strictly contained in `sse2` if all its pixels are pixels of `sse2`,
     if its associated events are subsets of the corresponding events
     in `sse2`, and if `sse2` contains non-empty events, or neuron IDs in some
     event, which do not belong to `sse1` (i.e., `sse1` and `sse2` are not identical).
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
-            
+
     .. centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
-    
+
     where each `i`, `j` is an integer and each `S` is a set of neuron IDs.
 
     Parameters
@@ -1750,15 +1754,15 @@ def synchronous_events_contains_all(sse1, sse2):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of pixel positions and associated synchronous events
     (see below), determines whether `sse1` strictly contains `sse2`.
-    
+
     `sse1` strictly contains `sse2` if it contains all pixels of `sse2`, if all
     associated events in `sse1` contain those in `sse2`, and if `sse1` additionally
     contains other pixels / events not contained in `sse2`.
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
-    
+
     .. centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
-    
+
     where each `i`, `j` is an integer and each `S` is a set of neuron IDs.
 
     Parameters
@@ -1790,14 +1794,14 @@ def synchronous_events_is_overlap(sse1, sse2):
     Given two sequences of synchronous events (SSEs) `sse1` and `sse2`, each
     consisting of a pool of pixel positions and associated synchronous events
     (see below), determines whether the two SSEs overlap.
-    
+
     The SSEs overlap if they are not equal and none of them is a superset of
     the other one but they are also not disjoint.
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
-    
+
     .. centered:: {(i1, j1): S1, (i2, j2): S2, ..., (iK, jK): SK},
-    
+
     where each `i`, `j` is an integer and each `S` is a set of neuron IDs.
 
     Parameters
@@ -1816,5 +1820,13 @@ def synchronous_events_is_overlap(sse1, sse2):
     extract_synchronous_events : extract SSEs from given spike trains
 
     """
-    return not (synchronous_events_is_subsequence(sse1, sse2) or synchronous_events_contains_all(sse1, sse2) or
-                synchronous_events_is_equal(sse1, sse2) or synchronous_events_is_disjoint(sse1, sse2))
+    return not (
+        synchronous_events_is_subsequence(
+            sse1,
+            sse2) or synchronous_events_contains_all(
+            sse1,
+            sse2) or synchronous_events_is_equal(
+                sse1,
+                sse2) or synchronous_events_is_disjoint(
+                    sse1,
+            sse2))
