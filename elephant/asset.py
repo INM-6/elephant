@@ -1051,15 +1051,16 @@ def _intersection_matrix(spiketrains, spiketrains_y, bin_size, t_start_x,
     for ii in range(bsts_x.shape[1]):
         # Normalize the row
         col_sum = bsts_x[:, ii].sum()
-        if normalization == 0 or normalization is None or col_sum == 0:
+        if normalization is None or col_sum == 0:
             norm_coef = 1.
-        elif normalization == 1:
+        elif normalization == 'intersection':
             norm_coef = np.minimum(
                 spikes_per_bin_x[ii], spikes_per_bin_y)
-        elif normalization == 2:
+        elif normalization == 'mean':
+            # geometric mean
             norm_coef = np.sqrt(
                 spikes_per_bin_x[ii] * spikes_per_bin_y)
-        elif normalization == 3:
+        elif normalization == 'union':
             norm_coef = np.array([(bsts_x[:, ii]
                                    + bsts_y[:, jj]).count_nonzero()
                                   for jj in range(bsts_y.shape[1])])
@@ -1211,16 +1212,16 @@ class ASSET(object):
 
         Parameters
         ----------
-        normalization : int, optional
+        normalization : {'intersection', 'mean', 'union'} or None, optional
             The normalization type to be applied to each entry `M[i,j]` of the
             intersection matrix `M`. Given the sets `s_i` and `s_j` of neuron
             IDs in the bins `i` and `j` respectively, the normalization
             coefficient can be:
 
-                * norm = 0 or None: no normalisation (row counts)
-                * norm = 1: `len(intersection(s_i, s_j))`
-                * norm = 2: `sqrt(len(s_1) * len(s_2))`
-                * norm = 3: `len(union(s_i, s_j))`
+                * None: no normalisation (row counts)
+                * 'intersection': `len(intersection(s_i, s_j))`
+                * 'mean': `sqrt(len(s_1) * len(s_2))`
+                * 'union': `len(union(s_i, s_j))`
             Default: None.
 
         Returns

@@ -224,7 +224,7 @@ class AssetTestCase(unittest.TestCase):
 
         # test with norm=1
         imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            normalization=1)
+            normalization='intersection')
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., 1., 1., 1.],
                                  [0., 1., 1., 0., 1.],
@@ -234,7 +234,7 @@ class AssetTestCase(unittest.TestCase):
 
         # test with norm=2
         imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            normalization=2)
+            normalization='mean')
         sq = np.sqrt(2) / 2.
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., sq, sq, 1.],
@@ -245,7 +245,7 @@ class AssetTestCase(unittest.TestCase):
 
         # test with norm=3
         imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            normalization=3)
+            normalization='union')
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., .5, .5, 1.],
                                  [0., .5, 1., 0., .5],
