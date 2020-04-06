@@ -14,7 +14,13 @@ def assset_example():
         for start in range(4)
     ]
     asset_obj = asset.ASSET(spiketrains, verbose=False)
-    sses = asset_obj.extract_synchronous_events()
+    imat = asset_obj.intersection_matrix()
+    pmat = asset_obj.probability_matrix_montecarlo(imat)
+    jmat = asset_obj.joint_probability_matrix(pmat, filter_shape=(5, 1))
+    mmat = asset_obj.mask_matrices([pmat, jmat], thresholds=0.9999)
+    cmat = asset_obj.cluster_matrix_entries(mmat)
+
+    sses = asset_obj.extract_synchronous_events(cmat)
     pprint(sses)
 
 
