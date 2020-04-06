@@ -980,6 +980,62 @@ def _signals_t_start_stop(signals, t_start=None, t_stop=None):
     return t_start, t_stop
 
 
+def _intersection_matrix(spiketrains, spiketrains_y, bin_size, t_start_x,
+                         t_start_y, t_stop_x, t_stop_y, normalization=None):
+    if spiketrains_y is None:
+        spiketrains_y = spiketrains
+
+    # Compute the binned spike train matrices, along both time axes
+    spiketrains_binned = conv.BinnedSpikeTrain(
+        spiketrains, binsize=bin_size,
+        t_start=t_start_x, t_stop=t_stop_x)
+    spiketrains_binned_y = conv.BinnedSpikeTrain(
+        spiketrains_y, binsize=bin_size,
+        t_start=t_start_y, t_stop=t_stop_y)
+
+    # Compute imat by matrix multiplication
+    bsts_x = spiketrains_binned.to_sparse_array()
+    bsts_y = spiketrains_binned_y.to_sparse_array()
+
+    # Compute the number of spikes in each bin, for both time axes
+    # 'A1' property returns self as a flattened ndarray.
+    spikes_per_bin_x = bsts_x.sum(axis=0).A1
+    spikes_per_bin_y = bsts_y.sum(axis=0).A1
+
+    # Compute the intersection matrix imat
+    imat = bsts_x.T.dot(bsts_y).toarray().astype(np.float32)
+    for ii in range(bsts_x.shape[1]):
+        # Normalize the row
+        col_sum = bsts_x[:, ii].sum()
+        if normalization == 0 or normalization is None or col_sum == 0:
+            norm_coef = 1.
+        elif normalization == 1:
+            norm_coef = np.minimum(
+                spikes_per_bin_x[ii], spikes_per_bin_y)
+        elif normalization == 2:
+            norm_coef = np.sqrt(
+                spikes_per_bin_x[ii] * spikes_per_bin_y)
+        elif normalization == 3:
+            norm_coef = np.array([(bsts_x[:, ii]
+                                   + bsts_y[:, jj]).count_nonzero()
+                                  for jj in range(bsts_y.shape[1])])
+        else:
+            raise ValueError(
+                "Invalid parameter 'norm': {}".format(normalization))
+
+        # If normalization required, for each j such that bsts_y[j] is
+        # identically 0 the code above sets imat[:, j] to identically nan.
+        # Substitute 0s instead.
+        imat[ii, :] = np.divide(imat[ii, :], norm_coef,
+                                out=np.zeros(imat.shape[1],
+                                             dtype=np.float32),
+                                where=norm_coef != 0)
+
+    # Return the intersection matrix and the edges of the bins used for the
+    # x and y axes, respectively.
+    return imat
+
+
 class ASSET(object):
     """
     Parameters
@@ -1095,8 +1151,7 @@ class ASSET(object):
         """
         return _quantities_almost_equal(self.x_edges[0], self.y_edges[0])
 
-    def intersection_matrix(self, spiketrains, spiketrains_y=None,
-                            normalization=None):
+    def intersection_matrix(self, normalization=None):
         """
         Generates the intersection matrix from a list of spike trains.
 
@@ -1113,10 +1168,6 @@ class ASSET(object):
 
         Parameters
         ----------
-        spiketrains, spiketrains_y : list of neo.SpikeTrain
-            Input spike trains for the first and second time dimensions,
-            respectively, to compute the intersection matrix with p-values.
-            If `spiketrains_y` is None, it's set to `spiketrains`.
         normalization : int, optional
             The normalization type to be applied to each entry `M[i,j]` of the
             intersection matrix `M`. Given the sets `s_i` and `s_j` of neuron IDs in the
@@ -1136,57 +1187,11 @@ class ASSET(object):
             time was discretized in.
 
         """
-        if spiketrains_y is None:
-            spiketrains_y = spiketrains
-
-        # Compute the binned spike train matrices, along both time axes
-        spiketrains_binned = conv.BinnedSpikeTrain(
-            spiketrains, binsize=self.bin_size,
-            t_start=self.t_start_x, t_stop=self.t_stop_x)
-        spiketrains_binned_y = conv.BinnedSpikeTrain(
-            spiketrains_y, binsize=self.bin_size,
-            t_start=self.t_start_y, t_stop=self.t_stop_y)
-
-        # Compute imat by matrix multiplication
-        bsts_x = spiketrains_binned.to_sparse_array()
-        bsts_y = spiketrains_binned_y.to_sparse_array()
-
-        # Compute the number of spikes in each bin, for both time axes
-        # 'A1' property returns self as a flattened ndarray.
-        spikes_per_bin_x = bsts_x.sum(axis=0).A1
-        spikes_per_bin_y = bsts_y.sum(axis=0).A1
-
-        # Compute the intersection matrix imat
-        imat = bsts_x.T.dot(bsts_y).toarray().astype(np.float32)
-        for ii in range(bsts_x.shape[1]):
-            # Normalize the row
-            if normalization == 0 or normalization is None or bsts_x[:,
-                                                              ii].sum() == 0:
-                norm_coef = 1.
-            elif normalization == 1:
-                norm_coef = np.minimum(
-                    spikes_per_bin_x[ii], spikes_per_bin_y)
-            elif normalization == 2:
-                norm_coef = np.sqrt(
-                    spikes_per_bin_x[ii] * spikes_per_bin_y)
-            elif normalization == 3:
-                norm_coef = np.array([(bsts_x[:, ii]
-                                       + bsts_y[:, jj]).count_nonzero()
-                                      for jj in range(bsts_y.shape[1])])
-            else:
-                raise ValueError(
-                    "Invalid parameter 'norm': {}".format(normalization))
-
-            # If normalization required, for each j such that bsts_y[j] is
-            # identically 0 the code above sets imat[:, j] to identically nan.
-            # Substitute 0s instead.
-            imat[ii, :] = np.divide(imat[ii, :], norm_coef,
-                                    out=np.zeros(imat.shape[1],
-                                                 dtype=np.float32),
-                                    where=norm_coef != 0)
-
-        # Return the intersection matrix and the edges of the bins used for the
-        # x and y axes, respectively.
+        imat = _intersection_matrix(self.spiketrains, self.spiketrains_y,
+                                    self.bin_size,
+                                    self.t_start_x, self.t_start_y,
+                                    self.t_stop_x, self.t_stop_y,
+                                    normalization=normalization)
         return imat
 
     def probability_matrix_montecarlo(self, imat=None,
@@ -1262,8 +1267,7 @@ class ASSET(object):
         """
         if imat is None:
             # Compute the intersection matrix of the original data
-            imat = self.intersection_matrix(self.spiketrains,
-                                            self.spiketrains_y)
+            imat = self.intersection_matrix()
 
         if surrogate_dt is None:
             surrogate_dt = self.bin_size * 5
@@ -1280,11 +1284,12 @@ class ASSET(object):
                               disable=not self.verbose):
             if mpi_accelerated and surr_id % size != rank:
                 continue
-            surrogates = [spike_train_surrogates.surrogates(st, n=1,
-                                                            surr_method=surrogate_method,
-                                                            dt=surrogate_dt,
-                                                            decimals=None,
-                                                            edges=True)[0]
+            surrogates = [spike_train_surrogates.surrogates(
+                st, n=1,
+                surr_method=surrogate_method,
+                dt=surrogate_dt,
+                decimals=None,
+                edges=True)[0]
                           for st in self.spiketrains]
 
             if symmetric:
@@ -1295,7 +1300,10 @@ class ASSET(object):
                     decimals=None, edges=True)[0]
                                 for st in self.spiketrains_y]
 
-            imat_surr = self.intersection_matrix(surrogates, surrogates_y)
+            imat_surr = _intersection_matrix(surrogates, surrogates_y,
+                                             self.bin_size,
+                                             self.t_start_x, self.t_start_y,
+                                             self.t_stop_x, self.t_stop_y)
 
             pmat += (imat_surr <= (imat - 1))
 
@@ -1362,8 +1370,7 @@ class ASSET(object):
         """
         if imat is None:
             # Compute the intersection matrix of the original data
-            imat = self.intersection_matrix(self.spiketrains,
-                                            self.spiketrains_y)
+            imat = self.intersection_matrix()
 
         symmetric = self.is_symmetric()
 

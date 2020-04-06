@@ -203,8 +203,7 @@ class AssetTestCase(unittest.TestCase):
 
         # Check that the routine works for correct input...
         # ...same t_start, t_stop on both time axes
-        imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            [st1, st2])
+        imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix()
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 2., 1., 1., 2.],
                                  [0., 1., 1., 0., 1.],
@@ -218,17 +217,14 @@ class AssetTestCase(unittest.TestCase):
             [st1, st2], spiketrains_y=[st + 6 * pq.ms for st in [st1, st2]],
             bin_size=bin_size, t_start_y=6 * pq.ms, t_stop_x=5 * pq.ms,
             t_stop_y=11 * pq.ms)
-        imat_1_2 = asset_obj_different_t_start_stop.intersection_matrix(
-            asset_obj_different_t_start_stop.spiketrains,
-            asset_obj_different_t_start_stop.spiketrains_y
-        )
+        imat_1_2 = asset_obj_different_t_start_stop.intersection_matrix()
         assert_array_equal(asset_obj_different_t_start_stop.x_edges, np.arange(6) * pq.ms)  # correct bins
         assert_array_equal(asset_obj_different_t_start_stop.y_edges, np.arange(6, 12) * pq.ms)
         self.assertTrue(np.all(imat_1_2 == trueimat_1_2))  # correct matrix
 
         # test with norm=1
         imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            [st1, st2], normalization=1)
+            normalization=1)
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., 1., 1., 1.],
                                  [0., 1., 1., 0., 1.],
@@ -238,7 +234,7 @@ class AssetTestCase(unittest.TestCase):
 
         # test with norm=2
         imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            [st1, st2], normalization=2)
+            normalization=2)
         sq = np.sqrt(2) / 2.
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., sq, sq, 1.],
@@ -249,7 +245,7 @@ class AssetTestCase(unittest.TestCase):
 
         # test with norm=3
         imat_1_2 = asset_obj_same_t_start_stop.intersection_matrix(
-            [st1, st2], normalization=3)
+            normalization=3)
         trueimat_1_2 = np.array([[0., 0., 0., 0., 0.],
                                  [0., 1., .5, .5, 1.],
                                  [0., .5, 1., 0., .5],
@@ -294,12 +290,11 @@ class AssetTestIntegration(unittest.TestCase):
                                           spiketrains_y=spiketrains_copy,
                                           bin_size=self.bin_size)
 
-        imat = asset_obj.intersection_matrix(spiketrains)
+        imat = asset_obj.intersection_matrix()
         pmat = asset_obj.probability_matrix_analytical(
             kernel_width=kernel_width)
 
-        imat_symm = asset_obj_symmetric.intersection_matrix(spiketrains,
-                                                            spiketrains_copy)
+        imat_symm = asset_obj_symmetric.intersection_matrix()
         pmat_symm = asset_obj_symmetric.probability_matrix_analytical(
                 kernel_width=kernel_width)
 
@@ -338,7 +333,7 @@ class AssetTestIntegration(unittest.TestCase):
                                 bin_size=self.bin_size)
 
         # calculate the intersection matrix
-        imat = asset_obj.intersection_matrix(spiketrains, spiketrains_y)
+        imat = asset_obj.intersection_matrix()
 
         # calculate probability matrix analytical
         pmat = asset_obj.probability_matrix_analytical(imat,
