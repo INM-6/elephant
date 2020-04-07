@@ -81,12 +81,6 @@ The ASSET found 2 sequences of synchronous events:
 {1: {(14, 7): {2, 3}, (20, 13): {0, 1}, (27, 20): {1, 2}},
 2: {(20, 7): {1, 2}, (27, 14): {2, 3}}}
 
-
-With the default parameters (not recommended), the whole procedure is
-equivalent to just one call:
-
-   >>> sses = asset_obj.extract_synchronous_events()
-
 """
 from __future__ import division, print_function, unicode_literals
 
@@ -301,7 +295,7 @@ def _analog_signal_step_interp(signal, times):
 
 def _stretched_metric_2d(x, y, stretch, ref_angle):
     r"""
-    Given a list of points on the real plane, identified by their absciss `x`
+    Given a list of points on the real plane, identified by their abscissa `x`
     and ordinate `y`, compute a stretched transformation of the Euclidean
     distance among each of them.
 
@@ -323,7 +317,7 @@ def _stretched_metric_2d(x, y, stretch, ref_angle):
     Parameters
     ----------
     x : (n,) np.ndarray
-        Array of abscissa of all points among which to compute the distance.
+        Array of abscissas of all points among which to compute the distance.
     y : (n,) np.ndarray
         Array of ordinates of all points among which to compute the distance
         (same shape as `x`).
@@ -1525,7 +1519,7 @@ class ASSET(object):
 
         return pmat
 
-    def joint_probability_matrix(self, pmat=None, filter_shape=(5, 1),
+    def joint_probability_matrix(self, pmat, filter_shape=(5, 1),
                                  n_largest=None, alpha=0, min_p_value=1e-5):
         """
         Map a probability matrix `pmat` to a joint probability matrix `jmat`,
@@ -1541,14 +1535,13 @@ class ASSET(object):
 
         Parameters
         ----------
-        pmat : np.ndarray or None, optional
-            A square matrix of cumulative probability values between `alpha`
-            and 1. The values are assumed to be uniformly distributed in the
-            said range.
-            If None, the output of :func:`ASSET.probability_matrix_montecarlo`
-            is used.
-            Default: None.
-        filter_shape : tuple of int
+        pmat : np.ndarray
+            A square matrix, the output of
+            :func:`ASSET.probability_matrix_montecarlo` or
+            :func:`ASSET.probability_matrix_analytical`, of cumulative
+            probability values between `alpha` and 1. The values are assumed
+            to be uniformly distributed in the said range.
+        filter_shape : tuple of int, optional
             A pair of integers representing the kernel shape `(l, w)`.
         n_largest : int, optional
             The number of the largest neighbors to collect for each entry in
@@ -1603,7 +1596,8 @@ class ASSET(object):
 
         return 1. - jpvmat
 
-    def mask_matrices(self, matrices=None, thresholds=0.9999):
+    @staticmethod
+    def mask_matrices(matrices, thresholds=0.9999):
         """
         Given a list of `matrices` and a list of `thresholds`, return a boolean
         matrix `B` ("mask") such that `B[i,j]` is True if each input matrix in
@@ -1611,14 +1605,11 @@ class ASSET(object):
 
         Parameters
         ----------
-        matrices : list of np.ndarray or None, optional
+        matrices : list of np.ndarray
             The matrices which are compared to the respective thresholds to
             build the mask. All matrices must have the same shape.
             Typically, it is a list `[pmat, jmat]`, i.e., the (cumulative)
             probability and joint probability matrices.
-            If None, the output of :func:`ASSET.probability_matrix_montecarlo`
-            and :func:`ASSET.joint_probability_matrix` is used.
-            Default: None.
         thresholds : float or list of float, optional
             The significance thresholds for each matrix in `matrices`.
 
@@ -1633,11 +1624,14 @@ class ASSET(object):
             If `matrices` or `thresholds` is an empty list.
 
             If `matrices` and `thresholds` have different lengths.
+
+        See Also
+        --------
+        ASSET.probability_matrix_montecarlo : for `pmat` generation
+        ASSET.probability_matrix_analytical : for `pmat` generation
+        ASSET.joint_probability_matrix : for `jmat` generation
+
         """
-        if matrices is None:
-            pmat = self.probability_matrix_montecarlo()
-            jmat = self.joint_probability_matrix(pmat=pmat)
-            matrices = [pmat, jmat]
         if len(matrices) == 0:
             raise ValueError("Empty list of matrices")
         if isinstance(thresholds, float):
@@ -1655,7 +1649,8 @@ class ASSET(object):
 
         return mask
 
-    def cluster_matrix_entries(self, mask_matrix=None, eps=10, min_neighbors=2,
+    @staticmethod
+    def cluster_matrix_entries(mask_matrix, eps=10, min_neighbors=2,
                                stretch=5):
         r"""
         Given a matrix `mask_matrix`, replaces its positive elements with
@@ -1694,11 +1689,9 @@ class ASSET(object):
 
         Parameters
         ----------
-        mask_matrix : np.ndarray or None, optional
+        mask_matrix : np.ndarray
             The boolean matrix, whose elements with positive values are to be
-            clustered. If None, the output of :func:`ASSET.mask_matrices` is
-            used.
-            Default: None
+            clustered. The output of :func:`ASSET.mask_matrices`.
         eps : float, optional
             The maximum distance between two elements in `mask_matrix` to be
             a part of the same neighbourhood in the DBSCAN algorithm.
@@ -1731,9 +1724,6 @@ class ASSET(object):
         sklearn.cluster.DBSCAN
 
         """
-        if mask_matrix is None:
-            mask_matrix = self.mask_matrices()
-
         # Don't do anything if mat is identically zero
         if np.all(mask_matrix == 0):
             return mask_matrix
@@ -1760,7 +1750,7 @@ class ASSET(object):
 
         return cluster_mat
 
-    def extract_synchronous_events(self, cmat=None, ids=None):
+    def extract_synchronous_events(self, cmat, ids=None):
         """
         Given a list of spike trains, a bin size, and a clustered
         intersection matrix obtained from those spike trains via ASSET
@@ -1769,11 +1759,9 @@ class ASSET(object):
 
         Parameters
         ----------
-        cmat: (n,n) np.ndarray, optional
-            The cluster matrix.
-            If None, the output of :func:`ASSET.cluster_matrix_entries` is
-            used.
-            Default: None.
+        cmat: (n,n) np.ndarray
+            The cluster matrix, the output of
+            :func:`ASSET.cluster_matrix_entries`.
         ids : list, optional
             A list of spike train IDs. If provided, `ids[i]` is the identity
             of `spiketrains[i]`. If None, the IDs `0,1,...,n-1` are used.
@@ -1799,9 +1787,6 @@ class ASSET(object):
             sets of neuron IDs representing a repeated synchronous event (i.e.,
             spiking at time bins `i` and `j`).
         """
-        if cmat is None:
-            cmat = self.cluster_matrix_entries()
-
         nr_worms = cmat.max()  # number of different clusters ("worms") in cmat
         if nr_worms <= 0:
             return {}

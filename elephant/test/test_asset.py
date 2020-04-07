@@ -124,18 +124,13 @@ class AssetTestCase(unittest.TestCase):
         mat1 = np.array([[0, 1], [1, 2]])
         mat2 = np.array([[2, 1], [1, 3]])
 
-        # asset mask_matrices() is asset-specific, requires spike trains, and
-        # should not be used outside of the asset scope
-        spiketrain_not_used = neo.SpikeTrain([1.] * pq.s, t_stop=2 * pq.s)
-        asset_obj = asset.ASSET([spiketrain_not_used])
-
-        mask_1_2 = asset_obj.mask_matrices([mat1, mat2], [1, 2])
+        mask_1_2 = asset.ASSET.mask_matrices([mat1, mat2], [1, 2])
         mask_1_2_correct = np.array([[False, False], [False, True]])
         self.assertTrue(np.all(mask_1_2 == mask_1_2_correct))
         self.assertIsInstance(mask_1_2[0, 0], np.bool_)
 
-        self.assertRaises(ValueError, asset_obj.mask_matrices, [], [])
-        self.assertRaises(ValueError, asset_obj.mask_matrices,
+        self.assertRaises(ValueError, asset.ASSET.mask_matrices, [], [])
+        self.assertRaises(ValueError, asset.ASSET.mask_matrices,
                           [np.arange(5)], [])
 
     def test_cluster_matrix_entries(self):
@@ -145,12 +140,7 @@ class AssetTestCase(unittest.TestCase):
                         [1, 0, 0, 0],
                         [0, 1, 0, 0]])
 
-        # asset cluster_matrix_entries() is asset-specific, requires spike
-        # trains, and should not be used outside of the asset scope
-        spiketrain_not_used = neo.SpikeTrain([1.] * pq.s, t_stop=2 * pq.s)
-        asset_obj = asset.ASSET([spiketrain_not_used])
-
-        clustered = asset_obj.cluster_matrix_entries(
+        clustered = asset.ASSET.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=2, stretch=1)
         correct = np.array([[0, 0, 1, 0],
                             [0, 0, 0, 1],
@@ -163,7 +153,7 @@ class AssetTestCase(unittest.TestCase):
                         [0, 0, 1, 0],
                         [1, 0, 0, 1],
                         [0, 1, 0, 0]])
-        clustered = asset_obj.cluster_matrix_entries(
+        clustered = asset.ASSET.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=3, stretch=1)
         correct = np.array([[0, 1, 0, 0],
                             [0, 0, 1, 0],
@@ -176,7 +166,7 @@ class AssetTestCase(unittest.TestCase):
                         [0, 0, 1, 0],
                         [1, 0, 0, 1],
                         [0, 1, 0, 0]])
-        clustered = asset_obj.cluster_matrix_entries(
+        clustered = asset.ASSET.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=2, stretch=1)
         correct = np.array([[0, 1, 0, 0],
                             [0, 0, 1, 0],
@@ -185,7 +175,7 @@ class AssetTestCase(unittest.TestCase):
         assert_array_equal(clustered, correct)
 
         mat = np.zeros((4, 4))
-        clustered = asset_obj.cluster_matrix_entries(
+        clustered = asset.ASSET.cluster_matrix_entries(
             mat, eps=1.5, min_neighbors=2, stretch=1)
         correct = mat
         assert_array_equal(clustered, correct)
