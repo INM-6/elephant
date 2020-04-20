@@ -64,7 +64,7 @@ Examples
 4) Create the masked version of the intersection matrix, `mmat`, from `pmat`
    and `jmat`:
 
-   >>> mmat = asset_obj.mask_matrices([pmat, jmat])
+   >>> mmat = asset_obj.mask_matrices([pmat, jmat], thresholds=.9999)
 
 5) Cluster significant elements of imat into diagonal structures:
 
@@ -1591,11 +1591,13 @@ class ASSET(object):
         return 1. - jpvmat
 
     @staticmethod
-    def mask_matrices(matrices, thresholds=0.9999):
+    def mask_matrices(matrices, thresholds):
         """
         Given a list of `matrices` and a list of `thresholds`, return a boolean
         matrix `B` ("mask") such that `B[i,j]` is True if each input matrix in
         the list strictly exceeds the corresponding threshold at that position.
+        If multiple matrices are passed along with only one threshold the same
+        threshold is applied to all matrices.
 
         Parameters
         ----------
@@ -1604,7 +1606,7 @@ class ASSET(object):
             build the mask. All matrices must have the same shape.
             Typically, it is a list `[pmat, jmat]`, i.e., the (cumulative)
             probability and joint probability matrices.
-        thresholds : float or list of float, optional
+        thresholds : float or list of float
             The significance thresholds for each matrix in `matrices`.
 
         Returns
