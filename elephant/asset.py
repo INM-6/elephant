@@ -43,9 +43,10 @@ Examples
    >>> from elephant import asset
 
    >>> spiketrains = [
-   ...      neo.SpikeTrain(np.arange(start, start + 100, step=20) * pq.ms,
-   ...                     t_stop=200 * pq.ms)
-   ...      for start in range(4)
+   ...      neo.SpikeTrain([start, start + 6] * (3 * pq.ms) + 10 * pq.ms,
+   ...                     t_stop=60 * pq.ms)
+   ...      for _ in range(3)
+   ...      for start in range(3)
    ... ]
    >>> asset_obj = asset.ASSET(spiketrains, bin_size=3*pq.ms, verbose=False)
 
@@ -53,23 +54,24 @@ Examples
 
    >>> imat = asset_obj.intersection_matrix()
 
-2) Estimate the probability matrix `pmat`, using Monte Carlo method:
+2) Estimate the probability matrix `pmat`, using the analytical method:
 
-   >>> pmat = asset_obj.probability_matrix_montecarlo(imat)
+   >>> pmat = asset_obj.probability_matrix_analytical(imat,
+   ...                                                kernel_width=9*pq.ms)
 
 3) Compute the joint probability matrix `jmat`, using a suitable filter:
 
    >>> jmat = asset_obj.joint_probability_matrix(pmat, filter_shape=(5, 1),
-   ...                                           n_largest=5)
+   ...                                           n_largest=3)
 
 4) Create the masked version of the intersection matrix, `mmat`, from `pmat`
    and `jmat`:
 
-   >>> mmat = asset_obj.mask_matrices([pmat, jmat], thresholds=.9999)
+   >>> mmat = asset_obj.mask_matrices([pmat, jmat], thresholds=.9)
 
 5) Cluster significant elements of imat into diagonal structures:
 
-   >>> cmat = asset_obj.cluster_matrix_entries(mmat, eps=10, min_neighbors=2,
+   >>> cmat = asset_obj.cluster_matrix_entries(mmat, eps=3, min_neighbors=3,
    ...                                         stretch=5)
 
 6) Extract sequences of synchronous events:
@@ -80,8 +82,7 @@ The ASSET found 2 sequences of synchronous events:
 
    >>> from pprint import pprint
    >>> pprint(sses)
-   {1: {(14, 7): {2, 3}, (20, 13): {0, 1}, (27, 20): {1, 2}},
-    2: {(20, 7): {1, 2}, (27, 14): {2, 3}}}
+   {1: {(9, 3): {0, 3, 6}, (10, 4): {1, 4, 7}, (11, 5): {8, 2, 5}}}
 
 """
 from __future__ import division, print_function, unicode_literals
