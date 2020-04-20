@@ -1516,7 +1516,7 @@ class ASSET(object):
 
         return pmat
 
-    def joint_probability_matrix(self, pmat, filter_shape=(5, 1),
+    def joint_probability_matrix(self, pmat, filter_shape,
                                  n_largest=None, min_p_value=1e-5):
         """
         Map a probability matrix `pmat` to a joint probability matrix `jmat`,
@@ -1538,7 +1538,7 @@ class ASSET(object):
             :func:`ASSET.probability_matrix_analytical`, of cumulative
             probability values between 0 and 1. The values are assumed
             to be uniformly distributed in the said range.
-        filter_shape : tuple of int, optional
+        filter_shape : tuple of int
             A pair of integers representing the kernel shape `(l, w)`.
         n_largest : int, optional
             The number of the largest neighbors to collect for each entry in
