@@ -78,8 +78,8 @@ The ASSET found 2 sequences of synchronous events:
 
    >>> from pprint import pprint
    >>> pprint(sses)
-{1: {(14, 7): {2, 3}, (20, 13): {0, 1}, (27, 20): {1, 2}},
-2: {(20, 7): {1, 2}, (27, 14): {2, 3}}}
+   {1: {(14, 7): {2, 3}, (20, 13): {0, 1}, (27, 20): {1, 2}},
+    2: {(20, 7): {1, 2}, (27, 14): {2, 3}}}
 
 """
 from __future__ import division, print_function, unicode_literals
@@ -703,9 +703,10 @@ def synchronous_events_difference(sse1, sse2, difference='linkwise'):
           events in `sse1` whose pixel position doesn't match any pixel in
           `sse2`.
         * if 'linkwise', for each pixel `(i, j)` in `sse1` and corresponding
-          synchronous event `S1`, if `(i, j)` is a pixel in `sse2` corresponding
-          to the event `S2`, it retains the set difference `S1 - S2`. If
-          `(i, j)` is not a pixel in `sse2`, it retains the full set `S1`.
+          synchronous event `S1`, if `(i, j)` is a pixel in `sse2`
+          corresponding to the event `S2`, it retains the set difference
+          `S1 - S2`. If `(i, j)` is not a pixel in `sse2`, it retains the full
+          set `S1`.
 
     Note that in either case the difference is a non-symmetric operation:
     `intersection(sse1, sse2) != intersection(sse2, sse1)`.
