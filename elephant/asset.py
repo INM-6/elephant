@@ -394,17 +394,17 @@ def _wrong_order(a):
     return False
 
 
-def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
+def _jsf_uniform_orderstat_3d(u, n, verbose=False):
     r"""
     Considered n independent random variables X1, X2, ..., Xn all having
-    uniform distribution in the interval (alpha, 1):
+    uniform distribution in the interval (0, 1):
 
-    .. centered::  Xi ~ Uniform(alpha, 1),
+    .. centered::  Xi ~ Uniform(0, 1),
 
-    with alpha \in [0, 1), and given a 2D matrix U = (u_ij) where each U_i
-    is an array of length d: U_i = [u0, u1, ..., u_{d-1}] of
-    quantiles, with u1 <= u2 <= ... <= un, computes the joint survival function
-    (jsf) of the d highest order statistics (U_{n-d+1}, U_{n-d+2}, ..., U_n),
+    given a 2D matrix U = (u_ij) where each U_i is an array of length d:
+    U_i = [u0, u1, ..., u_{d-1}] of quantiles, with u1 <= u2 <= ... <= un,
+    computes the joint survival function (jsf) of the d highest order
+    statistics (U_{n-d+1}, U_{n-d+2}, ..., U_n),
     where U_k := "k-th highest X's" at each u_i, i.e.:
 
     .. centered::  jsf(u_i) = Prob(U_{n-k} >= u_ijk, k=0,1,..., d-1).
@@ -418,10 +418,6 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
         variables whose cdf is `F(x) = x` for each `x`.
         The routine computes the joint cumulative probability of the `d`
         values in `u_ij`, for each `i` and `j`.
-    alpha : float
-        Float value in [0, 1).
-        The range where the values of `u` are assumed to vary.
-        alpha is `0` in the standard ASSET analysis.
     n : int
         Size of the sample where the `d` largest order statistics `u_ij` are
         assumed to have been sampled from.
@@ -444,12 +440,13 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
     lists = [range(j, n + 1) for j in range(d, 0, -1)]
     it_todo = np.prod([n + 1 - j for j in range(d, 0, -1)])
 
+    log_1 = np.log(1.)
     # Compute the log of the integral's coefficient
-    logK = np.sum(np.log(np.arange(1, n + 1))) - n * np.log(1 - alpha)
-    # Add to the 3D matrix u a bottom layer equal to alpha and a
+    logK = np.sum(np.log(np.arange(1, n + 1))) - n * log_1
+    # Add to the 3D matrix u a bottom layer equal to 0 and a
     # top layer equal to 1. Then compute the difference du along
     # the first dimension.
-    du = np.diff(u, prepend=alpha, append=1, axis=1)
+    du = np.diff(u, prepend=0, append=1, axis=1)
 
     # precompute logarithms
     # ignore warnings about infinities, see inside the loop:
@@ -459,7 +456,6 @@ def _jsf_uniform_orderstat_3d(u, alpha, n, verbose=False):
     with warnings.catch_warnings():
         warnings.simplefilter('ignore', RuntimeWarning)
         log_du = np.log(du)
-    log_1 = np.log(1.)
 
     # prepare arrays for usage inside the loop
     di_scratch = np.empty_like(du, dtype=np.int32)
@@ -1521,15 +1517,15 @@ class ASSET(object):
         return pmat
 
     def joint_probability_matrix(self, pmat, filter_shape=(5, 1),
-                                 n_largest=None, alpha=0, min_p_value=1e-5):
+                                 n_largest=None, min_p_value=1e-5):
         """
         Map a probability matrix `pmat` to a joint probability matrix `jmat`,
         where `jmat[i, j]` is the joint p-value of the largest neighbors of
         `pmat[i, j]`.
 
         The values of `pmat` are assumed to be uniformly distributed in the
-        range [`alpha`, 1] (`alpha=0` by default). Centered a rectangular
-        kernel of shape `filter_shape=(l, w)` around each entry `pmat[i, j]`,
+        range [0, 1]. Centered a rectangular kernel of shape
+        `filter_shape=(l, w)` around each entry `pmat[i, j]`,
         aligned along the diagonal where `pmat[i, j]` lies into, extracts the
         `n_largest` values falling within the kernel and computes their joint
         p-value `jmat[i, j]`.
@@ -1540,7 +1536,7 @@ class ASSET(object):
             A square matrix, the output of
             :func:`ASSET.probability_matrix_montecarlo` or
             :func:`ASSET.probability_matrix_analytical`, of cumulative
-            probability values between `alpha` and 1. The values are assumed
+            probability values between 0 and 1. The values are assumed
             to be uniformly distributed in the said range.
         filter_shape : tuple of int, optional
             A pair of integers representing the kernel shape `(l, w)`.
@@ -1548,9 +1544,6 @@ class ASSET(object):
             The number of the largest neighbors to collect for each entry in
             `jmat`. If None, the filter length `l` of `filter_shape` is used.
             Default: None.
-        alpha : float, optional
-            The left end of the range `[alpha, 1]`.
-            Default: 0.
         min_p_value : float, optional
             The minimum p-value in range `[0, 1)` for individual entries in
             `pmat`. Each `pmat[i, j]` is set to
@@ -1589,7 +1582,7 @@ class ASSET(object):
         # Compute the joint p-value matrix jpvmat
         n = l * (1 + 2 * w) - w * (
                 w + 1)  # number of entries covered by kernel
-        jpvmat = _jsf_uniform_orderstat_3d(pmat_neighb, alpha, n,
+        jpvmat = _jsf_uniform_orderstat_3d(pmat_neighb, n,
                                            verbose=self.verbose)
 
         # restore the original shape using the stored indices
