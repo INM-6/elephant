@@ -59,7 +59,8 @@ Examples
 
 3) Compute the joint probability matrix `jmat`, using a suitable filter:
 
-   >>> jmat = asset_obj.joint_probability_matrix(pmat, filter_shape=(5, 1))
+   >>> jmat = asset_obj.joint_probability_matrix(pmat, filter_shape=(5, 1),
+   ...                                           n_largest=5)
 
 4) Create the masked version of the intersection matrix, `mmat`, from `pmat`
    and `jmat`:
@@ -1517,8 +1518,8 @@ class ASSET(object):
 
         return pmat
 
-    def joint_probability_matrix(self, pmat, filter_shape,
-                                 n_largest=None, min_p_value=1e-5):
+    def joint_probability_matrix(self, pmat, filter_shape, n_largest,
+                                 min_p_value=1e-5):
         """
         Map a probability matrix `pmat` to a joint probability matrix `jmat`,
         where `jmat[i, j]` is the joint p-value of the largest neighbors of
@@ -1541,7 +1542,7 @@ class ASSET(object):
             to be uniformly distributed in the said range.
         filter_shape : tuple of int
             A pair of integers representing the kernel shape `(l, w)`.
-        n_largest : int, optional
+        n_largest : int
             The number of the largest neighbors to collect for each entry in
             `jmat`. If None, the filter length `l` of `filter_shape` is used.
             Default: None.
@@ -1560,7 +1561,6 @@ class ASSET(object):
 
         """
         l, w = filter_shape
-        n_largest = l if n_largest is None else n_largest
 
         if pmat is None:
             pmat = self.probability_matrix_montecarlo()
