@@ -68,7 +68,8 @@ Examples
 
 5) Cluster significant elements of imat into diagonal structures:
 
-   >>> cmat = asset_obj.cluster_matrix_entries(mmat)
+   >>> cmat = asset_obj.cluster_matrix_entries(mmat, eps=10, min_neighbors=2,
+   ...                                         stretch=5)
 
 6) Extract sequences of synchronous events:
 
@@ -1646,8 +1647,7 @@ class ASSET(object):
         return mask
 
     @staticmethod
-    def cluster_matrix_entries(mask_matrix, eps=10, min_neighbors=2,
-                               stretch=5):
+    def cluster_matrix_entries(mask_matrix, eps, min_neighbors, stretch):
         r"""
         Given a matrix `mask_matrix`, replaces its positive elements with
         integers representing different cluster IDs. Each cluster comprises
@@ -1688,20 +1688,17 @@ class ASSET(object):
         mask_matrix : np.ndarray
             The boolean matrix, whose elements with positive values are to be
             clustered. The output of :func:`ASSET.mask_matrices`.
-        eps : float, optional
+        eps : float
             The maximum distance between two elements in `mask_matrix` to be
             a part of the same neighbourhood in the DBSCAN algorithm.
-            Default: 10.
-        min_neighbors : int, optional
+        min_neighbors : int
             The minimum number of elements to form a neighbourhood.
-            Default: 2.
-        stretch : float, optional
+        stretch : float
             The stretching factor of the euclidean metric for elements aligned
             along the 135 degree direction (anti-diagonal). The actual
             stretching increases from 1 to `stretch` as the direction of the
             two elements moves from the 45 to the 135 degree direction.
             `stretch` must be greater than 1.
-            Default: 5.
 
         Returns
         -------
