@@ -1543,8 +1543,7 @@ class ASSET(object):
             A pair of integers representing the kernel shape `(l, w)`.
         n_largest : int
             The number of the largest neighbors to collect for each entry in
-            `jmat`. If None, the filter length `l` of `filter_shape` is used.
-            Default: None.
+            `jmat`.
         min_p_value : float, optional
             The minimum p-value in range `[0, 1)` for individual entries in
             `pmat`. Each `pmat[i, j]` is set to
