@@ -74,13 +74,17 @@ class AssetTestCase(unittest.TestCase):
         diff_ab_linkwise = {(1, 2): set([3]), (3, 4): set([5, 6])}
         diff_ba_linkwise = {(1, 2): set([5]), (5, 6): set([0, 2])}
         self.assertEqual(
-            asset.synchronous_events_difference(a, b, 'pixelwise'), diff_ab_pixelwise)
+            asset.synchronous_events_difference(a, b, 'pixelwise'),
+            diff_ab_pixelwise)
         self.assertEqual(
-            asset.synchronous_events_difference(b, a, 'pixelwise'), diff_ba_pixelwise)
+            asset.synchronous_events_difference(b, a, 'pixelwise'),
+            diff_ba_pixelwise)
         self.assertEqual(
-            asset.synchronous_events_difference(a, b, 'linkwise'), diff_ab_linkwise)
+            asset.synchronous_events_difference(a, b, 'linkwise'),
+            diff_ab_linkwise)
         self.assertEqual(
-            asset.synchronous_events_difference(b, a, 'linkwise'), diff_ba_linkwise)
+            asset.synchronous_events_difference(b, a, 'linkwise'),
+            diff_ba_linkwise)
 
     def test_sse_intersection(self):
         a = {(1, 2): set([1, 2, 3]), (3, 4): set([5, 6]), (6, 7): set([0, 1])}
@@ -90,13 +94,17 @@ class AssetTestCase(unittest.TestCase):
         inters_ab_linkwise = {(1, 2): set([1, 2]), (6, 7): set([0, 1])}
         inters_ba_linkwise = {(1, 2): set([1, 2]), (6, 7): set([0, 1])}
         self.assertEqual(
-            asset.synchronous_events_intersection(a, b, 'pixelwise'), inters_ab_pixelwise)
+            asset.synchronous_events_intersection(a, b, 'pixelwise'),
+            inters_ab_pixelwise)
         self.assertEqual(
-            asset.synchronous_events_intersection(b, a, 'pixelwise'), inters_ba_pixelwise)
+            asset.synchronous_events_intersection(b, a, 'pixelwise'),
+            inters_ba_pixelwise)
         self.assertEqual(
-            asset.synchronous_events_intersection(a, b, 'linkwise'), inters_ab_linkwise)
+            asset.synchronous_events_intersection(a, b, 'linkwise'),
+            inters_ab_linkwise)
         self.assertEqual(
-            asset.synchronous_events_intersection(b, a, 'linkwise'), inters_ba_linkwise)
+            asset.synchronous_events_intersection(b, a, 'linkwise'),
+            inters_ba_linkwise)
 
     def test_sse_relations(self):
         a = {(1, 2): set([1, 2, 3]), (3, 4): set([5, 6]), (6, 7): set([0, 1])}
@@ -199,8 +207,10 @@ class AssetTestCase(unittest.TestCase):
                                  [0., 1., 1., 0., 1.],
                                  [0., 1., 0., 1., 1.],
                                  [0., 2., 1., 1., 2.]])
-        assert_array_equal(asset_obj_same_t_start_stop.x_edges, np.arange(6) * pq.ms)  # correct bins
-        assert_array_equal(asset_obj_same_t_start_stop.y_edges, np.arange(6) * pq.ms)  # correct bins
+        assert_array_equal(asset_obj_same_t_start_stop.x_edges,
+                           np.arange(6) * pq.ms)  # correct bins
+        assert_array_equal(asset_obj_same_t_start_stop.y_edges,
+                           np.arange(6) * pq.ms)  # correct bins
         assert_array_equal(imat_1_2, trueimat_1_2)  # correct matrix
         # ...different t_start, t_stop on the two time axes
         asset_obj_different_t_start_stop = asset.ASSET(
@@ -208,8 +218,10 @@ class AssetTestCase(unittest.TestCase):
             bin_size=bin_size, t_start_y=6 * pq.ms, t_stop_x=5 * pq.ms,
             t_stop_y=11 * pq.ms)
         imat_1_2 = asset_obj_different_t_start_stop.intersection_matrix()
-        assert_array_equal(asset_obj_different_t_start_stop.x_edges, np.arange(6) * pq.ms)  # correct bins
-        assert_array_equal(asset_obj_different_t_start_stop.y_edges, np.arange(6, 12) * pq.ms)
+        assert_array_equal(asset_obj_different_t_start_stop.x_edges,
+                           np.arange(6) * pq.ms)  # correct bins
+        assert_array_equal(asset_obj_different_t_start_stop.y_edges,
+                           np.arange(6, 12) * pq.ms)
         self.assertTrue(np.all(imat_1_2 == trueimat_1_2))  # correct matrix
 
         # test with norm=1
@@ -326,13 +338,15 @@ class AssetTestIntegration(unittest.TestCase):
         imat = asset_obj.intersection_matrix()
 
         # calculate probability matrix analytical
-        pmat = asset_obj.probability_matrix_analytical(imat,
+        pmat = asset_obj.probability_matrix_analytical(
+            imat,
             kernel_width=kernel_width)
 
         # check if pmat is the same when rates are provided
-        pmat_as_rates = asset_obj.probability_matrix_analytical(imat,
-                firing_rates_x=_get_rates(spiketrains),
-                firing_rates_y=_get_rates(spiketrains_y))
+        pmat_as_rates = asset_obj.probability_matrix_analytical(
+            imat,
+            firing_rates_x=_get_rates(spiketrains),
+            firing_rates_y=_get_rates(spiketrains_y))
         assert_array_almost_equal(pmat, pmat_as_rates)
 
         # calculate probability matrix montecarlo
@@ -347,9 +361,10 @@ class AssetTestIntegration(unittest.TestCase):
         assert_array_equal(np.where(pmat_montecarlo > alpha),
                            indices_pmat)
         # calculate joint probability matrix
-        jmat = asset_obj.joint_probability_matrix(pmat,
-                                              filter_shape=filter_shape,
-                                              n_largest=nr_largest)
+        jmat = asset_obj.joint_probability_matrix(
+            pmat,
+            filter_shape=filter_shape,
+            n_largest=nr_largest)
         # test joint probability matrix
         assert_array_equal(np.where(jmat > 0.98), index_proba['high'])
         assert_array_equal(np.where(jmat > 0.9), index_proba['medium'])
@@ -361,10 +376,11 @@ class AssetTestIntegration(unittest.TestCase):
 
         # calculate mask matrix and cluster matrix
         mmat = asset_obj.mask_matrices([pmat, jmat], [alpha, alpha])
-        cmat = asset_obj.cluster_matrix_entries(mmat,
-                                            max_distance=max_distance,
-                                            min_neighbors=min_neighbors,
-                                            stretch=stretch)
+        cmat = asset_obj.cluster_matrix_entries(
+            mmat,
+            max_distance=max_distance,
+            min_neighbors=min_neighbors,
+            stretch=stretch)
 
         # extract sses and test them
         sses = asset_obj.extract_synchronous_events(cmat)
