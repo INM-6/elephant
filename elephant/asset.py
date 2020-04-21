@@ -71,8 +71,8 @@ Examples
 
 5) Cluster significant elements of imat into diagonal structures:
 
-   >>> cmat = asset_obj.cluster_matrix_entries(mmat, eps=3, min_neighbors=3,
-   ...                                         stretch=5)
+   >>> cmat = asset_obj.cluster_matrix_entries(mmat, max_distance=3,
+   ...                                         min_neighbors=3, stretch=5)
 
 6) Extract sequences of synchronous events:
 
@@ -1645,7 +1645,8 @@ class ASSET(object):
         return mask
 
     @staticmethod
-    def cluster_matrix_entries(mask_matrix, eps, min_neighbors, stretch):
+    def cluster_matrix_entries(mask_matrix, max_distance, min_neighbors,
+                               stretch):
         r"""
         Given a matrix `mask_matrix`, replaces its positive elements with
         integers representing different cluster IDs. Each cluster comprises
@@ -1658,8 +1659,8 @@ class ASSET(object):
         A cluster is built by pooling elements according to their distance,
         via the DBSCAN algorithm (see `sklearn.cluster.DBSCAN` class). Elements
         form a neighbourhood if at least one of them has a distance not larger
-        than `eps` from the others, and if they are at least `min_neighbors`.
-        Overlapping neighborhoods form a cluster:
+        than `max_distance` from the others, and if they are at least
+        `min_neighbors`. Overlapping neighborhoods form a cluster:
 
             * Clusters are assigned integers from `1` to the total number `k`
               of clusters;
@@ -1686,7 +1687,7 @@ class ASSET(object):
         mask_matrix : np.ndarray
             The boolean matrix, whose elements with positive values are to be
             clustered. The output of :func:`ASSET.mask_matrices`.
-        eps : float
+        max_distance : float
             The maximum distance between two elements in `mask_matrix` to be
             a part of the same neighbourhood in the DBSCAN algorithm.
         min_neighbors : int
@@ -1729,7 +1730,8 @@ class ASSET(object):
 
         # Cluster positions of significant pixels via dbscan
         core_samples, config = dbscan(
-            D, eps=eps, min_samples=min_neighbors, metric='precomputed')
+            D, eps=max_distance, min_samples=min_neighbors,
+            metric='precomputed')
 
         # Construct the clustered matrix, where each element has value
         # * i = 1 to k if it belongs to a cluster i,

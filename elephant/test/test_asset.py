@@ -141,7 +141,7 @@ class AssetTestCase(unittest.TestCase):
                         [0, 1, 0, 0]])
 
         clustered = asset.ASSET.cluster_matrix_entries(
-            mat, eps=1.5, min_neighbors=2, stretch=1)
+            mat, max_distance=1.5, min_neighbors=2, stretch=1)
         correct = np.array([[0, 0, 1, 0],
                             [0, 0, 0, 1],
                             [2, 0, 0, 0],
@@ -154,7 +154,7 @@ class AssetTestCase(unittest.TestCase):
                         [1, 0, 0, 1],
                         [0, 1, 0, 0]])
         clustered = asset.ASSET.cluster_matrix_entries(
-            mat, eps=1.5, min_neighbors=3, stretch=1)
+            mat, max_distance=1.5, min_neighbors=3, stretch=1)
         correct = np.array([[0, 1, 0, 0],
                             [0, 0, 1, 0],
                             [-1, 0, 0, 1],
@@ -167,7 +167,7 @@ class AssetTestCase(unittest.TestCase):
                         [1, 0, 0, 1],
                         [0, 1, 0, 0]])
         clustered = asset.ASSET.cluster_matrix_entries(
-            mat, eps=1.5, min_neighbors=2, stretch=1)
+            mat, max_distance=1.5, min_neighbors=2, stretch=1)
         correct = np.array([[0, 1, 0, 0],
                             [0, 0, 1, 0],
                             [2, 0, 0, 1],
@@ -176,7 +176,7 @@ class AssetTestCase(unittest.TestCase):
 
         mat = np.zeros((4, 4))
         clustered = asset.ASSET.cluster_matrix_entries(
-            mat, eps=1.5, min_neighbors=2, stretch=1)
+            mat, max_distance=1.5, min_neighbors=2, stretch=1)
         correct = mat
         assert_array_equal(clustered, correct)
 
@@ -304,7 +304,7 @@ class AssetTestIntegration(unittest.TestCase):
         alpha = 0.9
         filter_shape = (5, 1)
         nr_largest = 3
-        eps = 3
+        max_distance = 3
         min_neighbors = 3
         stretch = 5
         n_surr = 20
@@ -362,7 +362,7 @@ class AssetTestIntegration(unittest.TestCase):
         # calculate mask matrix and cluster matrix
         mmat = asset_obj.mask_matrices([pmat, jmat], [alpha, alpha])
         cmat = asset_obj.cluster_matrix_entries(mmat,
-                                            eps=eps,
+                                            max_distance=max_distance,
                                             min_neighbors=min_neighbors,
                                             stretch=stretch)
 
