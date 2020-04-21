@@ -1233,10 +1233,9 @@ class ASSET(object):
                                     normalization=normalization)
         return imat
 
-    def probability_matrix_montecarlo(self, imat=None,
+    def probability_matrix_montecarlo(self, n_surrogates, imat=None,
                                       surrogate_method='dither_spikes',
-                                      surrogate_dt=None,
-                                      n_surrogates=100):
+                                      surrogate_dt=None):
         """
         Given a list of parallel spike trains, estimate the cumulative
         probability of each entry in their intersection matrix by a Monte Carlo
@@ -1261,6 +1260,9 @@ class ASSET(object):
 
         Parameters
         ----------
+        n_surrogates : int
+            The number of spike train surrogates to generate for the bootstrap
+            procedure.
         imat : (n,n) np.ndarray or None, optional
             The floating point intersection matrix of a list of spike trains.
             It has the shape `(n, n)`, where `n` is the number of bins that
@@ -1284,10 +1286,6 @@ class ASSET(object):
             other methods, `surrogate_dt` is ignored.
             If None, it's set to `self.bin_size * 5`.
             Default: None.
-        n_surrogates : int, optional
-            The number of spike train surrogates to generate for the bootstrap
-            procedure.
-            Default: 100.
 
         Returns
         -------

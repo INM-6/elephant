@@ -336,9 +336,10 @@ class AssetTestIntegration(unittest.TestCase):
         assert_array_almost_equal(pmat, pmat_as_rates)
 
         # calculate probability matrix montecarlo
-        pmat_montecarlo = asset_obj.probability_matrix_montecarlo(imat,
-                surrogate_dt=surrogate_dt,
+        pmat_montecarlo = asset_obj.probability_matrix_montecarlo(
                 n_surrogates=n_surr,
+                imat=imat,
+                surrogate_dt=surrogate_dt,
                 surrogate_method='dither_spikes')
 
         # test probability matrices
