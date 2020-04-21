@@ -445,7 +445,7 @@ def _jsf_uniform_orderstat_3d(u, n, verbose=False):
 
     log_1 = np.log(1.)
     # Compute the log of the integral's coefficient
-    logK = np.sum(np.log(np.arange(1, n + 1))) - n * log_1
+    logK = np.sum(np.log(np.arange(1, n + 1)))
     # Add to the 3D matrix u a bottom layer equal to 0 and a
     # top layer equal to 1. Then compute the difference du along
     # the first dimension.
