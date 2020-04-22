@@ -553,7 +553,6 @@ def _pmat_neighbors(mat, filter_shape, n_largest, verbose):
         A pair of integers representing the kernel shape `(l, w)`.
     n_largest : int
         The number of largest neighbors to collect for each entry in `mat`.
-        If None, the filter length `l` in `filter_shape` is used.
     verbose : bool
         Show the progress bar or not.
 
@@ -1560,8 +1559,6 @@ class ASSET(object):
         """
         l, w = filter_shape
 
-        if pmat is None:
-            pmat = self.probability_matrix_montecarlo()
         # Find for each P_ij in the probability matrix its neighbors and
         # maximize them by the maximum value 1-p_value_min
         pmat_neighb = _pmat_neighbors(
