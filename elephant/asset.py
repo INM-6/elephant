@@ -103,6 +103,7 @@ import itertools
 import warnings
 
 import neo
+import math
 import numpy as np
 import quantities as pq
 import scipy.spatial
@@ -401,6 +402,8 @@ def _interpolate_signals(signals, sampling_times, verbose=False):
 
 
 def _num_iterations(n, d):
+    if d > n:
+        return 0
     if d == 1:
         return n
     if d == 2:
@@ -457,80 +460,33 @@ def _num_iterations(n, d):
     return np.sum(count_matrix)
 
 
-def _indices_subgenerator(index, range_object, previous_values):
-    # Generates the values for a given index, considering the current values
-    # of larger indexes.
+def _combinations_with_replacement(n, d):
+    # Generate sequences of {a_i} such that
+    #   a_0 >= a_1 >= ... >= a_(d-1) and
+    #   d-i <= a_i <= n, for each i in [0, d-1].
     #
-    # `index` : number of this index, from the range [1..d]
-    # `range_object` : all possible values that this index can take given
-    #                  the current value of the previous index
-    #                  (i.e., `index-1`)
-    # `previous_values` : current values of all the indexes larger than
-    #                     `index`
+    # Almost equivalent to
+    # list(itertools.combinations_with_replacement(range(n, 0, -1), r=d))[::-1]
     #
-    # The generator is called recursively with `index-1`, until `index` == 1.
+    # Example:
+    #   _combinations_with_replacement(n=13, d=3) -->
+    #   (3, 2, 1), (3, 2, 2), (3, 3, 1), ... , (13, 13, 12), (13, 13, 13).
     #
-    # Example: if `index` == 2, and the values of the previous indexes are
-    #          (5,5,4), this generator will yield values from 2 to 4, i.e.,
-    #
-    #          (5,5,4,2)
-    #          (5,5,4,3)
-    #          (5,5,4,4)
-    #
-    #          Each of these tuples is passed as `previous_values` when
-    #          calling `_indices_subgenerator` with `index` = 1. The
-    #          `range_object` for this next call will be defined based on the
-    #          current value, i.e.:
-    #
-    #          (5,5,4,2)  ->  [1..2]
-    #          (5,5,4,3)  ->  [1..3]
-    #          (5,5,4,4)  ->  [1..4]
-
-    if index > 1:
-        for index_value in range_object:
-            next_index = index - 1
-            for indices_tuple in _indices_subgenerator(next_index,
-                                           range(next_index, index_value + 1),
-                                           previous_values + (index_value,)):
-                yield indices_tuple
-    else:
-        # Last index
-        # Iterate over the valid range and return the tuple with the current
-        # values of all previous indexes plus the current value of the last
-        # index
-        for index_value in range_object:
-            yield previous_values + (index_value,)
-
-
-def _iterate_indices(n, d):
-    # Main generator for the indices tuple.
-    #
-    # It yields a tuple with `d` elements.
-    #
-    # The first index has values in the range from [d..n].
-    # The last index has range from [1..n].
-    # Each index range starts 1 unit below the range of the previous index:
-    #
-    # index    d        d-1        d-2       ...  1
-    # values   [d..n]   [d-1..n]   [d-2..n]  ...  [1..n]
-    #
-    #
-    # For a given index, the values of smaller indexes can't be larger, i.e.
-    # (5,4,4,4,3), but not (5,4,5,4,3) or (5,4,3,4,3)
-
-    main_index = range(d, n + 1)
-    if d > 1:
-        next_index = d - 1
-        for main_value in main_index:
-            for indices_tuple in _indices_subgenerator(
-                                           next_index,
-                                           range(next_index, main_value + 1),
-                                           (main_value,)):
-                yield indices_tuple
-    else:
-        # When `d` == 1, yields a single value tuple from 1 to `n`
-        for main_value in main_index:
-            yield main_value,
+    # The implementation follows the insertion sort algorithm:
+    #   insert a new element a_i from right to left to keep the reverse sorted
+    #   order. Now substitute increment operation for insert.
+    if d > n:
+        return
+    sequence_sorted = list(range(d, 0, -1))
+    input_order = tuple(sequence_sorted)  # fixed
+    while sequence_sorted[0] != n + 1:
+        yield tuple(sequence_sorted)
+        increment_id = d - 1
+        while increment_id > 0 and sequence_sorted[increment_id - 1] == \
+                sequence_sorted[increment_id]:
+            increment_id -= 1
+        sequence_sorted[increment_id + 1:] = input_order[increment_id + 1:]
+        sequence_sorted[increment_id] += 1
 
 
 def _jsf_uniform_orderstat_3d(u, n, verbose=False):
@@ -608,17 +564,14 @@ def _jsf_uniform_orderstat_3d(u, n, verbose=False):
     # using matrix algebra
     # initialise probabilities to 0
     P_total = np.zeros(du.shape[0], dtype=np.float32)
-    iter_id = 0
-    for matrix_entries in tqdm(_iterate_indices(n, d),
-                               total=it_todo,
-                               desc="Joint survival function",
-                               disable=not verbose):
+    for iter_id, matrix_entries in enumerate(
+            tqdm(_combinations_with_replacement(n, d=d),
+                 total=it_todo,
+                 desc="Joint survival function",
+                 disable=not verbose)):
         # if we are running with MPI
         if mpi_accelerated and iter_id % size != rank:
-            iter_id += 1
             continue
-
-        iter_id += 1
 
         # we only need the differences of the indices:
         di = -np.diff(matrix_entries, prepend=n, append=0)
