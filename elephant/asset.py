@@ -477,16 +477,23 @@ def _combinations_with_replacement(n, d):
     #   order. Now substitute increment operation for insert.
     if d > n:
         return
+    if d == 1:
+        for matrix_entry in range(1, n + 1):
+            yield (matrix_entry,)
+        return
     sequence_sorted = list(range(d, 0, -1))
     input_order = tuple(sequence_sorted)  # fixed
     while sequence_sorted[0] != n + 1:
         yield tuple(sequence_sorted)
-        increment_id = d - 1
-        while increment_id > 0 and sequence_sorted[increment_id - 1] == \
-                sequence_sorted[increment_id]:
-            increment_id -= 1
-        sequence_sorted[increment_id + 1:] = input_order[increment_id + 1:]
-        sequence_sorted[increment_id] += 1
+        if sequence_sorted[-1] == sequence_sorted[-2]:
+            increment_id = d - 2
+            while increment_id > 0 and sequence_sorted[increment_id - 1] == \
+                    sequence_sorted[increment_id]:
+                increment_id -= 1
+            sequence_sorted[increment_id + 1:] = input_order[increment_id + 1:]
+            sequence_sorted[increment_id] += 1
+        else:
+            sequence_sorted[-1] += 1
 
 
 def _jsf_uniform_orderstat_3d(u, n, verbose=False):
