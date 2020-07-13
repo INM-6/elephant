@@ -269,8 +269,10 @@ class AssetTestCase(unittest.TestCase):
                           spiketrains=[st1, st2], bin_size=bin_size,
                           t_stop_x=5 * pq.ms)
 
-    def test_wrong_order(self):
-        from elephant.asset import _combinations_with_replacement
+    def test_combinations_with_replacement(self):
+        # Test that _combinations_with_replacement yields the same tuples
+        # as in the original implementation with itertools.product(*lists)
+        # and filtering by _wrong_order.
 
         def _wrong_order(a):
             if a[-1] > a[0]:
@@ -283,7 +285,9 @@ class AssetTestCase(unittest.TestCase):
         for n in range(1, 15):
             for d in range(1, 6):
                 lists = [range(j, n + 1) for j in range(d, 0, -1)]
-                matrix_entries = list(_combinations_with_replacement(n=n, d=d))
+                matrix_entries = list(
+                    asset._combinations_with_replacement(n=n, d=d)
+                )
                 matrix_entries_correct = [
                     indices for indices in itertools.product(*lists)
                     if not _wrong_order(indices)
