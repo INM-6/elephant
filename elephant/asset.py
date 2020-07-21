@@ -99,11 +99,9 @@ The ASSET found 2 sequences of synchronous events:
 """
 from __future__ import division, print_function, unicode_literals
 
-import itertools
 import warnings
 
 import neo
-import math
 import numpy as np
 import quantities as pq
 import scipy.spatial
