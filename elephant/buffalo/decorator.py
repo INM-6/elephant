@@ -509,6 +509,7 @@ class Provenance(object):
 
         source = BuffaloProvenanceGraph(cls.history)
         source.to_pyvis(filename, show=show)
+        source.save_gexf(filename + ".gexf")
 
     @classmethod
     def get_script_variable(cls, name):

@@ -264,7 +264,7 @@ class BuffaloProvenanceGraph(nx.DiGraph):
                 return self.nodes[obj]['x'], self.nodes[obj]['y']
         if vis[0] is not None:
             return vis[0], vis[1]*2+factor
-        return None, None
+        return -1, -1
 
     def add_step(self, analysis_step, **attr):
 
@@ -403,3 +403,7 @@ class BuffaloProvenanceGraph(nx.DiGraph):
         # Open the file for visualization
         if show:
             net.show(name=filename)
+
+    def save_gexf(self, path):
+        nx.write_gexf(self, path)
+
