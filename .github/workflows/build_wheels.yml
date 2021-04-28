@@ -8,12 +8,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-10.15]
+        os: [ubuntu-20.04, windows-2019]
 
     steps:
       - uses: actions/checkout@v2
 
-      # Used to host cibuildwheel windows-2019,
+      # Used to host cibuildwheel , macos-10.15
       - uses: actions/setup-python@v2
 
       - name: Install cibuildwheel
@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Visual C++ for Python 2.7
         if: runner.os == 'Windows'
-        run: choco install vcpython27 -f -y
+        run: choco install vcpython27 -f -y --version 9.0.0.30729
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
