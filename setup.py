@@ -32,7 +32,7 @@ fim_module = Extension(
         # '-Werror',
         '-fopenmp',
         # '-std=gnu++17',
-        '-std=c++17'])
+        '/std:c++17'])
 
 setup(
     name="elephant",
