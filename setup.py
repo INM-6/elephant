@@ -30,7 +30,9 @@ fim_module = Extension(
         #'-Weffc++',
         #'-Wunused-result',
         # '-Werror',
-        '-fopenmp', '-std=gnu++17'])
+        '-fopenmp',
+        # '-std=gnu++17',
+        '-std=c++17'])
 
 setup(
     name="elephant",
