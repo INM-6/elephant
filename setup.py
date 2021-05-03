@@ -17,22 +17,28 @@ for extra in ['extras', 'docs', 'tests', 'tutorials']:
     with open('requirements/requirements-{0}.txt'.format(extra)) as fp:
         extras_require[extra] = fp.read()
 
-fim_module = Extension(
-    name='elephant.spade_src.fim',
-    sources=['elephant/spade_src/src/fim.cpp'],
-    include_dirs=['elephant/spade_src/include'],
-    language='c++',
-    libraries=[],#'pthread', 'gomp'],
-    extra_compile_args=[
-        '-DMODULE_NAME=fim', '-DUSE_OPENMP', '-DWITH_SIG_TERM',
-        '-Dfim_EXPORTS', '-O3', '-pedantic',
-        #'-Wextra',
-        #'-Weffc++',
-        #'-Wunused-result',
-        # '-Werror',
-        '-fopenmp',
-        # '-std=gnu++17',
-        '/std:c++17'])
+if platform.system() == "Windows":
+    fim_module = Extension(
+        name='elephant.spade_src.fim',
+        sources=['elephant/spade_src/src/fim.cpp'],
+        include_dirs=['elephant/spade_src/include'],
+        language='c++',
+        libraries=[],
+        extra_compile_args=[
+            '-DMODULE_NAME=fim', '-DUSE_OPENMP', '-DWITH_SIG_TERM',
+            '-Dfim_EXPORTS', '-fopenmp', '/std:c++17'])
+else:
+    fim_module = Extension(
+        name = 'elephant.spade_src.fim',
+        sources = ['elephant/spade_src/src/fim.cpp'],
+        include_dirs = ['elephant/spade_src/include'],
+        language = 'c++',
+        libraries = ['pthread', 'gomp'],
+        extra_compile_args = [
+            '-DMODULE_NAME=fim', '-DUSE_OPENMP', '-DWITH_SIG_TERM',
+            '-Dfim_EXPORTS', '-O3', '-pedantic', '-Wextra',
+            '-Weffc++', '-Wunused-result', '-Werror',
+            '-fopenmp', '-std=gnu++17'])
 
 setup(
     name="elephant",
