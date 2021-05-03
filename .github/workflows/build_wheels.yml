@@ -8,12 +8,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019]
+        os: [ubuntu-20.04, macos-10.15, windows-2019]
 
     steps:
       - uses: actions/checkout@v2
 
-      # Used to host cibuildwheel, macos-10.15
+      # Used to host cibuildwheel
       - uses: actions/setup-python@v2
 
       - name: Install cibuildwheel

@@ -18,6 +18,7 @@ for extra in ['extras', 'docs', 'tests', 'tutorials']:
     with open('requirements/requirements-{0}.txt'.format(extra)) as fp:
         extras_require[extra] = fp.read()
 
+print(platform.system())
 if platform.system() == "Windows":
     fim_module = Extension(
         name='elephant.spade_src.fim',
