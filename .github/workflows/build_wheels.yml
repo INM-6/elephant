@@ -21,7 +21,7 @@ jobs:
 
       - name: Install gcc from brew
         if: runner.os == 'macOS'
-        run: brew install gcc
+        run: brew reinstall gcc
 
       - name: Install libomp
         if: runner.os == 'macOS'
