@@ -26,7 +26,8 @@ fim_module = Extension(
     extra_compile_args=[
         '-DMODULE_NAME=fim', '-DUSE_OPENMP', '-DWITH_SIG_TERM',
         '-Dfim_EXPORTS', '-O3', '-pedantic',
-        '-Wextra', '-Weffc++', '-Wunused-result', '-Werror',
+        #'-Wextra',
+        '-Weffc++', '-Wunused-result', '-Werror',
         '-fopenmp', '-std=gnu++17'])
 
 setup(
