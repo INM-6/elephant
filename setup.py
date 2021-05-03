@@ -22,7 +22,7 @@ fim_module = Extension(
     sources=['elephant/spade_src/src/fim.cpp'],
     include_dirs=['elephant/spade_src/include'],
     language='c++',
-    libraries=['pthread', 'gomp'],
+    libraries=[],#'pthread', 'gomp'],
     extra_compile_args=[
         '-DMODULE_NAME=fim', '-DUSE_OPENMP', '-DWITH_SIG_TERM',
         '-Dfim_EXPORTS', '-O3', '-pedantic',
