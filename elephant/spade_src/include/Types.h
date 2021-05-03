@@ -33,11 +33,9 @@
 #include <vector>
 #include <map>
 
-// TODO: Reevaluate variable types and names; redesign some to make the code more consistent and reduce problems
-
 using ItemC = uint32_t;
 using Support = uint32_t;
-using ItemID = uint64_t;
+using ItemID = std::size_t;
 
 using Transaction = std::vector<ItemC>;
 using Transactions = std::vector<Transaction>;

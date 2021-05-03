@@ -369,12 +369,12 @@ static inline std::string SizeWithSuffix(const int64_t& val)
 #endif
 
 
-uint64_t GetCurrentRSS()
+std::size_t GetCurrentRSS()
 {
 #ifdef _WIN32 // Windows
 	PROCESS_MEMORY_COUNTERS pmc;
 	GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-	return static_cast<uint64_t>(pmc.WorkingSetSize);
+	return static_cast<std::size_t>(pmc.WorkingSetSize);
 #endif
 
 #ifdef __linux__ // Linux
@@ -391,7 +391,7 @@ uint64_t GetCurrentRSS()
 	in >> tSize >> resident;
 	in.close();
 
-	return static_cast<uint64_t>(resident * sysconf(_SC_PAGE_SIZE));
+	return resident * sysconf(_SC_PAGE_SIZE);
 #endif
 }
 
