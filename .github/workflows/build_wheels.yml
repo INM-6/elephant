@@ -20,11 +20,11 @@ jobs:
         run: python -m pip install cibuildwheel==1.10.0
 
       - name: Install gcc from brew
-        if: runner.os == 'Darwin'
+        if: runner.os == 'macOS'
         run: brew install gcc
 
       - name: Install libomp
-        if: runner.os == 'Darwin'
+        if: runner.os == 'macOS'
         run: brew install libomp
 
       #- name: Install Visual C++ for Python 2.7
