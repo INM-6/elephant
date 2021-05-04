@@ -40,8 +40,8 @@ elif platform.system() == "Darwin":
             '-DMODULE_NAME=fim', '-DUSE_OPENMP', '-DWITH_SIG_TERM',
             '-Dfim_EXPORTS', '-O3', '-pedantic', '-Wextra',
             '-Weffc++', '-Wunused-result', '-Werror',
-            #'-Xpreprocessor',
-            '-fopenmp', '-std=gnu++17'])
+            '-Xpreprocessor',
+            '-fopenmp', '-std=c++17'])
 else:
     fim_module = Extension(
         name='elephant.spade_src.fim',
