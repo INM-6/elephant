@@ -58,13 +58,11 @@ else:
 setup(
     name="elephant-mdenker",
     version=version,
-    packages=['elephant', 'elephant.test'],
+    packages=['elephant', 'elephant.test', 'elephant.spade_src.fim'],
     include_package_data=True,
     ext_modules=[fim_module],
-
     install_requires=install_requires,
     extras_require=extras_require,
-
     author="Elephant authors and contributors",
     author_email="contact@python-elephant.org",
     description="Elephant is a package for analysis of electrophysiology "
