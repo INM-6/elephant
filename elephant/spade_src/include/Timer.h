@@ -49,6 +49,7 @@ using Clock = std::chrono::system_clock;
         using Clock = std::chrono::system_clock;
     #else
         using Clock = std::chrono::high_resolution_clock;
+    #endif
 #endif
 
 class Timer
