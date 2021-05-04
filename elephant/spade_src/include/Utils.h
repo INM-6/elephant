@@ -368,6 +368,10 @@ static inline std::string SizeWithSuffix(const int64_t& val)
 #include <stdio.h>
 #endif
 
+#ifdef __APPLE__
+#include <stdio.h>
+#endif
+
 
 std::size_t GetCurrentRSS()
 {
@@ -378,6 +382,24 @@ std::size_t GetCurrentRSS()
 #endif
 
 #ifdef __linux__ // Linux
+	std::size_t tSize;
+	std::size_t resident;
+	std::ifstream in("/proc/self/statm");
+
+	if (!in.is_open())
+	{
+		std::cerr << "Unable to read /proc/self/statm for current process" << std::endl;
+		return 0;
+	}
+
+	in >> tSize >> resident;
+	in.close();
+
+	return resident * sysconf(_SC_PAGE_SIZE);
+#endif
+
+
+#ifdef __APPLE__ // Linux
 	std::size_t tSize;
 	std::size_t resident;
 	std::ifstream in("/proc/self/statm");
