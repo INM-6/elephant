@@ -56,7 +56,7 @@ else:
             '-fopenmp', '-std=gnu++17'])
 
 setup(
-    name="elephant",
+    name="elephant-mdenker",
     version=version,
     packages=['elephant', 'elephant.test'],
     include_package_data=True,
