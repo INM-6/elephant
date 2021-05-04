@@ -398,22 +398,23 @@ std::size_t GetCurrentRSS()
 	return resident * sysconf(_SC_PAGE_SIZE);
 #endif
 
+#ifdef __APPLE__ // MacOS
+    #ifdef TARGET_OS_MAC
+        std::size_t tSize;
+        std::size_t resident;
+        std::ifstream in("/proc/self/statm");
 
-#ifdef __APPLE__ // Linux
-	std::size_t tSize;
-	std::size_t resident;
-	std::ifstream in("/proc/self/statm");
+        if (!in.is_open())
+        {
+            std::cerr << "Unable to read /proc/self/statm for current process" << std::endl;
+            return 0;
+        }
 
-	if (!in.is_open())
-	{
-		std::cerr << "Unable to read /proc/self/statm for current process" << std::endl;
-		return 0;
-	}
+        in >> tSize >> resident;
+        in.close();
 
-	in >> tSize >> resident;
-	in.close();
-
-	return resident * sysconf(_SC_PAGE_SIZE);
+        return resident * sysconf(_SC_PAGE_SIZE);
+    #endif
 #endif
 }
 
