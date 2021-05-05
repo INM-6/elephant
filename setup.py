@@ -58,7 +58,7 @@ else:
 setup(
     name="elephant-mdenker",
     version=version,
-    packages=['elephant', 'elephant.test', 'elephant.spade_src.fim'],
+    packages=['elephant', 'elephant.test'],
     include_package_data=True,
     ext_modules=[fim_module],
     install_requires=install_requires,
