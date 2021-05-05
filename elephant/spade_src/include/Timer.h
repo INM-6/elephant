@@ -45,11 +45,7 @@
 #ifdef _MSC_VER
 using Clock = std::chrono::system_clock;
 #else
-    #ifdef __APPLE__
-        using Clock = std::chrono::system_clock;
-    #else
-        using Clock = std::chrono::high_resolution_clock;
-    #endif
+using Clock = std::chrono::high_resolution_clock;
 #endif
 
 class Timer
