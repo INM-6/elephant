@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import os
 import platform
 
@@ -18,7 +17,6 @@ for extra in ['extras', 'docs', 'tests', 'tutorials']:
     with open('requirements/requirements-{0}.txt'.format(extra)) as fp:
         extras_require[extra] = fp.read()
 
-print(platform.system())
 if platform.system() == "Windows":
     fim_module = Extension(
         name='elephant.spade_src.fim',
@@ -56,7 +54,7 @@ else:
             '-fopenmp', '-std=gnu++17'])
 
 setup(
-    name="elephant-mdenker",
+    name="elephant",
     version=version,
     packages=['elephant', 'elephant.test'],
     include_package_data=True,
@@ -65,8 +63,7 @@ setup(
     extras_require=extras_require,
     author="Elephant authors and contributors",
     author_email="contact@python-elephant.org",
-    description="Elephant is a package for analysis of electrophysiology "
-                "data in Python",
+    description="Elephant is a package for analysis of electrophysiology data in Python",
     long_description=long_description,
     license="BSD",
     url='http://python-elephant.org',
