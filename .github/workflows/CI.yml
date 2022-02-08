@@ -19,29 +19,30 @@ on:
     branches:
       - master
     types:
-      - assigned
-      - unassigned
+      #- assigned
+      #- unassigned
       - labeled
-      - unlabeled
+      #- unlabeled
       - opened
-      - edited
-      - closed
-      - reopened
-      - synchronize
-      - converted_to_draft
-      - ready_for_review
-      - locked
-      - unlocked
-      - review_requested
-      - review_request_removed
-      - auto_merge_enabled
-      - auto_merge_disabled
+      #- edited
+      #- closed
+      #- reopened
+      #- synchronize
+      #- converted_to_draft
+      #- ready_for_review
+      #- locked
+      #- unlocked
+      #- review_requested
+      #- review_request_removed
+      #- auto_merge_enabled
+      #- auto_merge_disabled
 
 
 # jobs define the steps that will be executed on the runner
 jobs:
   # install dependencies and elephant with pip and run tests with pytest
   build-and-test-pip:
+    if: github.event.label.name == 'run_tests'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -99,6 +100,7 @@ jobs:
 
   # install dependencies with conda and run tests with pytest
   test-conda:
+    #if: github.event.label.name == 'run_tests'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -143,6 +145,7 @@ jobs:
 
   # install dependencies with pip and run tests with pytest
   test-pip:
+      if: github.event.label.name == 'run_tests'
       runs-on: ${{ matrix.os }}
       strategy:
         matrix:
@@ -195,6 +198,7 @@ jobs:
 
   # install dependencies and elephant with pip and run MPI
   test-pip-MPI:
+    if: github.event.label.name == 'run_tests'
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -244,6 +248,7 @@ jobs:
 
   # install dependencies for the documentation and build .html
   docs:
+       if: github.event.label.name == 'run_tests'
        runs-on: ${{ matrix.os }}
        strategy:
         matrix:
