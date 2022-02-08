@@ -3,7 +3,40 @@
 
 name: tests
 # define events that trigger workflow 'tests'
-on: workflow_dispatch
+on: 
+  workflow_dispatch: # enables manual triggering of workflow
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug      
+  pull_request:
+    branches:
+      - master
+    types:
+      - assigned
+      - unassigned
+      - labeled
+      - unlabeled
+      - opened
+      - edited
+      - closed
+      - reopened
+      - synchronize
+      - converted_to_draft
+      - ready_for_review
+      - locked
+      - unlocked
+      - review_requested
+      - review_request_removed
+      - auto_merge_enabled
+      - auto_merge_disabled
+
 
 # jobs define the steps that will be executed on the runner
 jobs:
