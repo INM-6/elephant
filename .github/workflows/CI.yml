@@ -130,6 +130,7 @@ jobs:
         activate base
         conda install -c conda-forge openmpi
         pip install -r requirements/requirements-tests.txt
+        pip install pytest==6.2.5
         pip install pytest-cov coveralls
         pip install .
 
