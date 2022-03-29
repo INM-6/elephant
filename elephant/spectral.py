@@ -22,6 +22,7 @@ import quantities as pq
 import scipy.signal
 
 from elephant.utils import deprecated_alias
+import elephant.objects as objects
 
 __all__ = [
     "welch_psd",
@@ -196,6 +197,13 @@ def welch_psd(signal, n_segments=8, len_segment=None,
         3.14573483e-08, 6.82050475e-09, 1.18183354e-10]]) * mV**2/Hz
 
     """
+    # Elephant function params (store to use later in the Analysis Object)
+    elephant_params = {'n_segments': n_segments, 'len_segment': len_segment,
+                       'frequency_resolution': frequency_resolution,
+                       'overlap': overlap, 'fs': fs, 'window': window,
+                       'nfft': nfft, 'detrend': detrend,
+                       'return_onesided': return_onesided, 'scaling': scaling,
+                       'axis': axis}
 
     # initialize a parameter dict (to be given to scipy.signal.welch()) with
     # the parameters directly passed on to scipy.signal.welch()
@@ -253,7 +261,7 @@ def welch_psd(signal, n_segments=8, len_segment=None,
         #  --------------------   ===============================  ^^^^^^^^^^^
         # summed segment lengths        total overlap              data length
         nperseg = int(data.shape[axis] / (n_segments - overlap * (
-            n_segments - 1)))
+                n_segments - 1)))
     params['nperseg'] = nperseg
     params['noverlap'] = int(nperseg * overlap)
 
@@ -267,6 +275,14 @@ def welch_psd(signal, n_segments=8, len_segment=None,
             psd = psd * signal.units * signal.units / pq.Hz
         freqs = freqs * pq.Hz
 
+    if objects.USE_ANALYSIS_OBJECTS:
+        params.pop('x')
+        computation_method = 'scipy.signal.welch'
+        psd_object = objects.PSDObject(freqs, psd,
+                                       computation_method=computation_method,
+                                       computation_params=params,
+                                       elephant_params=elephant_params)
+        return psd_object
     return freqs, psd
 
 
@@ -479,7 +495,7 @@ def welch_coherence(signal_i, signal_j, n_segments=8, len_segment=None,
         #  -------------------    ===============================  ^^^^^^^^^^^
         # summed segment lengths        total overlap              data length
         nperseg = int(xdata.shape[axis] / (n_segments - overlap * (
-            n_segments - 1)))
+                n_segments - 1)))
     params['nperseg'] = nperseg
     params['noverlap'] = int(nperseg * overlap)
 

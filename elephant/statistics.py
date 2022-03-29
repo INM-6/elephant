@@ -79,6 +79,7 @@ import elephant.kernels as kernels
 from elephant.conversion import BinnedSpikeTrain
 from elephant.utils import deprecated_alias, check_neo_consistency, \
     is_time_quantity, round_binning_errors
+import elephant.objects as objects
 
 # do not import unicode_literals
 # (quantities rescale does not work with unicodes)
@@ -1013,10 +1014,19 @@ def time_histogram(spiketrains, bin_size, t_start=None, t_stop=None,
     else:
         raise ValueError(f'Parameter output ({output}) is not valid.')
 
-    return neo.AnalogSignal(signal=np.expand_dims(bin_hist, axis=1),
-                            sampling_period=bin_size, units=bin_hist.units,
-                            t_start=bs.t_start, normalization=output,
-                            copy=False)
+    if not objects.USE_ANALYSIS_OBJECTS:
+        return neo.AnalogSignal(signal=np.expand_dims(bin_hist, axis=1),
+                                sampling_period=bin_size, units=bin_hist.units,
+                                t_start=bs.t_start, normalization=output,
+                                copy=False)
+
+    return objects.TimeHistogramObject(bins=np.expand_dims(bin_hist, axis=1),
+                                       bin_size=bin_size,
+                                       units=bin_hist.units,
+                                       histogram_type=output,
+                                       t_start=bs.t_start, binary=binary,
+                                       copy=False,
+                                       warnings_raised=False)
 
 
 @deprecated_alias(binsize='bin_size')

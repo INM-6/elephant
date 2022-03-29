@@ -7,6 +7,7 @@ in Elephant.
 """
 
 from datetime import datetime
+from copy import deepcopy
 import uuid
 
 
@@ -35,7 +36,9 @@ class AnalysisObject(object):
         # This can be used internally by child classes to provide flexibility
         # when initializing the object with extended provenance information.
         for key, value in kwargs.items():
-            setattr(self, key, value)
+
+            setattr(self, key, value if not isinstance(value, (list, dict))
+                    else deepcopy(value))
 
     def _get_annotations(self):
         return self._annotations
