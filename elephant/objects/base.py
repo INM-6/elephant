@@ -20,16 +20,16 @@ class AnalysisObject(object):
 
     def __init__(self, *args, **kwargs):
         self._create_time = datetime.now()
-        self._pid = self._create_pid()
-        self._annotations = None
         self._warnings_raised = False
         self._ontology_path = None
         self._provenance_track = None
 
         # If base class does not have annotations, we store them in this class
         if not hasattr(self, 'annotations'):
-            self._annotations = dict()
-            self.annotations = property(self._get_annotations)
+            self.annotations = dict()
+
+        self._pid = self._create_pid()
+
 
     def _store_kwargs(self, kwargs):
         # Stores additional parameters as additional object attributes.
@@ -39,9 +39,6 @@ class AnalysisObject(object):
 
             setattr(self, key, value if not isinstance(value, (list, dict))
                     else deepcopy(value))
-
-    def _get_annotations(self):
-        return self._annotations
 
     @staticmethod
     def _create_pid():
@@ -99,7 +96,7 @@ class AnalysisObject(object):
         """
         self.annotations[key] = value
 
-    def set_annotations(self, annotation):
+    def set_annotations(self, annotations):
         """
         Inserts a dictionary into the object annotations.
 
@@ -108,9 +105,9 @@ class AnalysisObject(object):
         annotation : dict
             Dictionary with object annotations.
         """
-        if not isinstance(annotation, dict):
+        if not isinstance(annotations, dict):
             raise TypeError("Annotations must be a dictionary")
-        self.annotations.update(annotation)
+        self.annotations.update(annotations)
 
     def serialize(self, path):
         """
