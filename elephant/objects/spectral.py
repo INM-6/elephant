@@ -53,3 +53,7 @@ class PSDObject(AnalysisObject, _PSDObjectTuple):
     @property
     def computation_parameters(self):
         return self._computation_params
+
+    @property
+    def frequency_resolution(self):
+        return self.freqs[1] - self.freqs[0]
