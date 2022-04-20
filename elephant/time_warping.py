@@ -535,7 +535,7 @@ def warp_list_of_segments_by_events(
 
     new_block = neo.Block(name='Block warped by events')
     for seg_idx, segment in enumerate(list_of_segments):
-        print(f'Currently warping segment {seg_idx}')
+        print(f'Currently warping segment {seg_idx}', end="\r")
         knots_x, knots_y, warped_segment = warp_segment_by_events(
             segment,
             event_name,
