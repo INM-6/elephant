@@ -2,11 +2,10 @@
 """
 Unit tests for the GPFA analysis.
 
-:copyright: Copyright 2014-2016 by the Elephant team, see AUTHORS.txt.
+:copyright: Copyright 2014-2022 by the Elephant team, see AUTHORS.txt.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
-import sys
 import unittest
 
 import neo
@@ -21,11 +20,10 @@ try:
     from elephant.gpfa import gpfa_util
     from elephant.gpfa import GPFA
     from sklearn.model_selection import cross_val_score
+
     HAVE_SKLEARN = True
 except ImportError:
     HAVE_SKLEARN = False
-
-python_version_major = sys.version_info.major
 
 
 @unittest.skipUnless(HAVE_SKLEARN, 'requires sklearn')
@@ -113,8 +111,6 @@ class GPFATestCase(unittest.TestCase):
         with self.assertRaises(ValueError):
             gpfa1.transform(self.data2)
 
-    @unittest.skipUnless(python_version_major == 3,
-                         "sklearn py2 has a bug in cross_val_score")
     def test_cross_validation(self):
         # If GPFA.__init__ is decorated, sklearn signature function parsing
         # magic throws the error
@@ -204,7 +200,6 @@ class GPFATestCase(unittest.TestCase):
         seqs_cut = gpfa_util.cut_trials(seqs, seg_length=seg_length)
         assert_array_almost_equal(seqs[0]['y'], seqs_cut[0]['y'])
 
-    @unittest.skipUnless(python_version_major == 3, "assertWarns requires 3.2")
     def test_cut_trials_larger_length(self):
         data = [self.data2[0]]
         seqs = gpfa_util.get_seqs(data, bin_size=self.bin_size)
@@ -222,15 +217,5 @@ class GPFATestCase(unittest.TestCase):
         assert_array_almost_equal(logdet_fast, logdet_ground_truth)
 
 
-def suite():
-    suite = unittest.makeSuite(GPFATestCase, 'test')
-    return suite
-
-
-def run():
-    runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(suite())
-
-
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=2)

@@ -2,12 +2,11 @@
 """
 Unit tests for the causality module.
 
-:copyright: Copyright 2014-2020 by the Elephant team, see `doc/authors.rst`.
+:copyright: Copyright 2014-2022 by the Elephant team, see `doc/authors.rst`.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 from __future__ import division, print_function
 
-import sys
 import unittest
 
 import numpy as np
@@ -123,8 +122,6 @@ class PairwiseGrangerTestCase(unittest.TestCase):
                           elephant.causality.granger.pairwise_granger,
                           array_1d, max_order=2)
 
-    @unittest.skipUnless(sys.version_info >= (3, 1),
-                         "requires Python 3.1 or above")
     def test_result_namedtuple(self):
         """
         Check if the result of pairwise_granger is in the form of namedtuple.

@@ -1,13 +1,12 @@
 """
 Unit tests for the waveform_feature module.
 
-:copyright: Copyright 2014-2019 by the Elephant team, see `doc/authors.rst`.
+:copyright: Copyright 2014-2022 by the Elephant team, see `doc/authors.rst`.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
 from __future__ import division
 
-import sys
 import unittest
 
 import numpy as np
@@ -15,8 +14,6 @@ import quantities as pq
 from numpy.testing import assert_array_almost_equal
 
 from elephant import waveform_features
-
-python_version_major = sys.version_info.major
 
 
 class WaveformWidthTestCase(unittest.TestCase):
@@ -64,7 +61,6 @@ class WaveformWidthTestCase(unittest.TestCase):
 
 
 class WaveformSignalToNoiseRatioTestCase(unittest.TestCase):
-    @unittest.skipUnless(python_version_major == 3, "assertWarns requires 3.2")
     def test_zero_waveforms(self):
         zero_waveforms = [np.zeros((5, 10)),
                           np.zeros((5, 1, 10)),

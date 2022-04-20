@@ -2,11 +2,10 @@
 """
 Unit tests for the spike_train_correlation module.
 
-:copyright: Copyright 2015-2016 by the Elephant team, see `doc/authors.rst`.
+:copyright: Copyright 2014-2022 by the Elephant team, see `doc/authors.rst`.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
-import sys
 import unittest
 
 import neo
@@ -16,11 +15,9 @@ from numpy.testing.utils import assert_array_equal, assert_array_almost_equal
 
 import elephant.conversion as conv
 import elephant.spike_train_correlation as sc
-from elephant.spike_train_generation import homogeneous_poisson_process,\
+from elephant.spike_train_generation import homogeneous_poisson_process, \
     homogeneous_gamma_process
 import math
-
-python_version_major = sys.version_info.major
 
 
 class CovarianceTestCase(unittest.TestCase):
@@ -45,9 +42,9 @@ class CovarianceTestCase(unittest.TestCase):
             bin_size=1 * pq.ms)
 
     def test_covariance_binned(self):
-        '''
+        """
         Test covariance between two binned spike trains.
-        '''
+        """
 
         # Calculate clipped and unclipped
         res_clipped = sc.covariance(
@@ -90,10 +87,10 @@ class CovarianceTestCase(unittest.TestCase):
         self.assertAlmostEqual(res_clipped[1][0], target_from_scratch)
 
     def test_covariance_binned_same_spiketrains(self):
-        '''
+        """
         Test if the covariation between two identical binned spike
         trains evaluates to the expected 2x2 matrix.
-        '''
+        """
         # Calculate correlation
         binned_st = conv.BinnedSpikeTrain(
             [self.st_0, self.st_0], t_start=0 * pq.ms, t_stop=50. * pq.ms,
@@ -106,10 +103,10 @@ class CovarianceTestCase(unittest.TestCase):
         assert_array_equal(result[0][0], result[1][1])
 
     def test_covariance_binned_short_input(self):
-        '''
+        """
         Test if input list of only one binned spike train yields correct result
         that matches numpy.cov (covariance with itself)
-        '''
+        """
         # Calculate correlation
         binned_st = conv.BinnedSpikeTrain(
             self.st_0, t_start=0 * pq.ms, t_stop=50. * pq.ms,
@@ -160,9 +157,9 @@ class CorrCoefTestCase(unittest.TestCase):
             bin_size=1 * pq.ms)
 
     def test_corrcoef_binned(self):
-        '''
+        """
         Test the correlation coefficient between two binned spike trains.
-        '''
+        """
 
         # Calculate clipped and unclipped
         res_clipped = sc.correlation_coefficient(
@@ -211,10 +208,10 @@ class CorrCoefTestCase(unittest.TestCase):
         self.assertAlmostEqual(res_clipped[1][0], target_from_scratch)
 
     def test_corrcoef_binned_same_spiketrains(self):
-        '''
+        """
         Test if the correlation coefficient between two identical binned spike
         trains evaluates to a 2x2 matrix of ones.
-        '''
+        """
         # Calculate correlation
         binned_st = conv.BinnedSpikeTrain(
             [self.st_0, self.st_0], t_start=0 * pq.ms, t_stop=50. * pq.ms,
@@ -231,9 +228,9 @@ class CorrCoefTestCase(unittest.TestCase):
                 binned_st, fast=True))
 
     def test_corrcoef_binned_short_input(self):
-        '''
+        """
         Test if input list of one binned spike train yields 1.0.
-        '''
+        """
         # Calculate correlation
         binned_st = conv.BinnedSpikeTrain(
             self.st_0, t_start=0 * pq.ms, t_stop=50. * pq.ms,
@@ -248,12 +245,11 @@ class CorrCoefTestCase(unittest.TestCase):
             result, sc.correlation_coefficient(
                 binned_st, fast=True))
 
-    @unittest.skipUnless(python_version_major == 3, "assertWarns requires 3.2")
     def test_empty_spike_train(self):
-        '''
+        """
         Test whether a warning is yielded in case of empty spike train.
         Also check correctness of the output array.
-        '''
+        """
         # st_2 is empty
         binned_12 = conv.BinnedSpikeTrain([self.st_1, self.st_2],
                                           bin_size=1 * pq.ms)
@@ -318,10 +314,10 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
             bin_size=1 * pq.ms)
 
     def test_cross_correlation_histogram(self):
-        '''
+        """
         Test generic result of a cross-correlation histogram between two binned
         spike trains.
-        '''
+        """
         # Calculate CCH using Elephant (normal and binary version) with
         # mode equal to 'full' (whole spike trains are correlated)
         cch_clipped, bin_ids_clipped = sc.cross_correlation_histogram(
@@ -483,8 +479,8 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
             self.binned_st2, window='dsaij', method='memory')
 
     def test_raising_error_wrong_inputs(self):
-        '''Check that an exception is thrown if the two spike trains are not
-        fullfilling the requirement of the function'''
+        """Check that an exception is thrown if the two spike trains are not
+        fullfilling the requirement of the function"""
         # Check the bin_sizes are the same
         self.assertRaises(
             ValueError,
@@ -499,7 +495,7 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
             self.binned_st2, self.st_check_dimension)
 
     def test_window(self):
-        '''Test if the window parameter is correctly interpreted.'''
+        """Test if the window parameter is correctly interpreted."""
         cch_win, bin_ids = sc.cch(
             self.binned_st1, self.binned_st2, window=[-30, 30])
         cch_win_mem, bin_ids_mem = sc.cch(
@@ -555,8 +551,8 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
             self.binned_st2, window='test')
 
     def test_border_correction(self):
-        '''Test if the border correction for bins at the edges is correctly
-        performed'''
+        """Test if the border correction for bins at the edges is correctly
+        performed"""
 
         # check that nothing changes for valid lags
         cch_valid, _ = sc.cross_correlation_histogram(
@@ -596,8 +592,8 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
              / (min_n_bins - n_bins_outside_window))[mask])
 
     def test_kernel(self):
-        '''Test if the smoothing kernel is correctly defined, and wheter it is
-        applied properly.'''
+        """Test if the smoothing kernel is correctly defined, and wheter it is
+        applied properly."""
         smoothed_cch, _ = sc.cross_correlation_histogram(
             self.binned_st1, self.binned_st2, kernel=np.ones(3))
         smoothed_cch_mem, _ = sc.cross_correlation_histogram(
@@ -620,9 +616,9 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
             kernel=np.ones(100), method='memory')
 
     def test_exist_alias(self):
-        '''
+        """
         Test if alias cch still exists.
-        '''
+        """
         self.assertEqual(sc.cross_correlation_histogram, sc.cch)
 
     def test_annotations(self):
@@ -635,7 +631,6 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
         self.assertEqual(cch.annotations['cch_parameters'], target_dict)
 
 
-@unittest.skipUnless(python_version_major == 3, "subTest requires 3.4")
 class CrossCorrelationHistDifferentTStartTStopTest(unittest.TestCase):
 
     def _run_sub_tests(self, st1, st2, lags_true):
@@ -773,7 +768,7 @@ class SpikeTimeTilingCoefficientTestCase(unittest.TestCase):
 class SpikeTrainTimescaleTestCase(unittest.TestCase):
 
     def test_timescale_calculation(self):
-        '''
+        """
         Test the timescale generation using an alpha-shaped ISI distribution,
         see [1, eq. 1.68]. This is equivalent to a homogeneous gamma process
         with alpha=2 and beta=2*nu where nu is the rate.
@@ -785,7 +780,7 @@ class SpikeTrainTimescaleTestCase(unittest.TestCase):
 
         [1] Lindner, B. (2009). A brief introduction to some simple stochastic
             processes. Stochastic Methods in Neuroscience, 1.
-        '''
+        """
         nu = 25 / pq.s
         T = 15 * pq.min
         bin_size = 1 * pq.ms
@@ -813,8 +808,6 @@ class SpikeTrainTimescaleTestCase(unittest.TestCase):
         self.assertRaises(ValueError,
                           sc.spike_train_timescale, spikes_bin, tau_max)
 
-    @unittest.skipUnless(python_version_major == 3,
-                         "assertWarns requires python 3.2")
     def test_timescale_nan(self):
         st0 = neo.SpikeTrain([] * pq.ms, t_stop=10 * pq.ms)
         st1 = neo.SpikeTrain([1] * pq.ms, t_stop=10 * pq.ms)

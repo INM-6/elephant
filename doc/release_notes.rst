@@ -1,10 +1,129 @@
-*************
+=============
 Release Notes
-*************
+=============
+
+Elephant 0.11.1 release notes
+=============================
+
+Bug fixes
+-------------
+* Fix installation on macOS (#472)
+
+Documentation
+-------------
+* Added example to `asset.discretise_spiketimes` docstring  (#468)
+
+Optimizations
+-------------
+* Performance improvement of Spike Time Tiling Coefficient (STTC) (#438)
+
+Other changes
+-------------
+* Continuous Integration (CI): added two workflows for macOS (#474)
+* Fixed failing unit test asset on macOS (#474)
+
+Selected dependency changes
+-------------
+* scipy >=1.5.4 (#473)
+
+Elephant 0.11.0 release notes
+=============================
+
+Breaking changes
+-------------
+
+* For current source density measures electrode coordinates can no longer be supplied via a `RecordingChannelGroup` object as it is no longer supported in Neo v0.10.0 (#447)
+
+New functionality and features
+-------------
+
+* Redesigned `elephant.spike_train_generation` module using classes (old API is retained for compatibility) (#416)
+* Added function to calculate the multitaper power spectral density estimate in `elephant.spectral` (#417)
+* Added a boundary correction for the firing rate estimator `elephant.statistics.instantaneous_rate` with Gaussian kernels (#414)
+* Function to discretise spiketimes for a given spiketrain in `elephant.conversion` (#454)
+* Support for the new `SpikeTrainList` object of Neo (#447)
+
+Bug fixes
+-------------
+
+* Issue with unit scaling in `BinnedSpikeTrain` (#425)
+* Changed `BinnedSpikeTrain` to support quantities<0.12.4 (#418)
+* Fix `FloatingPointError` in ICSD (#421)
+* `t_start` information was lost while transposing LFP for `current_source_density` module (#432)
+* Fix `neo_tools` unit tests to work with Neo 0.10.0+ (#446)
+* Fixed various issues with consistency of bin boundaries of instantaneous rates (#453)
+
+Documentation
+-------------
+
+* Update tutorials ASSET and UE tutorial and datasets to use nixio >=1.5.0 (#441)
+* Updated `spade` tutorial to work with viziphant 0.2.0 (#444)
+* Fixed figures in the Granger causality tutorial (#434)
+* Add DOIs to documentation (#456)
+* Fixed random seed selection in some tutorials (#430)
+
+Optimizations
+-------------
+
+* Highly optimized run-time of the SPADE analysis (#419)
+* More efficient storage of spike complexities by the `elephant.statistics.Complexity` class (#412)
+* Updated `elephant.signal_processing.zscore` function for in-place operations (#440)
+
+Other changes
+-------------
+
+* Continuous Integration (CI) was moved to github actions (#451)
+* Change test framework from Nose to pytest (#413)
+* Added DOI with zenodo (#445)
+* Versioning for associated `elephant-data` repository for example datasets introduced (#463)
+
+
+Selected dependency changes
+-------------
+* nixio >= 1.5.0
+* neo >= 0.10.0
+* python >= 3.7
+
+
+Elephant 0.10.0 release notes
+=============================
+
+Documentation
+-------------
+The documentation is revised and restructured by categories (https://github.com/NeuralEnsemble/elephant/pull/386) to simplify navigation on readthedocs and improve user experience. All citations used in Elephant are stored in a single [BibTex file](https://github.com/NeuralEnsemble/elephant/blob/master/doc/bib/elephant.bib).
+
+Optimizations
+-------------
+
+CUDA and OpenCL support
+***********************
+[Analysis of Sequences of Synchronous EvenTs](https://elephant.readthedocs.io/en/latest/reference/asset.html) has become the first module in Elephant that supports CUDA and OpenCL (https://github.com/NeuralEnsemble/elephant/pull/351, https://github.com/NeuralEnsemble/elephant/pull/404, https://github.com/NeuralEnsemble/elephant/pull/399). Whether you have an Nvidia GPU or just run the analysis on a laptop with a built-in Intel graphics card, the speed-up is **X100** and **X1000** compared to a single CPU core. The computations are optimized to a degree that you can analyse and look for spike patterns in real data in several minutes of compute time on a laptop. The installation instructions are described in the [install](https://elephant.readthedocs.io/en/latest/install.html) section.
+
+Other optimizations
+*******************
+* Surrogates: sped up bin shuffling (https://github.com/NeuralEnsemble/elephant/pull/400) and reimplemented the continuous time version (https://github.com/NeuralEnsemble/elephant/pull/397)
+* Improved memory efficiency of creating a BinnedSpikeTrain (https://github.com/NeuralEnsemble/elephant/pull/395)
+
+New functionality and features
+------------------------------
+* Synchrofact detection (https://github.com/NeuralEnsemble/elephant/pull/322) is a method to detect highly synchronous spikes (at the level of sampling rate precision with an option to extend this to jittered synchrony) and annotate or optionally remove them.
+* Added `phase_locking_value`, `mean_phase_vector`, and `phase_difference` functions (https://github.com/NeuralEnsemble/elephant/pull/385/files)
+* BinnedSpikeTrain:
+  - added `to_spike_trains` and `time_slice` functions (https://github.com/NeuralEnsemble/elephant/pull/390). Now you can slice a binned spike train as `bst[:, i:j]` or `bst.time_slice(t_start, t_stop)`. Also, with `to_spike_trains` function, you can generate a realization of spike trains that maps to the same BinnedSpikeTrain object when binned.
+  - optional CSC format (https://github.com/NeuralEnsemble/elephant/pull/402)
+  - the `copy` parameter (False by default) in the `binarize` function makes a *shallow* copy, if set to True, of the output BinnedSpikeTrain object (https://github.com/NeuralEnsemble/elephant/pull/402)
+* Granger causality tutorial notebook (https://github.com/NeuralEnsemble/elephant/pull/393)
+* Unitary Event Analysis support multiple pattern hashes (https://github.com/NeuralEnsemble/elephant/pull/387)
+
+Bug fixes
+---------
+* Account for unidirectional spiketrain->segment links in synchrofact deletion (https://github.com/NeuralEnsemble/elephant/pull/398)
+* Joint-ISI dithering: fixed a bug regarding first ISI bin (https://github.com/NeuralEnsemble/elephant/pull/396)
+* Fix LvR values from being off when units are in seconds (https://github.com/NeuralEnsemble/elephant/pull/389)
 
 
 Elephant 0.9.0 release notes
-============================
+****************************
 
 This release is titled to accompany the [2nd Elephant User Workshop](https://www.humanbrainproject.eu/en/education/participatecollaborate/infrastructure-events-trainings/2nd-elephant-user-workshop/)
 
@@ -72,7 +191,7 @@ Bug fixes
 
 
 Elephant 0.8.0 release notes
-============================
+****************************
 
 New features
 ------------
@@ -99,7 +218,7 @@ Breaking changes
 * Naming convention changes (`binsize` -> `bin_size`, etc.) in almost all Elephant functions (https://github.com/NeuralEnsemble/elephant/pull/316).
 
 Elephant 0.7.0 release notes
-============================
+****************************
 
 Breaking changes
 ----------------
@@ -145,7 +264,7 @@ Performance
 
 
 Elephant 0.6.4 release notes
-============================
+****************************
 
 This release has been made for the "1st Elephant User Workshop" (https://www.humanbrainproject.eu/en/education/participatecollaborate/infrastructure-events-trainings/1st-elephant-user-workshop-accelerate-structured-and-reproducibl).
 
@@ -177,7 +296,7 @@ Improvements
 
 
 Elephant 0.6.3 release notes
-============================
+****************************
 July 22nd 2019
 
 The release v0.6.3 is mostly about improving maintenance.
@@ -200,7 +319,7 @@ Other changes
 * Single VERSION file (https://github.com/NeuralEnsemble/elephant/pull/231)
 
 Elephant 0.6.2 release notes
-============================
+****************************
 April 23rd 2019
 
 New functions
@@ -215,7 +334,7 @@ Other changes
 
 
 Elephant 0.6.1 release notes
-============================
+****************************
 April 1st 2019
 
 New functions
@@ -233,7 +352,7 @@ Other changes
 
 
 Elephant 0.6.0 release notes
-============================
+****************************
 October 12th 2018
 
 New functions
@@ -251,7 +370,7 @@ Other changes
 
 
 Elephant 0.5.0 release notes
-============================
+****************************
 April 4nd 2018
 
 New functions
@@ -271,7 +390,7 @@ Other changes
 
 
 Elephant 0.4.3 release notes
-============================
+****************************
 March 2nd 2018
 
 Other changes
@@ -281,7 +400,7 @@ Other changes
 
 
 Elephant 0.4.2 release notes
-============================
+****************************
 March 1st 2018
 
 New functions
@@ -307,7 +426,7 @@ Other changes
 
 
 Elephant 0.4.1 release notes
-============================
+****************************
 March 23rd 2017
 
 Other changes
@@ -316,7 +435,7 @@ Other changes
 
 
 Elephant 0.4.0 release notes
-============================
+****************************
 March 22nd 2017
 
 New functions
@@ -342,7 +461,7 @@ Other changes
 
 
 Elephant 0.3.0 release notes
-============================
+****************************
 April 12st 2016
 
 New functions
@@ -371,7 +490,7 @@ Other changes
 
 
 Elephant 0.2.1 release notes
-============================
+****************************
 February 18th 2016
 
 Other changes
@@ -380,7 +499,7 @@ Minor bug fixes.
 
 
 Elephant 0.2.0 release notes
-============================
+****************************
 September 22nd 2015
 
 New functions
