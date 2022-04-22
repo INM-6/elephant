@@ -30,7 +30,6 @@ class AnalysisObject(object):
 
         self._pid = self._create_pid()
 
-
     def _store_kwargs(self, kwargs):
         # Stores additional parameters as additional object attributes.
         # This can be used internally by child classes to provide flexibility

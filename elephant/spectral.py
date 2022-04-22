@@ -275,15 +275,13 @@ def welch_psd(signal, n_segments=8, len_segment=None,
             psd = psd * signal.units * signal.units / pq.Hz
         freqs = freqs * pq.Hz
 
-    if objects.USE_ANALYSIS_OBJECTS:
-        params.pop('x')
-        computation_method = 'scipy.signal.welch'
-        psd_object = objects.PSDObject(freqs, psd,
-                                       computation_method=computation_method,
-                                       computation_params=params,
-                                       elephant_params=elephant_params)
-        return psd_object
-    return freqs, psd
+    params.pop('x')
+    computation_method = 'scipy.signal.welch'
+    psd_object = objects.PSDObject(freqs, psd,
+                                   computation_method=computation_method,
+                                   computation_params=params,
+                                   elephant_params=elephant_params)
+    return psd_object
 
 
 @deprecated_alias(x='signal_i', y='signal_j', num_seg='n_segments',

@@ -1014,12 +1014,6 @@ def time_histogram(spiketrains, bin_size, t_start=None, t_stop=None,
     else:
         raise ValueError(f'Parameter output ({output}) is not valid.')
 
-    if not objects.USE_ANALYSIS_OBJECTS:
-        return neo.AnalogSignal(signal=np.expand_dims(bin_hist, axis=1),
-                                sampling_period=bin_size, units=bin_hist.units,
-                                t_start=bs.t_start, normalization=output,
-                                copy=False)
-
     return objects.TimeHistogramObject(bins=np.expand_dims(bin_hist, axis=1),
                                        bin_size=bin_size,
                                        units=bin_hist.units,
