@@ -32,6 +32,8 @@ from neo.core import SpikeTrain
 import elephant.kernels as kernels
 from elephant.utils import deprecated_alias
 
+from scipy.stats import wasserstein_distance
+
 __all__ = [
     "victor_purpura_distance",
     "van_rossum_distance"
@@ -303,6 +305,31 @@ def _victor_purpura_dist_for_st_pair_intuitive(spiketrain_a, spiketrain_b,
                                         spiketrain_b[j - 1])).simplified))
     return scr[nspk_a, nspk_b]
 
+def earth_movers_distance(spiketrains):
+
+    for train in spiketrains:
+        if not (isinstance(train, (pq.quantity.Quantity, SpikeTrain)) and
+                train.dimensionality.simplified ==
+                pq.Quantity(1, "s").dimensionality.simplified):
+            raise TypeError("Spike trains must have a time unit.")
+
+    def compute(i, j):
+        if i == j:
+            return 0.0
+        else:
+            return wasserstein_distance(
+                spiketrains[i], spiketrains[j])
+
+    return _create_matrix_from_indexed_function(
+        (len(spiketrains), len(spiketrains)), compute)
+
+if __name__ == '__main__':
+    r = SpikeTrain([0, 1, 3], units='ms', t_stop=10)
+    s = SpikeTrain([5, 6, 8], units='ms', t_stop=10)
+    t = SpikeTrain([7.3, 8.375, 9.999], units='ms', t_stop=10)
+    u = SpikeTrain([23, 56, 77.5]*pq.ms, t_stop=100)
+    st = [r, s, t, u]
+    print(earth_movers_distance(st))
 
 @deprecated_alias(trains='spiketrains', tau='time_constant')
 def van_rossum_distance(spiketrains, time_constant=1.0 * pq.s, sort=True):
