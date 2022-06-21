@@ -438,3 +438,54 @@ def _summed_dist_matrix(spiketrains, tau, presorted=False):
             D[v, u] = D[u, v]
 
     return D
+
+def hunter_milton_similarity(trains, tau=1.0 * pq.s, kernel=None):
+    """ Calculates the Hunter-Milton similarity measure.
+    If the kernel function is denoted as :math:`K(t)`, a function :math:`d(x_k)
+    = K(x_k - y_{k'})` can be defined with :math:`y_{k'}` being the closest
+    spike in spike train :math:`y` to the spike :math:`x_k` in spike train
+    :math:`x`. With this the Hunter-Milton similarity measure is :math:`S_H =
+    \\frac{1}{2} \\left(\\frac{1}{n_x} \\sum_{k = 1}^{n_x} d(x_k)
+    + \\frac{1}{n_y} \\sum_{k' = 1}^{n_y} d(y_{k'})\\right)`.
+    This implementation returns 0 if one of the spike trains is empty, but 1 if
+    both are empty.
+    Further information can be found in
+    - *Hunter, J. D., & Milton, J. G. (2003). Amplitude and Frequency
+      Dependence of Spike Timing: Implications for Dynamic Regulation. Journal
+      of Neurophysiology.*
+    - *Dauwels, J., Vialatte, F., Weber, T., & Cichocki, A. (2009). On
+      similarity measures for spike trains. Advances in Neuro-Information
+      Processing, 177-185.*
+    :param sequence trains: Sequence of :class:`neo.core.SpikeTrain` objects of
+        which the Hunter-Milton similarity will be calculated pairwise.
+    :param tau: The time scale for determining the coincidence of two events as
+        time scalar.
+    :type tau: Quantity scalar
+    :param kernel: Kernel to use in the calculation of the distance. If `None`,
+        a unnormalized Laplacian kernel will be used.
+    :type kernel: :class:`.signal_processing.Kernel`
+    :returns: Matrix containing the Hunter-Milton similarity for all pairs of
+        spike trains.
+    :rtype: 2-D array
+    """
+
+    from elephant.signal_processing_spikeutils import LaplacianKernel
+    from elephant import kernels
+
+    if kernel is None:
+        #kernel = LaplacianKernel(tau)
+         kernel = kernels.LaplacianKernel(tau)
+
+    def compute(i, j):
+        if i == j:
+            return 1.0
+        elif trains[i].size <= 0 or trains[j].size <= 0:
+            return 0.0
+        else:
+            diff_matrix = sp.absolute(trains[i] - sp.atleast_2d(trains[j]).T)
+            return 0.5 * (
+                sp.sum(kernel(sp.amin(diff_matrix, axis=0))) / trains[i].size +
+                sp.sum(kernel(sp.amin(diff_matrix, axis=1))) / trains[j].size)
+
+    return _create_matrix_from_indexed_function(
+        (len(trains), len(trains)), compute, kernel.is_symmetric())

@@ -586,6 +586,19 @@ class TimeScaleDependSpikeTrainDissimMeasures_TestCase(unittest.TestCase):
             [self.st21], self.tau3)[0, 0], 0)
         self.assertEqual(len(stds.van_rossum_distance([], self.tau3)), 0)
 
+    def test_returns_correct_hunter_milton_similarity(self):
+        import quantities as pq
+        import scipy as sp
+        a = SpikeTrain(sp.array([1.0, 2.5, 6.5]) * pq.s, t_stop=7.0 * pq.s)
+        c = SpikeTrain(sp.array([2.1, 2.0, 5.0]) * pq.s,
+                           t_stop=10.0 * pq.s)
+        tau = 2.0 * pq.s
+        expected = sp.array(
+            [[1.0,  0.661254342403672],
+             [0.661254342403672,  1.0]])
+        actual = stds.hunter_milton_similarity([a, c], tau)
+        assert_array_almost_equal(expected, actual)
+
 
 if __name__ == '__main__':
     unittest.main()
