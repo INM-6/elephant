@@ -1283,6 +1283,7 @@ class Complexity(object):
     """
 
     def __init__(self, spiketrains,
+                 only_events_with=None,
                  sampling_rate=None,
                  bin_size=None,
                  binary=True,
@@ -1298,6 +1299,7 @@ class Complexity(object):
             raise ValueError('Spread must be >=0')
 
         self.input_spiketrains = spiketrains
+        self.only_events_with = only_events_with
         self.t_start = spiketrains[0].t_start
         self.t_stop = spiketrains[0].t_stop
         self.sampling_rate = sampling_rate
@@ -1308,6 +1310,20 @@ class Complexity(object):
 
         if bin_size is None and sampling_rate is not None:
             self.bin_size = 1 / self.sampling_rate
+
+        if only_events_with is not None:
+            self.subpopulation_spiketrains = []
+            self.subpopulation_indices = []
+            for i, st in enumerate(self.input_spiketrains):
+                if (all([key in st.annotations for key in only_events_with])
+                    and
+                    all([st.annotations[key] == value
+                         for key, value in only_events_with.items()])):
+                    self.subpopulation_indices.append(i)
+                    self.subpopulation_spiketrains.append(st)
+        else:
+            self.subpopulation_spiketrains = self.input_spiketrains
+            self.subpopulation_indices = slice(None)
 
         if spread == 0:
             self.time_histogram, self.complexity_histogram = \
@@ -1347,6 +1363,12 @@ class Complexity(object):
         time_hist = time_histogram(self.input_spiketrains,
                                    self.bin_size,
                                    binary=self.binary)
+
+        if self.only_events_with is not None:
+            subpop_time_hist = time_histogram(self.subpopulation_spiketrains,
+                                              self.bin_size,
+                                              binary=self.binary)
+            time_hist[subpop_time_hist.magnitude.flatten() == 0] = 0
 
         # Computing the histogram of the entries of pophist
         complexity_hist = np.histogram(
@@ -1475,9 +1497,22 @@ class Complexity(object):
         combined_complexities = np.concatenate((single_bin_complexities,
                                                 cluster_complexities))
         sorting = np.argsort(combined_starts, kind='mergesort')
-        left_edges = bst.bin_edges[combined_starts[sorting]]
-        right_edges = bst.bin_edges[combined_stops[sorting]]
-        complexities = combined_complexities[sorting].astype(np.uint16)
+        combined_starts = combined_starts[sorting]
+        combined_stops = combined_stops[sorting]
+        combined_complexities = combined_complexities[sorting]
+
+        if self.only_events_with is not None:
+            mask = np.array([bst.sparse_matrix[self.subpopulation_indices,
+                                               start:stop].count_nonzero() > 0
+                             for start, stop in zip(combined_starts,
+                                                    combined_stops)])
+            combined_starts = combined_starts[mask]
+            combined_stops = combined_stops[mask]
+            combined_complexities = combined_complexities[mask]
+
+        left_edges = bst.bin_edges[combined_starts]
+        right_edges = bst.bin_edges[combined_stops]
+        complexities = combined_complexities.astype(np.uint16)
 
         if self.sampling_rate:
             # ensure that spikes are not on the bin edges

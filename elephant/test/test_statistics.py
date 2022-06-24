@@ -1133,6 +1133,34 @@ class ComplexityTestCase(unittest.TestCase):
         self.assertIsInstance(complexity_obj.epoch,
                               neo.Epoch)
 
+    def test_complexity_histogram_spread_0_subpopulation(self):
+        sampling_rate = 1 / pq.s
+
+        spiketrains = [neo.SpikeTrain([1, 5, 9, 11, 16, 19] * pq.s,
+                                      t_stop=20 * pq.s),
+                       neo.SpikeTrain([1, 4, 8, 12, 16, 18] * pq.s,
+                                      t_stop=20 * pq.s),
+                       neo.SpikeTrain([1, 3, 8, 11, 13, 18] * pq.s,
+                                      pick='me',
+                                      t_stop=20 * pq.s)]
+
+        correct_histogram = np.array([14, 2, 3, 1])
+
+        correct_time_histogram = np.array([0, 3, 0, 1, 0, 0, 0, 0, 2, 0,
+                                           0, 2, 0, 1, 0, 0, 0, 0, 2, 0])
+
+        complexity_obj = statistics.Complexity(spiketrains,
+                                               only_events_with={'pick': 'me'},
+                                               sampling_rate=sampling_rate,
+                                               spread=0)
+
+        assert_array_equal(complexity_obj.complexity_histogram,
+                           correct_histogram)
+
+        assert_array_equal(
+            complexity_obj.time_histogram.magnitude.flatten().astype(int),
+            correct_time_histogram)
+
     def test_complexity_histogram_spread_1(self):
         sampling_rate = 1 / pq.s
 
@@ -1147,6 +1175,34 @@ class ComplexityTestCase(unittest.TestCase):
                                            3, 3, 3, 0, 0, 1, 0, 1, 0, 1])
 
         complexity_obj = statistics.Complexity(spiketrains,
+                                               sampling_rate=sampling_rate,
+                                               spread=1)
+
+        assert_array_equal(complexity_obj.complexity_histogram,
+                           correct_histogram)
+
+        assert_array_equal(
+            complexity_obj.time_histogram.magnitude.flatten().astype(int),
+            correct_time_histogram)
+
+    def test_complexity_histogram_spread_1_subpopulation(self):
+        sampling_rate = 1 / pq.s
+
+        spiketrains = [neo.SpikeTrain([0, 1, 5, 9, 11, 13] * pq.s,
+                                      t_stop=21 * pq.s),
+                       neo.SpikeTrain([1, 4, 7, 12, 16, 18] * pq.s,
+                                      t_stop=21 * pq.s),
+                       neo.SpikeTrain([1, 4, 9, 16, 20] * pq.s,
+                                      pick='me',
+                                      t_stop=21 * pq.s)]
+
+        correct_histogram = np.array([14, 1, 2, 1, 1])
+
+        correct_time_histogram = np.array([4, 4, 0, 0, 3, 3, 0, 0, 0, 2, 0,
+                                           0, 0, 0, 0, 0, 2, 0, 0, 0, 1])
+
+        complexity_obj = statistics.Complexity(spiketrains,
+                                               only_events_with={'pick': 'me'},
                                                sampling_rate=sampling_rate,
                                                spread=1)
 
