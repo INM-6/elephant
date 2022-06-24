@@ -261,6 +261,7 @@ class Synchrotool(Complexity):
 
     def __init__(self, spiketrains,
                  sampling_rate,
+                 only_events_with=None,
                  bin_size=None,
                  binary=True,
                  spread=0,
@@ -269,6 +270,7 @@ class Synchrotool(Complexity):
         self.annotated = False
 
         super(Synchrotool, self).__init__(spiketrains=spiketrains,
+                                          only_events_with=only_events_with,
                                           bin_size=bin_size,
                                           sampling_rate=sampling_rate,
                                           binary=binary,
