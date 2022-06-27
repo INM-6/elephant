@@ -1502,13 +1502,16 @@ class Complexity(object):
         combined_complexities = combined_complexities[sorting]
 
         if self.only_events_with is not None:
-            mask = np.array([bst.sparse_matrix[self.subpopulation_indices,
-                                               start:stop].count_nonzero() > 0
-                             for start, stop in zip(combined_starts,
-                                                    combined_stops)])
-            combined_starts = combined_starts[mask]
-            combined_stops = combined_stops[mask]
-            combined_complexities = combined_complexities[mask]
+            subpopulation_bincount = bst[self.subpopulation_indices].get_num_of_spikes(axis=0)
+            subpopulation_nonzero_indices = np.nonzero(subpopulation_bincount)[0]
+            clusters_with_subpopulation = np.searchsorted(combined_stops,
+                                                          subpopulation_nonzero_indices,
+                                                          side='left')
+            clusters_with_subpopulation = np.unique(clusters_with_subpopulation)
+
+            combined_starts = combined_starts[clusters_with_subpopulation]
+            combined_stops = combined_stops[clusters_with_subpopulation]
+            combined_complexities = combined_complexities[clusters_with_subpopulation]
 
         left_edges = bst.bin_edges[combined_starts]
         right_edges = bst.bin_edges[combined_stops]
