@@ -334,10 +334,14 @@ class Synchrotool(Complexity):
             raise ValueError('A deletion threshold <= 1 would result '
                              'in the deletion of all spikes.')
 
+        spiketrains_to_modify = self.input_spiketrains
+        if self.only_events_with is not None:
+            spiketrains_to_modify = self.subpopulation_spiketrains
+
         if in_place:
-            spiketrain_list = self.input_spiketrains
+            spiketrain_list = spiketrains_to_modify
         else:
-            spiketrain_list = deepcopy(self.input_spiketrains)
+            spiketrain_list = deepcopy(spiketrains_to_modify)
 
         for idx, st in enumerate(spiketrain_list):
             mask = st.array_annotations['complexity'] < threshold
@@ -398,7 +402,11 @@ class Synchrotool(Complexity):
                 self.epoch.times.units).magnitude.flatten()
         )
 
-        for idx, st in enumerate(self.input_spiketrains):
+        spiketrains_to_annotate = self.input_spiketrains
+        if self.only_events_with is not None:
+            spiketrains_to_annotate = self.subpopulation_spiketrains
+
+        for idx, st in enumerate(spiketrains_to_annotate):
 
             # all indices of spikes that are within the half-open intervals
             # defined by the boundaries
