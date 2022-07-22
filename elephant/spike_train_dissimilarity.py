@@ -473,8 +473,9 @@ def hunter_milton_similarity(trains, tau=1.0 * pq.s, kernel=None):
     from elephant import kernels
 
     if kernel is None:
-        #kernel = LaplacianKernel(tau)
-         kernel = kernels.LaplacianKernel(tau)
+        kernel = LaplacianKernel(tau, normalize=False)
+        # kernel = kernels.LaplacianKernel(tau)
+        # kernel = kernels.LaplacianKernel2(tau, normalize=False)
 
     def compute(i, j):
         if i == j:
@@ -482,7 +483,7 @@ def hunter_milton_similarity(trains, tau=1.0 * pq.s, kernel=None):
         elif trains[i].size <= 0 or trains[j].size <= 0:
             return 0.0
         else:
-            diff_matrix = sp.absolute(trains[i] - sp.atleast_2d(trains[j]).T)
+            diff_matrix = sp.absolute(trains[i].times - sp.atleast_2d(trains[j].times).T)
             return 0.5 * (
                 sp.sum(kernel(sp.amin(diff_matrix, axis=0))) / trains[i].size +
                 sp.sum(kernel(sp.amin(diff_matrix, axis=1))) / trains[j].size)

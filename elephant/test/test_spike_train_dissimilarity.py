@@ -590,15 +590,41 @@ class TimeScaleDependSpikeTrainDissimMeasures_TestCase(unittest.TestCase):
         import quantities as pq
         import scipy as sp
         a = SpikeTrain(sp.array([1.0, 2.5, 6.5]) * pq.s, t_stop=7.0 * pq.s)
+        b = SpikeTrain(
+            sp.array([1.2, 5.7, 8.0, 9.0]) * pq.s, t_stop=10.0 * pq.s)
         c = SpikeTrain(sp.array([2.1, 2.0, 5.0]) * pq.s,
                            t_stop=10.0 * pq.s)
         tau = 2.0 * pq.s
         expected = sp.array(
-            [[1.0,  0.661254342403672],
-             [0.661254342403672,  1.0]])
-        actual = stds.hunter_milton_similarity([a, c], tau)
+            [[1.0, 0.64128747518120299, 0.661254342403672],
+             [0.64128747518120299, 1.0, 0.5521235786217787],
+             [0.661254342403672, 0.5521235786217787, 1.0]])
+        actual = stds.hunter_milton_similarity([a, b, c], tau)
         assert_array_almost_equal(expected, actual)
 
+    def test_allows_use_of_different_kernel(self):
+        import quantities as pq
+        import scipy as sp
+        # from elephant.kernels import TriangularKernel
+        from elephant.signal_processing_spikeutils import TriangularKernel
+
+        a = SpikeTrain(sp.array([1.0, 2.5, 6.5]) * pq.s, t_stop=7.0 * pq.s)
+        b = SpikeTrain(
+            sp.array([1.2, 5.7, 8.0, 9.0]) * pq.s, t_stop=10.0 * pq.s)
+        kernel = TriangularKernel(1.0 * pq.s) # normalize=False
+        expected = sp.array(
+            [[1.0, 0.29166666666666663], [0.29166666666666663, 1.0]])
+        actual = stds.hunter_milton_similarity([a, b], kernel=kernel)
+        assert_array_almost_equal(expected, actual)
+
+    def test_spike_trains_may_be_empty(self):
+        import quantities as pq
+        import scipy as sp
+        empty = SpikeTrain(sp.array([]) * pq.s, t_stop=3.0 * pq.s)
+        non_empty = SpikeTrain(sp.array([1.0]) * pq.s, t_stop=3.0 * pq.s)
+        expected = sp.array([[1.0, 0.0], [0.0, 1.0]])
+        actual = stds.hunter_milton_similarity([empty, non_empty])
+        assert_array_almost_equal(expected, actual)
 
 if __name__ == '__main__':
     unittest.main()
