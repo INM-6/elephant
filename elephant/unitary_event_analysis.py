@@ -56,6 +56,7 @@ from collections import defaultdict
 
 import neo
 import numpy as np
+from param import ParameterizedFunction, ParamOverrides, List, Number, Selector, Boolean, Integer
 import quantities as pq
 import scipy
 
@@ -690,169 +691,244 @@ def _UE(mat, pattern_hash, method='analytic_TrialByTrial', n_surrogates=1):
     return Js, rate_avg, n_exp, n_emp, indices
 
 
-@deprecated_alias(data='spiketrains', binsize='bin_size', winsize='win_size',
-                  winstep='win_step', n_surr='n_surrogates')
-def jointJ_window_analysis(spiketrains, bin_size=5 * pq.ms,
-                           win_size=100 * pq.ms, win_step=5 * pq.ms,
-                           pattern_hash=None, method='analytic_TrialByTrial',
-                           t_start=None, t_stop=None, binary=True,
-                           n_surrogates=100):
-    """
-    Calculates the joint surprise in a sliding window fashion.
+class jointJ_window_analysis(ParameterizedFunction):
+    """Funktion to calculate the joint surprise in a sliding window fashion."""
 
-    Implementation is based on :cite:`unitary_event_analysis-Gruen99_67`.
+    spiketrains = List(item_type=neo.SpikeTrain,
+                       doc=f"A list of spike trains (`neo.SpikeTrain` objects) in different trials:"
+                           f"* 0-axis --> Trials"
+                           f"* 1-axis --> Neurons"
+                           f"* 2-axis --> Spike times")
+    bin_size = Number(default=5 * pq.ms,
+                      bounds=(0.0 * pq.ms, None),
+                      softbounds=(1 * pq.ms, 100*pq.ms),
+                      step=1 * pq.ms,
+                      doc=f"The size of bins for discretizing spike trains.")
+    win_size = Number(default=100 * pq.ms,
+                      bounds=(0.0 * pq.ms, None),
+                      softbounds=(10 * pq.ms, 1000 * pq.ms),
+                      step=10 * pq.ms,
+                      doc=f"The size of the window of analysis.")
+    win_step = Number(default=5 * pq.ms,
+                      bounds=(0.0 * pq.ms, None),
+                      softbounds=(1 * pq.ms, 100 * pq.ms),
+                      step=1 * pq.ms,
+                      doc=f"The size of the window step.")
+    pattern_hash = List(default=None,
+                        item_type=int,
+                        doc=f"A list of interested patterns in hash values (see `hash_from_pattern`"
+                            f"and `inverse_hash_from_pattern` functions). If None, all neurons "
+                            f"are participated.")
+    method = Selector(default='analytic_TrialByTrial',
+                      objects=['analytic_TrialByTrial', 'analytic_TrialAverage', 'surrogate_TrialByTrial'],
+                      check_on_set=True,
+                      doc=f"The method with which to compute the unitary events:"
+                          f"* 'analytic_TrialByTrial': calculate the analytical expectancy"
+                          f"   on each trial, then sum over all trials;"
+                          f"* 'analytic_TrialAverage': calculate the expectancy by averaging over"
+                          f"   trials (cf. Gruen et al. 2003);"
+                          f"* 'surrogate_TrialByTrial': calculate the distribution of expected"
+                          f"   coincidences by spike time randomization in each trial and sum over trials.")
+    t_start = Number(default=None,
+                     bounds=(None, None),
+                     softbounds=(0 * pq.ms, 10000 * pq.ms),
+                     step=100 * pq.ms,
+                     doc=f"The start time to use for the time points."
+                         f"If not specified, retrieved from the `t_start` attribute"
+                         f"of the input spiketrains.")
 
-    Parameters
-    ----------
-    spiketrains : list
-        A list of spike trains (`neo.SpikeTrain` objects) in different trials:
-          * 0-axis --> Trials
+    t_stop = Number(default=None,
+                    bounds=(None, None),
+                    softbounds=(0 * pq.ms, 10000 * pq.ms),
+                    step=100 * pq.ms,
+                    doc=f"The stop times to use for the time points."
+                        f"If not specified, retrieved from the and `t_stop` attributes"
+                        f"of the input spiketrains.")
 
-          * 1-axis --> Neurons
+    binary = Boolean(default=True,
+                     allow_None=False,
+                     doc=f"Binarize the binned spike train objects (True) or not. Only the binary"
+                         f"matrices are supported at the moment.")
+    n_surrogates = Integer(default=100,
+                           bounds=(0, None),
+                           softbounds=(100, 1000),
+                           step=10,
+                           doc=f"The number of surrogates to be used.")
 
-          * 2-axis --> Spike times
-    bin_size : pq.Quantity, optional
-        The size of bins for discretizing spike trains.
-        Default: 5 ms
-    win_size : pq.Quantity, optional
-        The size of the window of analysis.
-        Default: 100 ms
-    win_step : pq.Quantity, optional
-        The size of the window step.
-        Default: 5 ms
-    pattern_hash : int or list of int or None, optional
-        A list of interested patterns in hash values (see `hash_from_pattern`
-        and `inverse_hash_from_pattern` functions). If None, all neurons
-        are participated.
-        Default: None
-    method : str, optional
-        The method with which to compute the unitary events:
+    def __call__(self, **params):
+        print("inside __call__ of jointJ_window_analysis(ParameterizedFunction)")
+        p = ParamOverrides(self, params)
+        return self._jointJ_window_analysis(spiketrains=p.spiketrains,
+                                            bin_size=p.bin_size,
+                                            win_size=p.win_size,
+                                            win_step=p.win_step,
+                                            pattern_hash=p.pattern_hash,
+                                            method=p.method,
+                                            t_start=p.t_start,
+                                            t_stop=p.t_stop,
+                                            binary=p.binary,
+                                            n_surrogates=p.n_surrogates
+                                            )
 
-          * 'analytic_TrialByTrial': calculate the analytical expectancy
-            on each trial, then sum over all trials;
-          * 'analytic_TrialAverage': calculate the expectancy by averaging over
-            trials (cf. Gruen et al. 2003);
-          * 'surrogate_TrialByTrial': calculate the distribution of expected
-            coincidences by spike time randomization in each trial and sum over
-            trials.
+    def _jointJ_window_analysis(self, spiketrains, bin_size, win_size, win_step,
+                               pattern_hash, method, t_start, t_stop, binary,
+                               n_surrogates):
+        """
+        Calculates the joint surprise in a sliding window fashion.
 
-        Default: 'analytic_trialByTrial'
-    t_start, t_stop : float or pq.Quantity, optional
-        The start and stop times to use for the time points.
-        If not specified, retrieved from the `t_start` and `t_stop` attributes
-        of the input spiketrains.
-    binary : bool, optional
-        Binarize the binned spike train objects (True) or not. Only the binary
-        matrices are supported at the moment.
-        Default: True
-    n_surrogates : int, optional
-        The number of surrogates to be used.
-        Default: 100
+        Implementation is based on :cite:`unitary_event_analysis-Gruen99_67`.
 
-    Returns
-    -------
-    dict
-        The values of the following keys have the shape of
+        Parameters
+        ----------
+        spiketrains : list
+            A list of spike trains (`neo.SpikeTrain` objects) in different trials:
+              * 0-axis --> Trials
 
-          * different window --> 0-axis
-          * different pattern hash --> 1-axis
+              * 1-axis --> Neurons
 
-        'Js': list of float
-          JointSurprise of different given patterns within each window.
-        'indices': list of list of int
-          A list of indices of pattern within each window.
-        'n_emp': list of int
-          The empirical number of each observed pattern.
-        'n_exp': list of float
-          The expected number of each pattern.
-        'rate_avg': list of float
-          The average firing rate of each neuron.
+              * 2-axis --> Spike times
+        bin_size : pq.Quantity, optional
+            The size of bins for discretizing spike trains.
+            Default: 5 ms
+        win_size : pq.Quantity, optional
+            The size of the window of analysis.
+            Default: 100 ms
+        win_step : pq.Quantity, optional
+            The size of the window step.
+            Default: 5 ms
+        pattern_hash : int or list of int or None, optional
+            A list of interested patterns in hash values (see `hash_from_pattern`
+            and `inverse_hash_from_pattern` functions). If None, all neurons
+            are participated.
+            Default: None
+        method : str, optional
+            The method with which to compute the unitary events:
 
-        Additionally, 'input_parameters' key stores the input parameters.
+              * 'analytic_TrialByTrial': calculate the analytical expectancy
+                on each trial, then sum over all trials;
+              * 'analytic_TrialAverage': calculate the expectancy by averaging over
+                trials (cf. Gruen et al. 2003);
+              * 'surrogate_TrialByTrial': calculate the distribution of expected
+                coincidences by spike time randomization in each trial and sum over
+                trials.
 
-    Raises
-    ------
-    ValueError
-        If `data` is not in the format, specified above.
-    NotImplementedError
-        If `binary` is not True. The method works only with binary matrices at
-        the moment.
+            Default: 'analytic_trialByTrial'
+        t_start, t_stop : float or pq.Quantity, optional
+            The start and stop times to use for the time points.
+            If not specified, retrieved from the `t_start` and `t_stop` attributes
+            of the input spiketrains.
+        binary : bool, optional
+            Binarize the binned spike train objects (True) or not. Only the binary
+            matrices are supported at the moment.
+            Default: True
+        n_surrogates : int, optional
+            The number of surrogates to be used.
+            Default: 100
 
-    Warns
-    -----
-    UserWarning
-        The ratio between `winsize` or `winstep` and `bin_size` is not an
-        integer.
+        Returns
+        -------
+        dict
+            The values of the following keys have the shape of
 
-    """
-    if not isinstance(spiketrains[0][0], neo.SpikeTrain):
-        raise ValueError(
-            "structure of the data is not correct: 0-axis should be trials, "
-            "1-axis units and 2-axis neo spike trains")
+              * different window --> 0-axis
+              * different pattern hash --> 1-axis
 
-    if t_start is None:
-        t_start = spiketrains[0][0].t_start
-    if t_stop is None:
-        t_stop = spiketrains[0][0].t_stop
+            'Js': list of float
+              JointSurprise of different given patterns within each window.
+            'indices': list of list of int
+              A list of indices of pattern within each window.
+            'n_emp': list of int
+              The empirical number of each observed pattern.
+            'n_exp': list of float
+              The expected number of each pattern.
+            'rate_avg': list of float
+              The average firing rate of each neuron.
 
-    n_trials = len(spiketrains)
-    n_neurons = len(spiketrains[0])
-    if pattern_hash is None:
-        pattern = [1] * n_neurons
-        pattern_hash = hash_from_pattern(pattern)
-    if np.issubdtype(type(pattern_hash), np.integer):
-        pattern_hash = [int(pattern_hash)]
+            Additionally, 'input_parameters' key stores the input parameters.
 
-    # position of all windows (left edges)
-    t_winpos = _winpos(t_start, t_stop, win_size, win_step,
-                       position='left-edge')
-    t_winpos_bintime = _bintime(t_winpos, bin_size)
+        Raises
+        ------
+        ValueError
+            If `data` is not in the format, specified above.
+        NotImplementedError
+            If `binary` is not True. The method works only with binary matrices at
+            the moment.
 
-    winsize_bintime = _bintime(win_size, bin_size)
-    winstep_bintime = _bintime(win_step, bin_size)
+        Warns
+        -----
+        UserWarning
+            The ratio between `winsize` or `winstep` and `bin_size` is not an
+            integer.
 
-    if winsize_bintime * bin_size != win_size:
-        warnings.warn(f"The ratio between the win_size ({win_size}) and the "
-                      f"bin_size ({bin_size}) is not an integer")
+        """
+        if not isinstance(spiketrains[0][0], neo.SpikeTrain):
+            raise ValueError(
+                "structure of the data is not correct: 0-axis should be trials, "
+                "1-axis units and 2-axis neo spike trains")
 
-    if winstep_bintime * bin_size != win_step:
-        warnings.warn(f"The ratio between the win_step ({win_step}) and the "
-                      f"bin_size ({bin_size}) is not an integer")
+        if t_start is None:
+            t_start = spiketrains[0][0].t_start
+        if t_stop is None:
+            t_stop = spiketrains[0][0].t_stop
 
-    input_parameters = dict(pattern_hash=pattern_hash, bin_size=bin_size,
-                            win_size=win_size, win_step=win_step,
-                            method=method, t_start=t_start, t_stop=t_stop,
-                            n_surrogates=n_surrogates)
+        n_trials = len(spiketrains)
+        n_neurons = len(spiketrains[0])
+        if pattern_hash is None:
+            pattern = [1] * n_neurons
+            pattern_hash = hash_from_pattern(pattern)
+        if np.issubdtype(type(pattern_hash), np.integer):
+            pattern_hash = [int(pattern_hash)]
 
-    n_bins = int(((t_stop - t_start) / bin_size).simplified.item())
+        # position of all windows (left edges)
+        t_winpos = _winpos(t_start, t_stop, win_size, win_step,
+                           position='left-edge')
+        t_winpos_bintime = _bintime(t_winpos, bin_size)
 
-    mat_tr_unit_spt = np.zeros((len(spiketrains), n_neurons, n_bins),
-                               dtype=np.int32)
-    for trial, sts in enumerate(spiketrains):
-        bs = conv.BinnedSpikeTrain(list(sts), t_start=t_start, t_stop=t_stop,
-                                   bin_size=bin_size)
-        if not binary:
-            raise NotImplementedError(
-                "The method works only with binary matrices at the moment")
-        mat_tr_unit_spt[trial] = bs.to_bool_array()
+        winsize_bintime = _bintime(win_size, bin_size)
+        winstep_bintime = _bintime(win_step, bin_size)
 
-    n_windows = len(t_winpos)
-    n_hashes = len(pattern_hash)
-    Js_win, n_exp_win, n_emp_win = np.zeros((3, n_windows, n_hashes),
-                                            dtype=np.float32)
-    rate_avg = np.zeros((n_windows, n_hashes, n_neurons), dtype=np.float32)
-    indices_win = defaultdict(list)
+        if winsize_bintime * bin_size != win_size:
+            warnings.warn(f"The ratio between the win_size ({win_size}) and the "
+                          f"bin_size ({bin_size}) is not an integer")
 
-    for i, win_pos in enumerate(t_winpos_bintime):
-        mat_win = mat_tr_unit_spt[:, :, win_pos:win_pos + winsize_bintime]
-        Js_win[i], rate_avg[i], n_exp_win[i], n_emp_win[
-            i], indices_lst = _UE(mat_win, pattern_hash=pattern_hash,
-                                  method=method, n_surrogates=n_surrogates)
-        for j in range(n_trials):
-            if len(indices_lst[j][0]) > 0:
-                indices_win[f"trial{j}"].append(indices_lst[j][0] + win_pos)
-    for key in indices_win.keys():
-        indices_win[key] = np.hstack(indices_win[key])
-    return {'Js': Js_win, 'indices': indices_win, 'n_emp': n_emp_win,
-            'n_exp': n_exp_win, 'rate_avg': rate_avg / bin_size,
-            'input_parameters': input_parameters}
+        if winstep_bintime * bin_size != win_step:
+            warnings.warn(f"The ratio between the win_step ({win_step}) and the "
+                          f"bin_size ({bin_size}) is not an integer")
+
+        input_parameters = dict(pattern_hash=pattern_hash, bin_size=bin_size,
+                                win_size=win_size, win_step=win_step,
+                                method=method, t_start=t_start, t_stop=t_stop,
+                                n_surrogates=n_surrogates)
+
+        n_bins = int(((t_stop - t_start) / bin_size).simplified.item())
+
+        mat_tr_unit_spt = np.zeros((len(spiketrains), n_neurons, n_bins),
+                                   dtype=np.int32)
+        for trial, sts in enumerate(spiketrains):
+            bs = conv.BinnedSpikeTrain(list(sts), t_start=t_start, t_stop=t_stop,
+                                       bin_size=bin_size)
+            if not binary:
+                raise NotImplementedError(
+                    "The method works only with binary matrices at the moment")
+            mat_tr_unit_spt[trial] = bs.to_bool_array()
+
+        n_windows = len(t_winpos)
+        n_hashes = len(pattern_hash)
+        Js_win, n_exp_win, n_emp_win = np.zeros((3, n_windows, n_hashes),
+                                                dtype=np.float32)
+        rate_avg = np.zeros((n_windows, n_hashes, n_neurons), dtype=np.float32)
+        indices_win = defaultdict(list)
+
+        for i, win_pos in enumerate(t_winpos_bintime):
+            mat_win = mat_tr_unit_spt[:, :, win_pos:win_pos + winsize_bintime]
+            Js_win[i], rate_avg[i], n_exp_win[i], n_emp_win[
+                i], indices_lst = _UE(mat_win, pattern_hash=pattern_hash,
+                                      method=method, n_surrogates=n_surrogates)
+            for j in range(n_trials):
+                if len(indices_lst[j][0]) > 0:
+                    indices_win[f"trial{j}"].append(indices_lst[j][0] + win_pos)
+        for key in indices_win.keys():
+            indices_win[key] = np.hstack(indices_win[key])
+        return {'Js': Js_win, 'indices': indices_win, 'n_emp': n_emp_win,
+                'n_exp': n_exp_win, 'rate_avg': rate_avg / bin_size,
+                'input_parameters': input_parameters}
