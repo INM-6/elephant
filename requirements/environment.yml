@@ -13,6 +13,7 @@ dependencies:
   - scikit-learn
   - statsmodels
   - jinja2
+  - param
   - pip:
     - neo>=0.10.0
     - viziphant
