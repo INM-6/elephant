@@ -311,10 +311,9 @@ class GPFA(sklearn.base.BaseEstimator):
             raise ValueError(errmesg)
 
         if self.verbose:
-            print('Number of training trials: {}'.format(len(seqs_train)))
-            print('Latent space dimensionality: {}'.format(self.x_dim))
-            print('Observation dimensionality: {}'.format(
-                self.has_spikes_bool.sum()))
+            print(f'Number of training trials: {len(seqs_train)}')
+            print(f'Latent space dimensionality: {self.x_dim}')
+            print(f'Observation dimensionality: {self.has_spikes_bool.sum()}')
 
         # The following does the heavy lifting.
         self.params_estimated, self.fit_info = gpfa_core.fit(
@@ -348,7 +347,7 @@ class GPFA(sklearn.base.BaseEstimator):
             seq['y'] = seq['y'][self.has_spikes_bool, :]
         return seqs
 
-    def transform(self, spiketrains, returned_data=['latent_variable_orth']):
+    def transform(self, spiketrains, returned_data=None):
         """
         Obtain trajectories of neural activity in a low-dimensional latent
         variable space by inferring the posterior mean of the obtained GPFA
@@ -421,6 +420,8 @@ class GPFA(sklearn.base.BaseEstimator):
             If `returned_data` contains keys different from the ones in
             `self.valid_data_names`.
         """
+        if returned_data is None:
+            returned_data = ['latent_variable_orth']
         if len(spiketrains[0]) != len(self.has_spikes_bool):
             raise ValueError("'spiketrains' must contain the same number of "
                              "neurons as the training spiketrain data")
@@ -442,8 +443,7 @@ class GPFA(sklearn.base.BaseEstimator):
             return seqs[returned_data[0]]
         return {x: seqs[x] for x in returned_data}
 
-    def fit_transform(self, spiketrains, returned_data=[
-                      'latent_variable_orth']):
+    def fit_transform(self, spiketrains, returned_data=None):
         """
         Fit the model with `spiketrains` data and apply the dimensionality
         reduction on `spiketrains`.
@@ -472,6 +472,9 @@ class GPFA(sklearn.base.BaseEstimator):
         GPFA.transform : transform `spiketrains` into trajectories
 
         """
+        if returned_data is None:
+            returned_data = ['latent_variable_orth']
+
         self.fit(spiketrains)
         return self.transform(spiketrains, returned_data=returned_data)
 
