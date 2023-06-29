@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Basic processing procedures for time series (e.g., performing a z-score of a
 signal, or filtering a signal).
@@ -18,16 +17,12 @@ signal, or filtering a signal).
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
-from __future__ import division, print_function, unicode_literals
-
 import neo
 import numpy as np
 import quantities as pq
 import scipy.signal
 
 from elephant.utils import deprecated_alias, check_same_units
-
-import warnings
 
 __all__ = [
     "zscore",
@@ -67,7 +62,7 @@ def zscore(signal, inplace=True):
         Signals for which to calculate the z-score.
     inplace : bool, optional
         If True, the contents of the input `signal` is replaced by the
-        z-transformed signal, if possible, i.e when the signal type is float.
+        z-transformed signal, if possible, i.e. when the signal type is float.
         If the signal type is not float, an error is raised.
         If False, a copy of the original `signal` is returned.
         Default: True
@@ -339,9 +334,8 @@ def cross_correlation_function(signal, channel_pairs, hilbert_envelope=False,
                          "indices. Cannot define pairs for cross-correlation.")
     if not isinstance(hilbert_envelope, bool):
         raise ValueError("'hilbert_envelope' must be a boolean value")
-    if n_lags is not None:
-        if not isinstance(n_lags, int) or n_lags <= 0:
-            raise ValueError('n_lags must be a non-negative integer')
+    if n_lags is not None and not isinstance(n_lags, int) or n_lags <= 0:
+        raise ValueError('n_lags must be a non-negative integer')
 
     # z-score analog signal and store channel time series in different arrays
     # Cross-correlation will be calculated between xsig and ysig
@@ -353,7 +347,7 @@ def cross_correlation_function(signal, channel_pairs, hilbert_envelope=False,
     xsig, ysig = np.transpose(z_transformed.T[pairs], (1, 2, 0))
 
     # Define vector of lags tau
-    nt, nch = xsig.shape
+    nt = xsig.shape[0]
     tau = np.arange(nt) - nt // 2
 
     # Calculate cross-correlation by taking Fourier transform of signal,
@@ -369,7 +363,7 @@ def cross_correlation_function(signal, channel_pairs, hilbert_envelope=False,
         normalizer = np.sqrt((xsig ** 2).sum(axis=0) * (ysig ** 2).sum(axis=0))
         xcorr /= normalizer
     elif scaleopt != 'none':
-        raise ValueError("Invalid scaleopt mode: '{}'".format(scaleopt))
+        raise ValueError(f"Invalid scaleopt mode: '{scaleopt}'")
 
     # Calculate envelope of cross-correlation function with Hilbert transform.
     # This is useful for transient oscillatory signals.
@@ -576,7 +570,7 @@ def wavelet_transform(signal, frequency, n_cycles=6.0, sampling_frequency=1.0,
     Parameters
     ----------
     signal : (Nt, Nch) neo.AnalogSignal or np.ndarray or list
-        Time series data to be wavelet-transformed. When multi-dimensional
+        Time series data to be wavelet-transformed. When multidimensional
         `np.ndarray` or list is given, the time axis must be the last
         dimension. If `neo.AnalogSignal`, `Nt` is the number of time points
         and `Nch` is the number of channels.
@@ -836,7 +830,7 @@ def hilbert(signal, padding='nextpow'):
         # No padding
         n = n_org
     else:
-        raise ValueError("Invalid padding '{}'.".format(padding))
+        raise ValueError(f"Invalid padding '{padding}'.")
 
     output = signal.duplicate_with_new_data(
         scipy.signal.hilbert(signal.magnitude, N=n, axis=0)[:n_org])
@@ -930,6 +924,7 @@ def rauc(signal, baseline=None, bin_duration=None, t_start=None, t_stop=None):
         raise ValueError('Input signal is not a neo.AnalogSignal!')
 
     if baseline is None:
+        # no action required
         pass
     elif baseline == 'mean':
         # subtract mean from each channel
@@ -956,8 +951,8 @@ def rauc(signal, baseline=None, bin_duration=None, t_start=None, t_stop=None):
                     signal.sampling_period.rescale('s')))
             n_bins = int(np.ceil(signal.shape[0] / samples_per_bin))
         else:
-            raise ValueError("bin_duration must be a Quantity. Got {}".format(
-                bin_duration))
+            raise ValueError(f"bin_duration must be a Quantity. "
+                             f"Got {bin_duration}")
     else:
         # all samples in one bin
         samples_per_bin = signal.shape[0]
