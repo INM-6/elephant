@@ -94,8 +94,7 @@ class FormalConcept(object):
         strrep += "introduced attributes:" + repr(
             self.introducedAttributes) + "\n"
         if hasattr(self, "stability"):
-            strrep += "stability: {0:1.4f}".format(
-                self.stability) + "\n"
+            strrep += f"stability: {self.stability:1.4f}" + "\n"
         strrep += "upper neighbours: "
         for un in self.upperNeighbours:
             strrep += str(un.cnum) + ", "
