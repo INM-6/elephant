@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to generate surrogates of a spike train by randomising its spike times
 in different ways (see :cite:`surrogates-Gerstein2004_203`,
@@ -162,7 +161,7 @@ def dither_spikes(spiketrain, dither, n_surrogates=1, decimals=None,
     Returns
     -------
     list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         randomly dithering its spikes. The range of the surrogate spike trains
         is the same as of `spiketrain`.
 
@@ -262,7 +261,7 @@ def randomise_spikes(spiketrain, n_surrogates=1, decimals=None):
     Returns
     -------
     list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         randomly distributing its spikes in the interval
         `[spiketrain.t_start, spiketrain.t_stop]`.
 
@@ -327,7 +326,7 @@ def shuffle_isis(spiketrain, n_surrogates=1, decimals=None):
     Returns
     -------
     list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         random ISI shuffling. The time range of the surrogate spike trains is
         the same as in `spiketrain`.
 
@@ -414,7 +413,7 @@ def dither_spike_train(spiketrain, shift, n_surrogates=1, decimals=None,
     Returns
     -------
     list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         randomly dithering the whole spike train. The time range of the
         surrogate spike trains is the same as in `spiketrain`.
 
@@ -499,7 +498,7 @@ def jitter_spikes(spiketrain, bin_size, n_surrogates=1):
     Returns
     -------
     list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         randomly replacing its spikes within bins of user-defined width. The
         time range of the surrogate spike trains is the same as in
         `spiketrain`.
@@ -605,7 +604,7 @@ def bin_shuffling(
         if sliding:
             warnings.warn(
                 'The sliding option is not implemented yet for bin shuffling'
-                ' on continuos time spike trains. Results are given for'
+                ' on continuous time spike trains. Results are given for'
                 ' sliding=False.', UserWarning)
         return _continuous_time_bin_shuffling(
             spiketrain, max_displacement=max_displacement, bin_size=bin_size,
@@ -881,7 +880,7 @@ class JointISI(object):
         -------
         bool
             If True, the spike train is so sparse, that this algorithm can't be
-            applied properly. Than in dithering() copies of the spiketrains are
+            applied properly. Then in dithering() copies of the spiketrains are
             returned.
         """
         return len(self.spiketrain) < self.MIN_SPIKES
@@ -1009,7 +1008,7 @@ class JointISI(object):
         -------
         np.ndarray
             Monotonously increasing array from 0 to 1.
-            If `array` does not contain all equal elements, a only-zeros array
+            If `array` does not contain all equal elements, an only-zeros array
             is returned.
         """
         if array[-1] - array[0] > 0.:
@@ -1209,7 +1208,7 @@ def trial_shifting(spiketrains, dither, n_surrogates=1):
     Returns
     -------
     surrogate_spiketrains : list of list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         randomly dithering its spikes. The range of the surrogate spike trains
         is the same as of `spiketrain`.
     """
@@ -1293,7 +1292,7 @@ def _trial_shifting_of_concatenated_spiketrain(
     Returns
     -------
     surrogate_spiketrains : list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain` by
+        Each surrogate spike train obtained independently of `spiketrain` by
         randomly dithering its spikes. The range of the surrogate spike trains
         is the same as of `spiketrain`.
     """
@@ -1381,7 +1380,7 @@ def surrogates(spiketrain, n_surrogates=1, method='dither_spike_train',
     Returns
     -------
     list of neo.SpikeTrain
-        Each surrogate spike train obtained independently from `spiketrain`
+        Each surrogate spike train obtained independently of `spiketrain`
         according to chosen surrogate type. The time range of the surrogate
         spike trains is the same as in `spiketrain`.
 
@@ -1427,8 +1426,8 @@ def surrogates(spiketrain, n_surrogates=1, method='dither_spike_train',
     }
 
     if method not in surrogate_types.keys():
-        raise ValueError("Specified surrogate method ('{}') "
-                         "is not valid".format(method))
+        raise ValueError(f"Specified surrogate method ('{method}') "
+                         f"is not valid")
     method = surrogate_types[method]
 
     if dt is None and method not in (randomise_spikes, shuffle_isis):
