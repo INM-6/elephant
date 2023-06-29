@@ -155,7 +155,7 @@ def _get_all_objs(container, class_name):
     elif hasattr(container, '__iter__') and not hasattr(container, 'ndim'):
         vals = container
     else:
-        raise ValueError('Cannot handle object of type %s' % type(container))
+        raise ValueError(f'Cannot handle object of type {type(container)}')
     res = list(chain.from_iterable(_get_all_objs(obj, class_name)
                                    for obj in vals))
     return unique_objs(res)
@@ -181,8 +181,8 @@ def get_all_spiketrains(container):
     Returns
     -------
     list
-        A `neo.SpikeTrainList` object of the unique `neo.SpikeTrain` objects in `container`.
-
+        A `neo.SpikeTrainList` object of the unique `neo.SpikeTrain`
+        objects in `container`.
     """
     return SpikeTrainList(_get_all_objs(container, 'SpikeTrain'))
 
