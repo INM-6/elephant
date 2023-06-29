@@ -48,7 +48,7 @@ In this example we
 
   * simulate two noisy synfire chains;
   * shuffle the neurons to destroy visual appearance;
-  * run ASSET analysis to recover the original neurons arrangement.
+  * run ASSET analysis to recover the original neurons' arrangement.
 
 1. Simulate two noise synfire chains, shuffle the neurons to destroy the
    pattern visually, and store shuffled activations in neo.SpikeTrains.
@@ -208,7 +208,7 @@ def _signals_same_attribute(signals, attr_name):
     for sig in signals[1:]:
         if getattr(sig, attr_name) != attribute:
             raise ValueError(
-                "Signals have different '{}' values".format(attr_name))
+                f"Signals have different '{attr_name}' values")
     return attribute
 
 
@@ -362,7 +362,7 @@ def _stretched_metric_2d(x, y, stretch, ref_angle, working_memory=None,
     and ordinate `y`, compute a stretched transformation of the Euclidean
     distance among each of them.
 
-    The classical euclidean distance `d` between points `(x1, y1)` and
+    The classical Euclidean distance `d` between points `(x1, y1)` and
     `(x2, y2)`, i.e., :math:`\sqrt((x1-x2)^2 + (y1-y2)^2)`, is multiplied by a
     factor
 
@@ -450,7 +450,7 @@ def _stretched_metric_2d(x, y, stretch, ref_angle, working_memory=None,
         return _stretch_mat
 
     if working_memory is None:
-        # Compute the matrix D[i, j] of euclidean distances among points
+        # Compute the matrix D[i, j] of Euclidean distances among points
         # i and j
         D = pairwise_distances(points)
 
@@ -937,7 +937,7 @@ class _JSFUniformOrderStat3D(_GPUBackend):
         log_factorial = log_factorial.astype(self.dtype)
         logK = log_factorial[-1]
 
-        free, total = drv.mem_get_info()
+        free = drv.mem_get_info()[0]
         # 4 * (D + 1) * size + 8 * size == mem_avail
         chunk_size = free // (4 * log_du.shape[1] + self.dtype.itemsize)
         chunk_size, split_idx = self._split_axis(chunk_size=chunk_size,
@@ -1264,7 +1264,7 @@ class _PMatNeighbors(_GPUBackend):
         else:
             lmat = lmat_padded[filt_size // 2: -filt_size // 2 + 1]
 
-        free, total = drv.mem_get_info()
+        free = drv.mem_get_info()[0]
         # 4 * size * n_cols * n_largest + 4 * (size + filt_size) * n_cols
         chunk_size = (free // 4 - filt_size * lmat.shape[1]) // (
                 lmat.shape[1] * (self.n_largest + 1))
@@ -1322,15 +1322,14 @@ class _PMatNeighbors(_GPUBackend):
         return lmat_padded
 
     def compute(self, mat):
-        """
-        Build the 3D matrix `L` of largest neighbors of elements in a 2D matrix
-        `mat`.
+        """ Build the 3D matrix `L` of largest neighbors of elements in a 2D
+        matrix `mat`.
 
         For each entry `mat[i, j]`, collects the `n_largest` elements with
-        largest values around `mat[i, j]`, say `z_i, i=1,2,...,n_largest`,
+        the largest values around `mat[i, j]`, say `z_i, i=1,2,...,n_largest`,
         and assigns them to `L[i, j, :]`.
-        The zone around `mat[i, j]` where largest neighbors are collected from
-        is a rectangular area (kernel) of shape `(l, w) = filter_shape`
+        The zone around `mat[i, j]` where the largest neighbors are collected
+        from is a rectangular area (kernel) of shape `(l, w) = filter_shape`
         centered around `mat[i, j]` and aligned along the diagonal.
 
         If `mat` is symmetric, only the triangle below the diagonal is
@@ -1347,6 +1346,7 @@ class _PMatNeighbors(_GPUBackend):
             A matrix of shape `(l, w, n_largest)` containing along the last
             dimension `lmat[i, j, :]` the largest neighbors of `mat[i, j]`.
         """
+
         backend = self._choose_backend()
         lmat = backend(mat)
         return lmat
@@ -1448,7 +1448,7 @@ def synchronous_events_intersection(sse1, sse2, intersection='linkwise'):
         pass
     else:
         raise ValueError(
-            "intersection (=%s) can only be" % intersection +
+            f"intersection (={intersection}) can only be" +
             " 'pixelwise' or 'linkwise'")
 
     return sse_new
@@ -1512,7 +1512,7 @@ def synchronous_events_difference(sse1, sse2, difference='linkwise'):
                     del sse_new[pixel1]
             else:
                 raise ValueError(
-                    "difference (=%s) can only be" % difference +
+                    f"difference (={difference}) can only be" +
                     " 'pixelwise' or 'linkwise'")
 
     return sse_new
@@ -1683,7 +1683,7 @@ def synchronous_events_contained_in(sse1, sse2):
 
     # Return False if any pixel in sse1 is not contained in sse2, or if any
     # link of sse1 is not a subset of the corresponding link in sse2.
-    # Otherwise (if sse1 is a subset of sse2) continue
+    # Otherwise, if sse1 is a subset of sse2, continue
     for pixel1, link1 in sse11.items():
         if pixel1 not in sse22.keys():
             return False
@@ -1742,7 +1742,7 @@ def synchronous_events_overlap(sse1, sse2):
     (see below), determines whether the two SSEs overlap.
 
     The SSEs overlap if they are not equal and none of them is a superset of
-    the other one but they are also not disjoint.
+    the other one, but they are also not disjoint.
 
     Both `sse1` and `sse2` must be provided as dictionaries of the type
 
@@ -1925,7 +1925,7 @@ def _intersection_matrix(spiketrains, spiketrains_y, bin_size, t_start_x,
                                   for jj in range(bsts_y.shape[1])])
         else:
             raise ValueError(
-                "Invalid parameter 'norm': {}".format(normalization))
+                f"Invalid parameter 'norm': {normalization}")
 
         # If normalization required, for each j such that bsts_y[j] is
         # identically 0 the code above sets imat[:, j] to identically nan.
@@ -2442,7 +2442,7 @@ class ASSET(object):
             Tolerance is used to catch unexpected behavior of billions of
             floating point additions, when the number of iterations is huge
             or the data arrays are large. A warning is thrown when the
-            resulting joint prob. matrix values are outside of the acceptable
+            resulting joint prob. matrix values are outside the acceptable
             range ``[-tolerance, 1.0 + tolerance]``.
             Default: 1e-5
 
@@ -2456,7 +2456,7 @@ class ASSET(object):
         1. By default, if CUDA is detected, CUDA acceleration is used. CUDA
            backend is **~X1000** faster than the Python implementation.
            To turn off CUDA features, set the environment flag
-           ``ELEPHANT_USE_CUDA`` to ``0``. Otherwise
+           ``ELEPHANT_USE_CUDA`` to ``0``.
         2. If PyOpenCL is installed and detected, PyOpenCL backend is used.
            PyOpenCL backend is **~X100** faster than the Python implementation.
            To turn off OpenCL features, set the environment flag
@@ -2612,7 +2612,7 @@ class ASSET(object):
         min_neighbors : int
             The minimum number of elements to form a neighbourhood.
         stretch : float
-            The stretching factor of the euclidean metric for elements aligned
+            The stretching factor of the Euclidean metric for elements aligned
             along the 135 degree direction (anti-diagonal). The actual
             stretching increases from 1 to `stretch` as the direction of the
             two elements moves from the 45 to the 135 degree direction.
@@ -2695,9 +2695,9 @@ class ASSET(object):
                               ) from err
 
         # Cluster positions of significant pixels via dbscan
-        core_samples, config = dbscan(
+        config = dbscan(
             D, eps=max_distance, min_samples=min_neighbors,
-            metric='precomputed')
+            metric='precomputed')[0]
 
         # Construct the clustered matrix, where each element has value
         # * i = 1 to k if it belongs to a cluster i,
