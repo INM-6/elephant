@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Functions to calculate spike-triggered average and spike-field coherence of
 analog signals.
@@ -12,9 +11,6 @@ analog signals.
 :copyright: Copyright 2014-2023 by the Elephant team, see `doc/authors.rst`.
 :license: Modified BSD, see LICENSE.txt for details.
 """
-
-from __future__ import division, print_function, unicode_literals
-
 import warnings
 
 import numpy as np
@@ -42,8 +38,9 @@ def spike_triggered_average(signal, spiketrains, window):
     ----------
     signal : neo AnalogSignal object
         'signal' contains n analog signals.
-    spiketrains : one SpikeTrain or one numpy ndarray or a list of n of either of these.
-        'spiketrains' contains the times of the spikes in the spiketrains.
+    spiketrains : one SpikeTrain or one numpy ndarray or a list of n of either
+    of these. 'spiketrains' contains the times of the spikes in the
+    spiketrains.
     window : tuple of 2 Quantity objects with dimensions of time.
         'window' is the start time and the stop time, relative to a spike, of
         the time interval for signal averaging.
@@ -93,12 +90,13 @@ def spike_triggered_average(signal, spiketrains, window):
                         "must be a time quantity.")
     if window_stoptime <= window_starttime:
         raise ValueError("The start time of the window (window[0]) must be "
-                         "earlier than the stop time of the window (window[1]).")
+                         "earlier than the stop time of the window "
+                         "(window[1]).")
 
     # checks on signal
     if not isinstance(signal, AnalogSignal):
         raise TypeError(
-            "Signal must be an AnalogSignal, not %s." % type(signal))
+            f"Signal must be an AnalogSignal, not {type(signal)}.")
     if len(signal.shape) > 1:
         # num_signals: number of analog signals
         num_signals = signal.shape[1]
@@ -149,10 +147,11 @@ def spike_triggered_average(signal, spiketrains, window):
 
     # window_bins: number of bins of the chosen averaging interval
     window_bins = int(np.ceil(((window_stoptime - window_starttime) *
-        signal.sampling_rate).simplified))
+                      signal.sampling_rate).simplified))
     # result_sta: array containing finally the spike-triggered averaged signal
     result_sta = AnalogSignal(np.zeros((window_bins, num_signals)),
-        sampling_rate=signal.sampling_rate, units=signal.units)
+                              sampling_rate=signal.sampling_rate,
+                              units=signal.units)
     # setting of correct times of the spike-triggered average
     # relative to the spike
     result_sta.t_start = window_starttime
@@ -169,7 +168,8 @@ def spike_triggered_average(signal, spiketrains, window):
                 # calculating the startbin in the analog signal of the
                 # averaging window for spike
                 startbin = int(np.floor(((spiketime + window_starttime -
-                    signal.t_start) * signal.sampling_rate).simplified))
+                               signal.t_start) * signal.sampling_rate
+                                         ).simplified))
                 # adds the signal in selected interval relative to the spike
                 result_sta[:, i] += signal[
                     startbin: startbin + window_bins, i]
@@ -194,11 +194,11 @@ def spike_triggered_average(signal, spiketrains, window):
 
 def spike_field_coherence(signal, spiketrain, **kwargs):
     """
-    Calculates the spike-field coherence between a analog signal(s) and a
+    Calculates the spike-field coherence between an analog signal(s) and a
     (binned) spike train.
 
-    The current implementation makes use of scipy.signal.coherence(). Additional
-    kwargs will will be directly forwarded to scipy.signal.coherence(),
+    The current implementation makes use of scipy.signal.coherence().
+    Additional kwargs will be directly forwarded to scipy.signal.coherence(),
     except for the axis parameter and the sampling frequency, which will be
     extracted from the input signals.
 
@@ -269,9 +269,9 @@ def spike_field_coherence(signal, spiketrain, **kwargs):
     """
 
     if not hasattr(scipy.signal, 'coherence'):
-        raise AttributeError('scipy.signal.coherence is not available. The sfc '
-                             'function uses scipy.signal.coherence for '
-                             'the coherence calculation. This function is '
+        raise AttributeError('scipy.signal.coherence is not available. '
+                             'The sfc function uses scipy.signal.coherence '
+                             'for the coherence calculation. This function is '
                              'available for scipy version 0.16 or newer. '
                              'Please update you scipy version.')
 
@@ -284,7 +284,7 @@ def spike_field_coherence(signal, spiketrain, **kwargs):
     # checks on analogsignal
     if not isinstance(signal, AnalogSignal):
         raise TypeError(
-            "Signal must be an AnalogSignal, not %s." % type(signal))
+            f"Signal must be an AnalogSignal, not {type(signal)}.")
     if len(signal.shape) > 1:
         # num_signals: number of individual traces in the analog signal
         num_signals = signal.shape[1]
@@ -324,7 +324,9 @@ def spike_field_coherence(signal, spiketrain, **kwargs):
     # duplicate spike trains
     spiketrain_array = np.zeros((1, len_signals))
     spiketrain_array[0, left_edge:right_edge] = spiketrain.to_array()
-    spiketrains_array = np.repeat(spiketrain_array, repeats=num_signals, axis=0).transpose()
+    spiketrains_array = np.repeat(spiketrain_array,
+                                  repeats=num_signals,
+                                  axis=0).transpose()
 
     # calculate coherence
     frequencies, sfc = scipy.signal.coherence(
