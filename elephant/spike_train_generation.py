@@ -267,15 +267,6 @@ def peak_detection(signal, threshold=0.0 * pq.mV, sign='above',
         If True, a NumPy array of the resulting peak times is returned instead
         of a (default) `neo.SpikeTrain` object.
         Default: False
-    format : {None, 'raw'}, optional
-
-        .. deprecated:: 0.8.0
-
-        Whether to return as SpikeTrain (None) or as a plain array of times
-        ('raw').
-        Deprecated. Use `as_array=False` for None format and `as_array=True`
-        otherwise.
-        Default: None
 
     Returns
     -------
@@ -1371,8 +1362,8 @@ def single_interaction_process(
         jittered around a common time randomly, up to +/- `jitter`.
         Default: 0 * pq.ms
     coincidences : {'deterministic', 'stochastic'}, optional
-        Whether the total number of injected coincidences must be determin-
-        istic (i.e. rate_coincidence is the actual rate with which coincidences
+        Whether the total number of injected coincidences must be deterministic
+        (i.e. rate_coincidence is the actual rate with which coincidences
         are generated) or stochastic (i.e. rate_coincidence is the mean rate of
         coincidences):
 
@@ -1559,7 +1550,7 @@ def _pool_two_spiketrains(spiketrain_1, spiketrain_2, extremes='inner'):
         times = times[times < t_stop.magnitude]
     else:
         raise ValueError(
-            'extremes (%s) can only be "inner" or "outer"' % extremes)
+            f'extremes ({extremes}) can only be "inner" or "outer"')
 
     return neo.SpikeTrain(times=times, units=unit, t_start=t_start,
                           t_stop=t_stop)
@@ -1575,7 +1566,7 @@ def _sample_int_from_pdf(probability_density, n_samples):
     Parameters
     ----------
     probability_density : np.ndarray
-        Probability vector (i..e array of sum 1) that at each entry j carries
+        Probability vector (i.e. array of sum 1) that at each entry j carries
         the probability to sample j (j=0,1,...,len(a)-1).
     n_samples : int
         Number of samples generated with the function
@@ -1789,7 +1780,7 @@ def compound_poisson_process(
     ----------
     rate : pq.Quantity
         Average rate of each spike train generated. Can be:
-          - a single value, all spike trains will have same rate rate
+          - a single value, all spike trains will have same rate
           - an array of values (of length `len(A)-1`), each indicating the
             firing rate of one process in output
     amplitude_distribution : np.ndarray or list
