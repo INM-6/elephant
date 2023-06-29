@@ -299,7 +299,7 @@ class BinnedSpikeTrain(object):
     AttributeError
         If less than 3 optional parameters are `None`.
     TypeError
-        If `spiketrains` is an np.ndarray with dimensionality different than
+        If `spiketrains` is a np.ndarray with dimensionality different from
         NxM or
         if type of `n_bins` is not an `int` or `n_bins` < 0.
     ValueError
@@ -311,7 +311,7 @@ class BinnedSpikeTrain(object):
     Warns
     -----
     UserWarning
-        If some spikes fall outside of [`t_start`, `t_stop`] range
+        If some spikes fall outside [`t_start`, `t_stop`] range
 
     Notes
     -----
@@ -732,7 +732,7 @@ class BinnedSpikeTrain(object):
             the returned binned sparse matrix will affect the original data.
         """
         # taken from csr_matrix.__getitem__
-        row, col = self.sparse_matrix._validate_indices(item)
+        col = self.sparse_matrix._validate_indices(item)[1]
         spmat = self.sparse_matrix[item]
         if np.isscalar(spmat):
             # data with one element
@@ -842,7 +842,7 @@ class BinnedSpikeTrain(object):
         spikes : {"left", "center", "random"}, optional
             Specifies how to generate spikes inside bins.
 
-              * "left": align spikes from left to right to have equal inter-
+              * "left": align spikes from left to right to have equal inter
                 spike interval;
               * "center": align spikes around center to have equal inter-spike
                 interval;
@@ -1132,7 +1132,7 @@ class BinnedSpikeTrain(object):
             sparse_matrix = sparse_format(spiketrains, dtype=data_dtype)
             return sparse_matrix
 
-        # Get index dtype that can accomodate the largest index
+        # Get index dtype that can accommodate the largest index
         # (this is the same dtype that will be used for the index arrays of the
         #  sparse matrix, so already using it here avoids array duplication)
         shape = (len(spiketrains), self.n_bins)
@@ -1198,7 +1198,7 @@ class BinnedSpikeTrainView(BinnedSpikeTrain):
     t_start, t_stop : float
         Unit-less start and stop times that share the same units.
     bin_size : float
-        Unit-less bin size that was used used in binning the `sparse_matrix`.
+        Unit-less bin size that was used in binning the `sparse_matrix`.
     units : pq.Quantity
         The units of input spike trains.
     sparse_matrix : scipy.sparse.csr_matrix
@@ -1307,8 +1307,8 @@ def discretise_spiketimes(spiketrains, sampling_rate):
 
     if not isinstance(sampling_rate, pq.Quantity):
         raise TypeError(
-             "The 'sampling_rate' must be pq.Quantity.\n"
-             "Found: %s." % type(sampling_rate))
+             f"The 'sampling_rate' must be pq.Quantity.\n"
+             f"Found: {type(sampling_rate)}.")
 
     units = spiketrains[0].times.units
     mag_sampling_rate = sampling_rate.rescale(1/units).magnitude.flatten()
