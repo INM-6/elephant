@@ -37,15 +37,17 @@ import tqdm
 
 class FormalConcept(object):
     """
-    A formal concept is comprised of an extent and and intent.
+    A formal concept consists of an extent and an intent.
     Furthermore, intentIndexes is an ordered list of attribute indexes for
-    lectic ordering. Also contains sets of introduced attibutes and objects
+    lectic ordering. Also contains sets of introduced attributes and objects
     and lectically ordered lists of upper and lower neighbours.
     """
 
     def __init__(self, extent=frozenset(), intent=frozenset(),
-                 intentIndexes=[]):
+                 intentIndexes=None):
         """ intent/extent are a frozensets because they need to be hashable."""
+        if not intentIndexes:
+            intentIndexes = []
         self.cnum = 0
         self.extent = extent
         self.intent = intent
@@ -157,9 +159,9 @@ class FormalContext(object):
         attribute set. """
         if len(attributeSet) == 0:
             return frozenset(self.objects)
-        aiter = iter(attributeSet)
-        apr = self.attributesToObjects[next(aiter)].copy()
-        for att in aiter:
+        a_iter = iter(attributeSet)
+        apr = self.attributesToObjects[next(a_iter)].copy()
+        for att in a_iter:
             apr.intersection_update(self.attributesToObjects[att])
         return frozenset(apr)
 
@@ -183,7 +185,7 @@ class FormalConcepts(object):
         """ 'relation' has to be an iterable container of tuples. If objects
         or attributes are not supplied, determine from relation. """
         self.context = FormalContext(relation, objects, attributes)
-        self.concepts = []  # a lectically ordered list of concepts"
+        self.concepts = []  # a lectically ordered list of concepts
         self.intentToConceptDict = dict()
         self.verbose = verbose
 
