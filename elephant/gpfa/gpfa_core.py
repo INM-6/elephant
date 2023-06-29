@@ -207,7 +207,7 @@ def em(params_init, seqs_train, max_iters=500, tol=1.0E-8, min_var_frac=0.01,
             posterior mean of latent variables at each time bin
         Vsm : np.ndarray of shape (#latent_vars, #latent_vars, #bins)
             posterior covariance between latent variables at each
-            timepoint
+            time-point
         VsmGP : np.ndarray of shape (#bins, #bins, #latent_vars)
             posterior covariance over time for each latent
             variable
@@ -218,7 +218,7 @@ def em(params_init, seqs_train, max_iters=500, tol=1.0E-8, min_var_frac=0.01,
     """
     params = params_init
     t = seqs_train['T']
-    y_dim, x_dim = params['C'].shape
+    x_dim = params['C'].shape[0]
     lls = []
     ll_old = ll_base = ll = 0.0
     iter_time = []
@@ -297,13 +297,12 @@ def em(params_init, seqs_train, max_iters=500, tol=1.0E-8, min_var_frac=0.01,
             ll_base = ll
         elif verbose and ll < ll_old:
             print('\nError: Data likelihood has decreased ',
-                  'from {0} to {1}'.format(ll_old, ll))
+                  f'from {ll_old} to {ll}')
         elif (ll - ll_base) < (1 + tol) * (ll_old - ll_base):
             break
 
     if len(lls) < max_iters:
-        print('Fitting has converged after {0} EM iterations.)'.format(
-            len(lls)))
+        print(f'Fitting has converged after {len(lls)} EM iterations.)')
 
     if np.any(np.diag(params['R']) == var_floor):
         warnings.warn('Private variance floor used for one or more observed '
@@ -349,7 +348,7 @@ def exact_inference_with_ll(seqs, params, get_ll=True):
               posterior mean of latent variables at each time bin
         Vsm :  (#latent_vars, #latent_vars, #bins) np.ndarray
               posterior covariance between latent variables at each
-              timepoint
+              time-point
         VsmGP :  (#bins, #bins, #latent_vars) np.ndarray
                 posterior covariance over time for each latent
                 variable
@@ -366,7 +365,7 @@ def exact_inference_with_ll(seqs, params, get_ll=True):
     for dtype_name in seqs.dtype.names:
         seqs_latent[dtype_name] = seqs[dtype_name]
 
-    # Precomputations
+    # Pre-computations
     if params['notes']['RforceDiagonal']:
         rinv = np.diag(1.0 / np.diag(params['R']))
         logdet_r = (np.log(np.diag(params['R']))).sum()
@@ -396,7 +395,7 @@ def exact_inference_with_ll(seqs, params, get_ll=True):
 
         # Note that posterior covariance does not depend on observations,
         # so can compute once for all trials with same T.
-        # xDim x xDim posterior covariance for each timepoint
+        # xDim x xDim posterior covariance for each time-point
         vsm = np.full((x_dim, x_dim, t), np.nan)
         idx = np.arange(0, x_dim * t + 1, x_dim)
         for i in range(t):
@@ -497,7 +496,7 @@ def learn_gp_params(seqs_latent, params, verbose=False):
         param_opt['gamma'][i] = np.exp(res_opt.x.item())
 
         if verbose:
-            print('\n Converged p; xDim:{}, p:{}'.format(i, res_opt.x))
+            print(f'\n Converged p; xDim:{i}, p:{res_opt.x}')
 
     return param_opt
 
@@ -534,14 +533,14 @@ def orthonormalize(params_est, seqs):
         Data structure, whose n-th entry (corresponding to the n-th
         experimental trial) has fields
         T : int
-          number of timesteps
+          number of time steps
         y : np.ndarray of shape (#units, #bins)
           neural data
         latent_variable : np.ndarray of shape (#latent_vars, #bins)
           posterior mean of latent variables at each time bin
         Vsm : np.ndarray of shape (#latent_vars, #latent_vars, #bins)
           posterior covariance between latent variables at each
-          timepoint
+          time-point
         VsmGP : np.ndarray of shape (#bins, #bins, #latent_vars)
           posterior covariance over time for each latent variable
 
