@@ -163,8 +163,8 @@ class Kernel(object):
         self.invert = invert
 
     def __repr__(self):
-        return "{cls}(sigma={sigma}, invert={invert})".format(
-            cls=self.__class__.__name__, sigma=self.sigma, invert=self.invert)
+        return f"{self.__class__.__name__}(sigma={self.sigma}, " \
+               f"invert={self.invert})"
 
     @deprecated_alias(t='times')
     def __call__(self, times):
@@ -273,8 +273,8 @@ class Kernel(object):
             valid = 0 <= fraction < 1
             bracket = ')'
         if not valid:
-            raise ValueError("`fraction` must be in the interval "
-                             "[0, 1{}".format(bracket))
+            raise ValueError(
+                f"`fraction` must be in the interval [0, 1{bracket}")
 
     def _check_time_input(self, t):
         if not isinstance(t, pq.Quantity):
@@ -338,7 +338,7 @@ class Kernel(object):
         the input array, CDF and ICDF stand for Cumulative Distribution
         Function and its Inverse, respectively.
 
-        This function is not mandatory for symmetrical kernels but it is
+        This function is not mandatory for symmetrical kernels, but it is
         required when asymmetrical kernels have to be aligned at their median.
 
         Parameters
@@ -398,7 +398,7 @@ class Kernel(object):
         Returns
         -------
         bool
-            Whether the kernels is symmetric or not.
+            Whether the kernels are symmetric or not.
         """
         return isinstance(self, SymmetricKernel)
 
@@ -675,16 +675,16 @@ class EpanechnikovLikeKernel(SymmetricKernel):
         self._check_fraction(fraction)
         # Python's complex-operator cannot handle quantities, hence the
         # following construction on quantities is necessary:
-        Delta_0 = complex(1.0 / (5.0 * self.sigma.magnitude ** 2), 0) / \
+        delta_0 = complex(1.0 / (5.0 * self.sigma.magnitude ** 2), 0) / \
             self.sigma.units ** 2
-        Delta_1 = complex(2.0 * np.sqrt(5.0) * fraction /
+        delta_1 = complex(2.0 * np.sqrt(5.0) * fraction /
                           (25.0 * self.sigma.magnitude ** 3), 0) / \
             self.sigma.units ** 3
-        C = ((Delta_1 + (Delta_1 ** 2.0 - 4.0 * Delta_0 ** 3.0) ** (
+        C = ((delta_1 + (delta_1 ** 2.0 - 4.0 * delta_0 ** 3.0) ** (
             1.0 / 2.0)) /
             2.0) ** (1.0 / 3.0)
         u_3 = complex(-1.0 / 2.0, -np.sqrt(3.0) / 2.0)
-        b = -5.0 * self.sigma ** 2 * (u_3 * C + Delta_0 / (u_3 * C))
+        b = -5.0 * self.sigma ** 2 * (u_3 * C + delta_0 / (u_3 * C))
         return b.real
 
 
