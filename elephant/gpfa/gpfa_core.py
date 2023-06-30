@@ -218,7 +218,7 @@ def em(params_init, seqs_train, max_iters=500, tol=1.0E-8, min_var_frac=0.01,
     """
     params = params_init
     t = seqs_train['T']
-    x_dim = params['C'].shape[0]
+    y_dim, x_dim = params['C'].shape
     lls = []
     ll_old = ll_base = ll = 0.0
     iter_time = []

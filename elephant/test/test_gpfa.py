@@ -92,7 +92,7 @@ class GPFATestCase(unittest.TestCase):
         latent_variable_orth = gpfa.transform(self.data1)
         self.assertAlmostEqual(gpfa.transform_info['log_likelihood'],
                                -8172.004695554373, places=5)
-        # Since data1 is inherently 2 dimensional, only the first two
+        # Since data1 is inherently 2-dimensional, only the first two
         # dimensions of latent_variable_orth should have finite power.
         for i in [0, 1]:
             self.assertNotEqual(latent_variable_orth[0][i].mean(), 0)
@@ -143,7 +143,7 @@ class GPFATestCase(unittest.TestCase):
         seqs = gpfa.transform(self.data2, returned_data=returned_data)
         for key, data in seqs.items():
             self.assertEqual(len(data), n_trials,
-                             msg="Failed ndarray field {0}".format(key))
+                             msg=f"Failed ndarray field {key}")
         t_start = self.data2[0][0].t_stop
         t_stop = self.data2[0][0].t_start
         n_bins = int(((t_start - t_stop) / self.bin_size).magnitude)
