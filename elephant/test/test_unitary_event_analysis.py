@@ -171,6 +171,7 @@ class UETestCase(unittest.TestCase):
             1, 1, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]])
         m = ue.inverse_hash_from_pattern(h, N)
         self.assertTrue(np.shape(m)[0] == N)
+        assert_array_equal(np.sort(m, axis=0), np.sort(expected, axis=0))
 
     def test_hash_invhash_consistency(self):
         m = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1],
@@ -193,7 +194,6 @@ class UETestCase(unittest.TestCase):
     def test_n_emp_mat_sum_trial_default(self):
         mat = self.binary_sts
         pattern_hash = np.array([4, 6])
-        N = 3
         expected1 = np.array([1., 3.])
         expected2 = [[[0], [3]], [[], [2, 4]]]
         n_emp, n_emp_idx = ue.n_emp_mat_sum_trial(mat, pattern_hash)
@@ -325,7 +325,7 @@ class UETestCase(unittest.TestCase):
 
         # joinJ_window_analysis requires the following:
         # A list of spike trains(neo.SpikeTrain objects) in different trials:
-        data = list(zip(*[sts1,sts2]))
+        data = list(zip(*[sts1, sts2]))
 
         win_size = 100 * pq.ms
         bin_size = 5 * pq.ms
@@ -430,12 +430,12 @@ class UETestCase(unittest.TestCase):
             data_tr.append(data_sel_units)
 
         data_tr.reverse()
-        data_tr=np.asarray(data_tr, dtype=object)
+        data_tr = np.asarray(data_tr, dtype=object)
         spiketrain = np.vstack([i for i in data_tr]).T
         return spiketrain
 
     # Test if the result of newly implemented Unitary Events in Elephant is
-    # consistent with the result of Riehle et al 1997 Science
+    # consistent with the result of Riehle et al. 1997 Science
     # (see Rostami et al (2016) [Re] Science, 3(1):1-17).
     def test_Riehle_et_al_97_UE(self):
         url = "http://raw.githubusercontent.com/ReScience-Archives/Rostami-" \
@@ -448,7 +448,7 @@ class UETestCase(unittest.TestCase):
             # The files will be downloaded to ELEPHANT_TMP_DIR
             download(url=f"{url}/{filename}", checksum=checksum)
 
-        # load spike data of figure 2 of Riehle et al 1997
+        # load spike data of figure 2 of Riehle et al. 1997
         spiketrain = self.load_gdf2Neo(ELEPHANT_TMP_DIR / "winny131_23.gdf",
                                        trigger='RS_4',
                                        t_pre=1799 * pq.ms,
@@ -470,7 +470,7 @@ class UETestCase(unittest.TestCase):
                                        win_size=winsize,
                                        win_step=winstep,
                                        method='analytic_TrialAverage')
-        # load extracted data from figure 2 of Riehle et al 1997
+        # load extracted data from figure 2 of Riehle et al. 1997
         extracted_data = np.load(ELEPHANT_TMP_DIR / 'extracted_data.npy',
                                  encoding='latin1', allow_pickle=True).item()
         Js_sig = ue.jointJ(significance_level)
@@ -478,7 +478,7 @@ class UETestCase(unittest.TestCase):
         diff_UE_rep = []
         y_cnt = 0
         for trial_id in range(len(spiketrain)):
-            trial_id_str = "trial{}".format(trial_id)
+            trial_id_str = f"trial{trial_id}"
             indices_unique = np.unique(UE['indices'][trial_id_str])
             if len(indices_unique) > 0:
                 # choose only the significant coincidences
