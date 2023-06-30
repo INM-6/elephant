@@ -38,7 +38,7 @@ ARRAY_ATTRS = ['waveforms',
                ]
 
 
-def strip_iter_values(targ, array_attrs=ARRAY_ATTRS):
+def strip_iter_values(targ, array_attrs=None):
     """Remove iterable, non-string values from a dictionary.
 
     `elephant.neo_tools.extract_neo_attrs` automatically strips out
@@ -70,6 +70,8 @@ def strip_iter_values(targ, array_attrs=ARRAY_ATTRS):
     values please add them manually.
 
     """
+    if array_attrs is None:
+        array_attrs = ARRAY_ATTRS
     targ = targ.copy()
 
     for attr in array_attrs:
@@ -231,7 +233,7 @@ class GetAllObjsTestCase(unittest.TestCase):
                     assert_same_sub_schema(itarg, ires)
                     break
             else:
-                raise ValueError('Target %s not in result' % i)
+                raise ValueError(f'Target {i} not in result')
 
     def test__get_all_objs__nested_many_spiketrain(self):
         targ = self.spiketrain_list
@@ -247,7 +249,7 @@ class GetAllObjsTestCase(unittest.TestCase):
                     assert_same_sub_schema(itarg, ires)
                     break
             else:
-                raise ValueError('Target %s not in result' % i)
+                raise ValueError(f'Target {i} not in result')
 
     def test__get_all_objs__unit_spiketrain(self):
         value = neo.core.Group(
@@ -317,7 +319,7 @@ class ExtractNeoAttrsTestCase(unittest.TestCase):
                     else:
                         self.assertEqual(value1, value2)
                 except BaseException as exc:
-                    exc.args += ('key: %s' % key1,)
+                    exc.args += (f'key: {key1}',)
                     raise
 
     def test__extract_neo_attrs__spiketrain_noarray(self):
@@ -478,15 +480,6 @@ class ExtractNeoAttrsTestCase(unittest.TestCase):
         self.assert_dicts_equal(targ, res011)
         self.assert_dicts_equal(targ, res111)
         self.assert_dicts_equal(targ, res211)
-
-    @staticmethod
-    def _fix_neo_issue_749(obj, targ):
-        # TODO: remove once fixed
-        # https://github.com/NeuralEnsemble/python-neo/issues/749
-        num_times = len(targ['times'])
-        obj = obj[:num_times]
-        del targ['array_annotations']
-        return obj
 
     def test__extract_neo_attrs__epoch_parents_empty_array(self):
         obj = random_epoch()
