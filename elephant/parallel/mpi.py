@@ -31,7 +31,7 @@ class MPIPoolExecutor(ProcessPoolExecutor):
     def _extra_repr(self):
         extra_old = super(MPIPoolExecutor, self)._extra_repr()
         info = dict(MPI.INFO_ENV)
-        return "{old}, {mpi}".format(old=extra_old, mpi=info)
+        return f"{extra_old}, {info}"
 
 
 class MPICommExecutor(MPIPoolExecutor):

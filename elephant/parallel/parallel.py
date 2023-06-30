@@ -8,8 +8,7 @@ class SingleProcess(object):
     """
 
     def __repr__(self):
-        return "{name}({extra})".format(name=self.__class__.__name__,
-                                        extra=self._extra_repr())
+        return f"{self.__class__.__name__}({self._extra_repr()})"
 
     def _extra_repr(self):
         return ""
@@ -68,7 +67,7 @@ class ProcessPoolExecutor(SingleProcess):
         self.max_workers = max_workers
 
     def _extra_repr(self):
-        return "max_workers={0}".format(self.max_workers)
+        return f"max_workers={self.max_workers}"
 
     def _create_executor(self):
         return concurrent.futures.ProcessPoolExecutor(self.max_workers)
