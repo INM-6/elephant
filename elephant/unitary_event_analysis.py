@@ -327,13 +327,13 @@ def _n_exp_mat_analytic(mat, pattern_hash):
     """
     marg_prob = np.mean(mat, 1, dtype=float)
     # marg_prob needs to be a column vector, so we
-    # build a two dimensional array with 1 column
+    # build a 2-dimensional array with 1 column
     # and len(marg_prob) rows
     marg_prob = np.expand_dims(marg_prob, axis=1)
     n_neurons = mat.shape[0]
     m = inverse_hash_from_pattern(pattern_hash, n_neurons)
     nrep = m.shape[1]
-    # multipyling the marginal probability of neurons with regard to the
+    # multiplying the marginal probability of neurons with regard to the
     # pattern
     pmat = np.multiply(m, np.tile(marg_prob, (1, nrep))) \
         + np.multiply(1 - m, np.tile(1 - marg_prob, (1, nrep)))
@@ -590,8 +590,7 @@ def gen_pval_anal(mat, pattern_hash, method='analytic_TrialByTrial',
                                  'calculated only for one pattern!')
             return np.sum(exp_dist[int(n_emp[0]):])
     else:
-        raise ValueError("Method is not allowed: {method}".format(
-            method=method))
+        raise ValueError(f"Method is not allowed: {method}")
 
     return pval, n_exp
 
@@ -631,7 +630,7 @@ def jointJ(p_val):
 
 def _rate_mat_avg_trial(mat):
     """
-    Calculates the average firing rate of each neurons across trials.
+    Calculates the average firing rate of each neuron across trials.
     """
     n_trials, n_neurons, n_bins = np.shape(mat)
     psth = np.zeros(n_neurons, dtype=np.float32)
