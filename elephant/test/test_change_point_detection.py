@@ -12,8 +12,6 @@ import elephant.change_point_detection as mft
 class FilterTestCase(unittest.TestCase):
     def setUp(self):
         self.test_array = [0.4, 0.5, 0.65, 0.7, 0.9, 1.15, 1.2, 1.9]
-        # spks_ri = [0.9, 1.15, 1.2]
-        # spk_le = [0.4, 0.5, 0.65, 0.7]
         mu_ri = (0.25 + 0.05) / 2
         mu_le = (0.1 + 0.15 + 0.05) / 3
         sigma_ri = ((0.25 - 0.15) ** 2 + (0.05 - 0.15) ** 2) / 2
@@ -112,10 +110,10 @@ class MultipleFilterAlgorithmTestCase(unittest.TestCase):
         self.targ_h05_dt05 = [1.5 * pq.s]
 
         # to speed up the test, the following `test_param` and `test_quantile`
-        # paramters have been calculated offline using the function:
+        # parameters have been calculated offline using the function:
         # empirical_parameters([10, 25, 50, 75, 100, 125, 150]*pq.s,700*pq.s,5,
         #                                                                10000)
-        # the user should do the same, if the metohd has to be applied to
+        # the user should do the same, if the method has to be applied to
         # several spike trains of the same length `T` and with the same set of
         # window.
         self.test_param = np.array([[10.,
@@ -198,9 +196,5 @@ class MultipleFilterAlgorithmTestCase(unittest.TestCase):
         result_concatenated = np.sort(result_concatenated)
         assert_allclose(result_concatenated[:3], target[:3], rtol=0,
                         atol=5)
-        print('detected {0} cps: {1}'.format(len(result_concatenated),
-                                             result_concatenated))
-
-
-if __name__ == '__main__':
-    unittest.main()
+        print(f'detected {len(result_concatenated)} cps: '
+              f'{result_concatenated}')
