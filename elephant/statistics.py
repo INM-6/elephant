@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Statistical measures of spike trains (e.g., Fano factor) and functions to
 estimate firing rates.
@@ -62,13 +61,10 @@ References
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
-from __future__ import division, print_function
-
 import math
 import warnings
 
 import neo
-from neo.core.spiketrainlist import SpikeTrainList
 import numpy as np
 import quantities as pq
 import scipy.stats
@@ -354,8 +350,8 @@ def fanofactor(spiketrains, warn_tolerance=0.1 * pq.ms):
 def __variation_check(v, with_nan):
     # ensure the input ia a vector
     if v.ndim != 1:
-        raise ValueError("The input must be a vector, not a {}-dim matrix.".
-                         format(v.ndim))
+        raise ValueError(f"The input must be a vector, not a "
+                         f"{v.ndim}-dim matrix.")
 
     # ensure we have enough entries
     if v.size < 2:
@@ -1342,7 +1338,7 @@ class Complexity(object):
             `t_start + j * binsize` and `t_start + (j + 1) * binsize`.
         """
         norm_hist = self.complexity_histogram / self.complexity_histogram.sum()
-        # Convert the Complexity pdf to an neo.AnalogSignal
+        # Convert the Complexity pdf to a neo.AnalogSignal
         pdf = neo.AnalogSignal(
             np.expand_dims(norm_hist, axis=1),
             units=pq.dimensionless,
@@ -1542,7 +1538,7 @@ def fftkernel(x, w):
     Notes
     -----
     1. MAY 5/23, 2012 Author Hideaki Shimazaki
-       RIKEN Brain Science Insitute
+       RIKEN Brain Science Institute
        http://2000.jukuin.keio.ac.jp/shimazaki
     2. Ported to Python: Subhasis Ray, NCBS. Tue Jun 10 10:42:38 IST 2014
 
