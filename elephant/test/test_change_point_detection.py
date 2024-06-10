@@ -70,9 +70,7 @@ class FilterTestCase(unittest.TestCase):
 class FilterProcessTestCase(unittest.TestCase):
     def setUp(self):
         self.test_array = [1.1, 1.2, 1.4, 1.6, 1.7, 1.75, 1.8, 1.85, 1.9, 1.95]
-        x = (7 - 3) / np.sqrt(
-            (0.0025 / 0.15**3) * 0.5 + (0.0003472 / 0.05833**3) * 0.5
-        )
+        x = (7 - 3) / np.sqrt((0.0025 / 0.15**3) * 0.5 + (0.0003472 / 0.05833**3) * 0.5)
         self.targ_h05 = [
             [0.5, 1, 1.5],
             [

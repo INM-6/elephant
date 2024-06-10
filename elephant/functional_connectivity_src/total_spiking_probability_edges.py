@@ -167,8 +167,7 @@ delay_matrix : (N, N) np.ndarray
         NCC_window = NCC_d[
             :,
             :,
-            max_padding
-            - filter.needed_padding : max_delay
+            max_padding - filter.needed_padding : max_delay
             + max_padding
             + filter.needed_padding,
         ]

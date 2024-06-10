@@ -916,10 +916,9 @@ def _segmented_apply_func(
     n_overlap_step = n_per_seg - n_overlap
 
     for i in range(n_segments):
-
         _, estimate = func(
             data[:, i * n_overlap_step : i * n_overlap_step + n_per_seg],
-            **func_params_dict
+            **func_params_dict,
         )
 
         # Workaround for mismatched dimensions

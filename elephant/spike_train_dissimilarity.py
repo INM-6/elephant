@@ -236,7 +236,8 @@ def _victor_purpura_dist_for_st_pair_fast(spiketrain_a, spiketrain_b, kernel):
             cost[1, : spiketrain_b.size - i] + k[i, i:]
         )
         accumulated_min = np.minimum(
-            accumulated_min, cost[:, 1 : max_dim - i]  # shift
+            accumulated_min,
+            cost[:, 1 : max_dim - i],  # shift
         )  # insert
         acc_dim = accumulated_min.shape[1]
         # delete vs min(insert, shift)

@@ -341,7 +341,6 @@ def cell_assembly_detection(
     w1 = 0
 
     while w1 < n_as:
-
         w1_elements = assembly[w1]["neurons"]
 
         # Add only neurons that have significant first order
@@ -361,7 +360,6 @@ def cell_assembly_detection(
 
         # check that there are candidate neurons for agglomeration
         if w2_to_test:
-
             # bonferroni correction only for the tests actually performed
             alpha = alph / float(len(w2_to_test) * n_as * (2 * max_lag + 1))
 

@@ -1499,7 +1499,6 @@ class Complexity(object):
         spread=0,
         tolerance=1e-8,
     ):
-
         check_neo_consistency(spiketrains, object_type=neo.SpikeTrain)
 
         if bin_size is None and sampling_rate is None:

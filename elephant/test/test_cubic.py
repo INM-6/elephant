@@ -41,7 +41,6 @@ class CubicTestCase(unittest.TestCase):
         self.max_iterations = 10
 
     def test_cubic(self):
-
         # Computing the output of CuBIC for the test data AnalogSignal
         xi, p_vals, k, test_aborted = cubic.cubic(self.data_signal, alpha=self.alpha)
 
@@ -119,7 +118,6 @@ class CubicTestCase(unittest.TestCase):
         self.assertEqual(xi_max_iterations - 1, self.max_iterations)
 
     def test_cubic_errors(self):
-
         # Check error ouputs for mis-settings of the parameters
 
         # Empty signal

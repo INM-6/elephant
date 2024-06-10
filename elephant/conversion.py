@@ -511,8 +511,9 @@ class BinnedSpikeTrain(object):
                 raise ValueError("t_start must be smaller than t_stop")
             if not isinstance(self.n_bins, int) or self.n_bins <= 0:
                 raise TypeError(
-                    "The number of bins ({}) must be a positive "
-                    "integer".format(self.n_bins)
+                    "The number of bins ({}) must be a positive " "integer".format(
+                        self.n_bins
+                    )
                 )
 
         if not _check_neo_spiketrain(spiketrains):
@@ -1197,8 +1198,9 @@ class BinnedSpikeTrain(object):
 
         if n_discarded > 0:
             warnings.warn(
-                "Binning discarded {} last spike(s) of the "
-                "input spiketrain".format(n_discarded)
+                "Binning discarded {} last spike(s) of the " "input spiketrain".format(
+                    n_discarded
+                )
             )
 
         # Stacking preserves the data type. In any case, while creating

@@ -272,7 +272,6 @@ class Synchrotool(Complexity):
         spread=0,
         tolerance=1e-8,
     ):
-
         self.annotated = False
 
         super(Synchrotool, self).__init__(
@@ -408,7 +407,6 @@ class Synchrotool(Complexity):
         )
 
         for idx, st in enumerate(self.input_spiketrains):
-
             # all indices of spikes that are within the half-open intervals
             # defined by the boundaries
             # note that every second entry in boundaries is an upper boundary

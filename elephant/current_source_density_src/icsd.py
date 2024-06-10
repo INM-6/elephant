@@ -106,9 +106,7 @@ class CSD(object):
         except AssertionError as ae:
             raise ae(
                 "{} not equal to 'filtfilt' or \
-                     'convolve'".format(
-                    filterfunction
-                )
+                     'convolve'".format(filterfunction)
             )
 
         if self.f_type == "boxcar":
@@ -142,9 +140,7 @@ class CSD(object):
         print(
             (
                 "discrete filter coefficients: \nb = {}, \
-               \na = {}".format(
-                    num_string, denom_string
-                )
+               \na = {}".format(num_string, denom_string)
             )
         )
 
@@ -203,15 +199,9 @@ class StandardCSD(CSD):
                 self.lfp = np.empty((lfp.shape[0] + 2,))
             else:
                 self.lfp = np.empty((lfp.shape[0] + 2, lfp.shape[1]))
-            self.lfp[0,] = lfp[
-                0,
-            ]
-            self.lfp[
-                1:-1,
-            ] = lfp
-            self.lfp[-1,] = lfp[
-                -1,
-            ]
+            self.lfp[0,] = lfp[0,]
+            self.lfp[1:-1,] = lfp
+            self.lfp[-1,] = lfp[-1,]
             self.lfp = self.lfp * lfp.units
         else:
             self.lfp = lfp
@@ -254,9 +244,7 @@ class StandardCSD(CSD):
         csd : np.ndarray * quantity.Quantity
             Array with the csd estimate
         """
-        csd = np.dot(self.f_inv_matrix, self.lfp)[
-            1:-1,
-        ]
+        csd = np.dot(self.f_inv_matrix, self.lfp)[1:-1,]
         # `np.dot()` does not return correct units, so the units of `csd` must
         # be assigned manually
         csd_units = (self.f_inv_matrix.units * self.lfp.units).simplified
@@ -384,7 +372,6 @@ class StepiCSD(CSD):
     """step-iCSD method"""
 
     def __init__(self, lfp, coord_electrode, **kwargs):
-
         """
         Initializing step-iCSD method class object
 
@@ -532,7 +519,7 @@ class StepiCSD(CSD):
         f_cyl = (
             1.0
             / (2.0 * sigma)
-            * (np.sqrt((diam / 2) ** 2 + ((z_val - zeta)) ** 2) - abs(z_val - zeta))
+            * (np.sqrt((diam / 2) ** 2 + (z_val - zeta) ** 2) - abs(z_val - zeta))
         )
         return f_cyl
 
@@ -541,7 +528,6 @@ class SplineiCSD(CSD):
     """spline iCSD method"""
 
     def __init__(self, lfp, coord_electrode, **kwargs):
-
         """
         Initializing spline-iCSD method class object
 
@@ -820,7 +806,7 @@ class SplineiCSD(CSD):
         return (
             1.0
             / (2.0 * sigma)
-            * (np.sqrt((diam / 2) ** 2 + ((z_val - zeta)) ** 2) - abs(z_val - zeta))
+            * (np.sqrt((diam / 2) ** 2 + (z_val - zeta) ** 2) - abs(z_val - zeta))
         )
 
     def _f_mat1(self, zeta, z_val, zi_val, sigma, diam):
@@ -887,12 +873,8 @@ class SplineiCSD(CSD):
         k_matrix = self._calc_k_matrix()
 
         # Define matrixes for C to A transformation:
-        tja = np.eye(el_len + 2)[
-            :-1,
-        ]
-        tjp1a = np.eye(el_len + 2, k=1)[
-            :-1,
-        ]
+        tja = np.eye(el_len + 2)[:-1,]
+        tjp1a = np.eye(el_len + 2, k=1)[:-1,]
 
         # Define spline coefficients
         e_mat0 = tja

@@ -115,7 +115,7 @@ class CSD1D_TestCase(unittest.TestCase):
             self.csd_method,
             lfp=self.lfp,
             method=method,
-            **self.params[method]
+            **self.params[method],
         )
         self.params["StepiCSD"].update({"h": np.ones(5) * 100e-6 * pq.m})
         result = self.csd_method(self.lfp, method=method, **self.params[method])

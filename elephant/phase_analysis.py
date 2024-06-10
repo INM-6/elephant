@@ -173,7 +173,6 @@ def spike_triggered_phase(hilbert_transform, spiketrains, interpolate):
 
         # Step through all spikes
         for spike_i, ind_at_spike_j in enumerate(ind_at_spike):
-
             if interpolate and ind_at_spike_j + 1 < len(times):
                 # Get relative spike occurrence between the two closest signal
                 # sample points
