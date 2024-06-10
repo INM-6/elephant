@@ -13,7 +13,6 @@ import elephant.cell_assembly_detection as cad
 
 class CadTestCase(unittest.TestCase):
     def setUp(self):
-
         # Parameters
         self.bin_size = 1 * pq.ms
         self.alpha = 0.05

@@ -227,9 +227,9 @@ def make_k_big(params, n_timesteps):
     logdet_K_big = 0
 
     for i in range(xDim):
-        K = (1 - params["eps"][i]) * np.exp(
-            -params["gamma"][i] / 2 * Tdif**2
-        ) + params["eps"][i] * np.eye(n_timesteps)
+        K = (1 - params["eps"][i]) * np.exp(-params["gamma"][i] / 2 * Tdif**2) + params[
+            "eps"
+        ][i] * np.eye(n_timesteps)
         K_big[i::xDim, i::xDim] = K
         # the original MATLAB program uses here a special algorithm, provided
         # in C and MEX, for inversion of Toeplitz matrix:

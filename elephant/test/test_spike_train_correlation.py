@@ -634,9 +634,7 @@ class CrossCorrelationHistogramTest(unittest.TestCase):
             kernel=None,
         )
         valid_lags = sc._CrossCorrHist.get_valid_lags(self.binned_st1, self.binned_st2)
-        left_edge, right_edge = valid_lags[
-            (0, -1),
-        ]
+        left_edge, right_edge = valid_lags[(0, -1),]
         cch_builder = sc._CrossCorrHist(
             self.binned_st1, self.binned_st2, window=(left_edge, right_edge)
         )
@@ -731,9 +729,7 @@ class CrossCorrelationHistDifferentTStartTStopTest(unittest.TestCase):
                     bin_size = 1 * pq.s
                     st1_binned = conv.BinnedSpikeTrain(st1, bin_size=bin_size)
                     st2_binned = conv.BinnedSpikeTrain(st2, bin_size=bin_size)
-                    left, right = lags_true[window][
-                        (0, -1),
-                    ]
+                    left, right = lags_true[window][(0, -1),]
                     cch_window, lags_window = sc.cross_correlation_histogram(
                         st1_binned,
                         st2_binned,
@@ -997,7 +993,9 @@ class SpikeTimeTilingCoefficientTestCase(unittest.TestCase):
         NeuralEnsemble/elephant-data/unittest/spike_train_correlation/
         spike_time_tiling_coefficient"""
 
-        repo_path = r"unittest/spike_train_correlation/spike_time_tiling_coefficient/data"  # noqa
+        repo_path = (
+            r"unittest/spike_train_correlation/spike_time_tiling_coefficient/data"  # noqa
+        )
 
         files_to_download = [
             (

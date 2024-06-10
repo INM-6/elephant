@@ -168,7 +168,6 @@ def estimate_csd(
         elif dim == 3:
             output.annotate(x_coords=k.estm_x, y_coords=k.estm_y, z_coords=k.estm_z)
     elif method in py_iCSD_toolbox:
-
         coordinates = np.array(coordinates) * coordinates[0].units
 
         if method in icsd_methods:

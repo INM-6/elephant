@@ -316,11 +316,7 @@ def _vector_arm(signals, dimension, order):
 
     coeffs = []
     for index in range(order):
-        coeffs.append(
-            lstsq_coeffs[
-                index * dimension : (index + 1) * dimension,
-            ].T
-        )
+        coeffs.append(lstsq_coeffs[index * dimension : (index + 1) * dimension,].T)
 
     coeffs = np.stack(coeffs)
 
@@ -514,7 +510,6 @@ def _spectral_factorization(cross_spectrum, num_iterations, term_crit=1e-12):
     converged = False
     # Iteration for calculating spectral factorization
     for i in range(num_iterations):
-
         factorization_old = np.copy(factorization)
 
         # Implementation of Eq. 3.1 from "The Factorization of Matricial

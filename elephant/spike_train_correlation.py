@@ -245,8 +245,7 @@ class _CrossCorrHist(object):
         jj = data2.dot(data2)
         cov_mean = n_spikes1 * n_spikes2 / max_num_bins
         std_xy = np.sqrt(
-            (ii - n_spikes1**2.0 / max_num_bins)
-            * (jj - n_spikes2**2.0 / max_num_bins)
+            (ii - n_spikes1**2.0 / max_num_bins) * (jj - n_spikes2**2.0 / max_num_bins)
         )
         cross_corr_normalized = (cross_corr - cov_mean) / std_xy
         return cross_corr_normalized
@@ -778,9 +777,7 @@ def cross_correlation_histogram(
         cch_mode = window
     elif window == "valid":
         lags = _CrossCorrHist.get_valid_lags(binned_spiketrain_i, binned_spiketrain_j)
-        left_edge, right_edge = lags[
-            (0, -1),
-        ]
+        left_edge, right_edge = lags[(0, -1),]
         cch_mode = window
     else:
         raise ValueError("Invalid window parameter")

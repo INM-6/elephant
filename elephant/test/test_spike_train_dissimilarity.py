@@ -532,7 +532,6 @@ class TimeScaleDependSpikeTrainDissimMeasuresTestCase(unittest.TestCase):
         )
 
     def test_victor_purpura_matlab_comparison_float(self):
-
         repo_path = r"unittest/spike_train_dissimilarity/victor_purpura_distance/data"
 
         files_to_download = [
@@ -561,7 +560,6 @@ class TimeScaleDependSpikeTrainDissimMeasuresTestCase(unittest.TestCase):
         assert_array_almost_equal(vic_pur_result_float, mat_res_float)
 
     def test_victor_purpura_matlab_comparison_int(self):
-
         repo_path = r"unittest/spike_train_dissimilarity/victor_purpura_distance/data"
 
         files_to_download = [

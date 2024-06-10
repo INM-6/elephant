@@ -388,7 +388,6 @@ class SpadeTestCase(unittest.TestCase):
         )
 
     def test_spade_output_for_specific_pattern(self):
-
         np.random.seed(0)
 
         n_spiketrains = 3

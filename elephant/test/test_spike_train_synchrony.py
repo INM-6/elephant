@@ -210,7 +210,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         in_place=False,
         binary=True,
     ):
-
         synchrofact_obj = Synchrotool(
             spiketrains, sampling_rate=sampling_rate, binary=binary, spread=spread
         )
@@ -250,7 +249,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
             assert_array_almost_equal(cleaned_st, correct_st)
 
     def test_no_synchrofacts(self):
-
         # nothing to find here
         # there used to be an error for spread > 0 when nothing was found
 
@@ -273,7 +271,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_spread_0(self):
-
         # basic test with a minimum number of two spikes per synchrofact
         # only taking into account multiple spikes
         # within one bin of size 1 / sampling_rate
@@ -298,7 +295,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_spiketrains_findable(self):
-
         # same test as `test_spread_0` with the addition of
         # a neo structure: we must not overwrite the spiketrain
         # list of the segment before determining the index
@@ -327,7 +323,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_unidirectional_uplinks(self):
-
         # same test as `test_spiketrains_findable` but the spiketrains
         # are rescaled first
         # the rescaled spiketrains have a unidirectional uplink to segment
@@ -361,7 +356,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
             )
 
     def test_spread_1(self):
-
         # test synchrofact search taking into account adjacent bins
         # this requires an additional loop with shifted binning
 
@@ -385,7 +379,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_n_equals_3(self):
-
         # test synchrofact detection with a minimum number of
         # three spikes per synchrofact
 
@@ -412,7 +405,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_extract(self):
-
         # test synchrofact search taking into account adjacent bins
         # this requires an additional loop with shifted binning
 
@@ -436,7 +428,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_binning_for_input_with_rounding_errors(self):
-
         # a test with inputs divided by 30000 which leads to rounding errors
         # these errors have to be accounted for by proper binning;
         # check if we still get the correct result
@@ -467,7 +458,6 @@ class SynchrofactDetectionTestCase(unittest.TestCase):
         )
 
     def test_correct_transfer_of_spiketrain_attributes(self):
-
         # for delete=True the spiketrains in the block are changed,
         # test if their attributes remain correct
 

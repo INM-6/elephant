@@ -374,7 +374,6 @@ class UETestCase(unittest.TestCase):
                 self.assertTrue(np.allclose(indices_surr[item0_cnt][item1_cnt], item1))
 
     def test_jointJ_window_analysis(self):
-
         sts1 = self.sts1_neo
         sts2 = self.sts2_neo
 

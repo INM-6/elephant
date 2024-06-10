@@ -1031,7 +1031,7 @@ def _fpgrowth(
     # filter out subsets of patterns that are found as a side effect
     # of using the moving window strategy
     fpgrowth_output = _filter_for_moving_window_subsets(fpgrowth_output, winlen)
-    for (intent, supp) in fpgrowth_output:
+    for intent, supp in fpgrowth_output:
         if report == "a":
             if rel_matrix is not None:
                 # Computing the extent of the concept (patterns
@@ -1050,12 +1050,12 @@ def _fpgrowth(
         return concepts
 
     if report == "#":
-        for (size, occurrences) in np.transpose(np.where(spec_matrix != 0)):
+        for size, occurrences in np.transpose(np.where(spec_matrix != 0)):
             spectrum.append(
                 (size + 1, occurrences + 1, int(spec_matrix[size, occurrences]))
             )
     elif report == "3d#":
-        for (size, occurrences, duration) in np.transpose(np.where(spec_matrix != 0)):
+        for size, occurrences, duration in np.transpose(np.where(spec_matrix != 0)):
             spectrum.append(
                 (
                     size + 1,
@@ -1269,13 +1269,13 @@ def _fast_fca(
     del concepts
     # returning spectrum
     if report == "#":
-        for (size, occurrence) in np.transpose(np.where(spec_matrix != 0)):
+        for size, occurrence in np.transpose(np.where(spec_matrix != 0)):
             spectrum.append(
                 (size + 1, occurrence + 1, int(spec_matrix[size, occurrence]))
             )
 
     if report == "3d#":
-        for (size, occurrence, duration) in np.transpose(np.where(spec_matrix != 0)):
+        for size, occurrence, duration in np.transpose(np.where(spec_matrix != 0)):
             spectrum.append(
                 (
                     size + 1,
@@ -1456,7 +1456,6 @@ def pvalue_spectrum(
         n_surrogates=len_partition + add_remainder,
         **surr_kwargs,
     ):
-
         # Find all pattern signatures in the current surrogate data set
         surr_concepts = concepts_mining(
             binned_surrogates,
@@ -1843,7 +1842,6 @@ def test_signature_significance(
     tests = [False] * len(pvalues)
 
     if len(pvalues_totest) > 0:
-
         # Compute significance for only the non-trivial tests
         if corr in ["", "no"]:  # ...without statistical correction
             tests_selected = pvalues_totest <= alpha

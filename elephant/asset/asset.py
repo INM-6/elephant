@@ -478,7 +478,6 @@ def _stretched_metric_2d(
         return _stretch_mat
 
     if working_memory is None:
-
         logger.info("Finding distances without chunking")
 
         # Compute the matrix D[i, j] of Euclidean distances among points
@@ -558,7 +557,6 @@ def _stretched_metric_2d(
             desc="Pairwise distances chunked",
             total=it_todo,
         ):
-
             chunk_size = D_chunk.shape[0]
 
             assert (
@@ -1162,8 +1160,9 @@ class _JSFUniformOrderStat3D(_GPUBackend):
     def compute(self, u):
         if u.shape[1] != self.d:
             raise ValueError(
-                "Invalid input data shape axis 1: expected {}, "
-                "got {}".format(self.d, u.shape[1])
+                "Invalid input data shape axis 1: expected {}, " "got {}".format(
+                    self.d, u.shape[1]
+                )
             )
         # A faster and memory efficient implementation of
         # du = np.diff(u, prepend=0, append=1, axis=1).astype(np.float32)
@@ -2137,7 +2136,6 @@ class ASSET(object):
         bin_tolerance="default",
         verbose=None,
     ):
-
         if verbose is not None:
             warnings.warn(
                 "The 'verbose' parameter is deprecated and will be "
@@ -2769,7 +2767,7 @@ class ASSET(object):
             raise ValueError("`matrices` and `thresholds` must have same length")
 
         mask = np.ones_like(matrices[0], dtype=bool)
-        for (mat, thresh) in zip(matrices, thresholds):
+        for mat, thresh in zip(matrices, thresholds):
             mask &= mat > thresh
 
         # Replace nans, coming from False * np.inf, with zeros
@@ -3023,7 +3021,6 @@ class ASSET(object):
             # if no link lies on the reference diagonal
             if all([y - x != diag_id for (x, y) in pos_worm_k]):
                 for bin_x, bin_y in pos_worm_k:  # for each link
-
                     # reconstruct the link
                     link_l = set(tracts_x[bin_x]).intersection(tracts_y[bin_y])
 

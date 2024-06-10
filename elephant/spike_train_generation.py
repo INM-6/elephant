@@ -913,7 +913,6 @@ class RateModulatedProcess(AbstractPointProcess):
     process_operational_time: RenewalProcess
 
     def __init__(self, rate_signal: neo.AnalogSignal):
-
         if not isinstance(rate_signal, neo.AnalogSignal):
             raise ValueError(
                 f"rate_signal should be of type neo.AnalogSignal."
@@ -1005,7 +1004,6 @@ class NonStationaryPoissonProcess(RateModulatedProcess):
         rate_signal: neo.AnalogSignal,
         refractory_period: Optional[pq.Quantity] = None,
     ):
-
         if refractory_period is not None:
             if not isinstance(refractory_period, pq.Quantity):
                 raise ValueError("refractory_period must be of type pq.Quantity")

@@ -720,8 +720,7 @@ def bin_shuffling(
                 # shuffling the binned spike train within the window
                 np.random.shuffle(
                     surrogate_spiketrain[
-                        window_position
-                        * displacement_window : (window_position + 1)
+                        window_position * displacement_window : (window_position + 1)
                         * displacement_window
                     ]
                 )
@@ -901,7 +900,6 @@ class JointISI(object):
         refractory_period=4.0 * pq.ms,
         isi_dithering=False,
     ):
-
         if not isinstance(spiketrain, neo.SpikeTrain):
             raise TypeError("spiketrain must be of type neo.SpikeTrain")
 
@@ -919,8 +917,9 @@ class JointISI(object):
 
         if method not in ("fast", "window"):
             raise ValueError(
-                "The method can either be 'fast' or 'window', "
-                "but not '{}'".format(method)
+                "The method can either be 'fast' or 'window', " "but not '{}'".format(
+                    method
+                )
             )
         self.method = method
 

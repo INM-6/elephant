@@ -354,7 +354,7 @@ def spike_field_coherence(signal, spiketrain, **kwargs):
         signal.magnitude,
         fs=signal.sampling_rate.rescale("Hz").magnitude,
         axis=0,
-        **kwargs
+        **kwargs,
     )
 
     return (
