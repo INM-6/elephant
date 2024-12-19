@@ -1,0 +1,121 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 413035361405031414, "label": "Block", "level": null, "physics": false, "shape": "ellipse", "title": "neo.core.block.Block\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Reachgrasp Recording [...]\u003c/font\u003e", "x": 500, "y": 100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1578725419526509318, "label": "list", "level": null, "physics": false, "shape": "ellipse", "title": "builtins.list"}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -2068052076611514093, "label": "load_data", "level": null, "physics": false, "shape": "box", "title": "__main__.load_data\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003esession_id\u003c/i\u003e=i140703-001\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003echannels\u003c/i\u003e=[10]\u003c/font\u003e", "x": 500, "y": 0}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1348142346868941137, "label": "Quantity", "level": null, "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(944,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e", "x": 500, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1267868754842064970, "label": "plot_isi_histograms", "level": null, "physics": false, "shape": "box", "title": "__main__.plot_isi_histograms\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ebin_size\u003c/i\u003e=2.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003emax_time\u003c/i\u003e=500.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003egrid\u003c/i\u003e=(3, 1)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003etitles\u003c/i\u003e=[\"{\u0027unit_id\u0027: 0, \u0027channel_id\u0027: 10}\", \"{\u0027unit_id\u0027: 1, \u0027channel_id\u0027: 10}\", \u0027Generated spike train\u0027]\u003c/font\u003e", "x": 500, "y": 1000}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 923529252972141144, "label": "SpikeTrain", "level": null, "physics": false, "shape": "ellipse", "title": "neo.core.spiketrain.SpikeTrain\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(945,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Unit 10000\u003c/font\u003e", "x": 500, "y": 100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 734414811936538388, "label": "isi", "level": null, "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=0\u003c/font\u003e", "x": 500, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 43901037379469492, "label": "mean_firing_rate", "level": null, "physics": false, "shape": "box", "title": "elephant.statistics.mean_firing_rate\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=None\u003c/font\u003e", "x": 500, "y": 400}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -516812096893825342, "label": "Quantity", "level": null, "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5814,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e", "x": 1000, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -512179148747129555, "label": "SpikeTrain", "level": null, "physics": false, "shape": "ellipse", "title": "neo.core.spiketrain.SpikeTrain\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5815,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Unit 10001\u003c/font\u003e", "x": 1000, "y": 100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 631895248293433246, "label": "isi", "level": null, "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=0\u003c/font\u003e", "x": 1000, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 521215109460849128, "label": "Quantity", "level": null, "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=()\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=1/(1.0/30000 * s)\u003c/font\u003e", "x": 500, "y": 500}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1578724921547688918, "label": "list", "level": null, "physics": false, "shape": "ellipse", "title": "builtins.list", "x": 500, "y": 500}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -2150950729845417268, "label": "fanofactor", "level": null, "physics": false, "shape": "box", "title": "elephant.statistics.fanofactor\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ewarn_tolerance\u003c/i\u003e=0.1\u003c/font\u003e", "x": 500, "y": 600}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -2083469475590399328, "label": "Segment", "level": null, "physics": false, "shape": "ellipse", "title": "neo.core.segment.Segment\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Segment 0\u003c/font\u003e"}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1283605195268007151, "label": "float64", "level": null, "physics": false, "shape": "ellipse", "title": "numpy.float64", "x": 500, "y": 700}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 2125644273535896465, "label": "ndarray", "level": null, "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(48,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=float64\u003c/font\u003e", "x": 500, "y": 900}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1811919978658658799, "label": "isi", "level": null, "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=-1\u003c/font\u003e", "x": 1500, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1414886875200831032, "label": "homogeneous_poisson_process", "level": null, "physics": false, "shape": "box", "title": "elephant.spike_train_generation.homogeneous_poisson_process\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=1000.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003erefractory_period\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003erate\u003c/i\u003e=50.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eas_array\u003c/i\u003e=True\u003c/font\u003e", "x": 500, "y": 800}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -2012438531958753450, "label": "ndarray", "level": null, "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(47,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=float64\u003c/font\u003e", "x": 1500, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1168051543482277576, "label": "tuple", "level": null, "physics": false, "shape": "ellipse", "title": "builtins.tuple", "x": 500, "y": 1100}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": 413035361405031414, "label": ".segments", "title": "attribute", "to": -1578725419526509318}, {"arrows": "to", "from": -2068052076611514093, "to": 413035361405031414}, {"arrows": "to", "from": 1348142346868941137, "to": 1267868754842064970}, {"arrows": "to", "from": 923529252972141144, "to": 734414811936538388}, {"arrows": "to", "from": 923529252972141144, "to": 43901037379469492}, {"arrows": "to", "from": 734414811936538388, "to": 1348142346868941137}, {"arrows": "to", "from": -516812096893825342, "to": 1267868754842064970}, {"arrows": "to", "from": -512179148747129555, "to": 631895248293433246}, {"arrows": "to", "from": 631895248293433246, "to": -516812096893825342}, {"arrows": "to", "from": 43901037379469492, "to": 521215109460849128}, {"arrows": "to", "from": -1578724921547688918, "to": -2150950729845417268}, {"arrows": "to", "from": -2083469475590399328, "label": ".spiketrains", "title": "attribute", "to": -1578724921547688918}, {"arrows": "to", "from": -1578725419526509318, "label": "[0]", "title": "subscript", "to": -2083469475590399328}, {"arrows": "to", "from": -2150950729845417268, "to": 1283605195268007151}, {"arrows": "to", "from": 2125644273535896465, "to": 1811919978658658799}, {"arrows": "to", "from": -1414886875200831032, "to": 2125644273535896465}, {"arrows": "to", "from": -2012438531958753450, "to": 1267868754842064970}, {"arrows": "to", "from": 1811919978658658799, "to": -2012438531958753450}, {"arrows": "to", "from": 1267868754842064970, "to": -1168051543482277576}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "arrowStrikethrough": false,
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false,
+        "multiselect": true,
+        "tooltipDelay": 0
+    },
+    "navigationButons": true,
+    "physics": {
+        "enabled": false,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

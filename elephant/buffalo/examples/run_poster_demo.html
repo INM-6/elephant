@@ -1,0 +1,118 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "blue", "id": 5409983293520441065, "label": "Block", "level": 1, "shape": "dot", "title": "neo.core.block.Block"}, {"color": "blue", "id": 615863736691817167, "label": "list", "level": 2, "shape": "dot", "title": "builtins.list"}, {"color": "red", "id": 714665800518893945, "label": "load_data", "level": 0, "shape": "square", "title": "__main__.load_data"}, {"color": "blue", "id": 7732583858951357290, "label": "SpikeTrain", "level": 5, "shape": "dot", "title": "neo.core.spiketrain.SpikeTrain"}, {"color": "red", "id": 2017082314299713087, "label": "isi", "level": 6, "shape": "square", "title": "elephant.statistics.isi"}, {"color": "red", "id": 1008136717897317048, "label": "mean_firing_rate", "level": 6, "shape": "square", "title": "elephant.statistics.mean_firing_rate"}, {"color": "blue", "id": -3626531141470199413, "label": "list", "level": 4, "shape": "dot", "title": "builtins.list"}, {"color": "red", "id": 1660629930991644935, "label": "fanofactor", "level": 5, "shape": "square", "title": "elephant.statistics.fanofactor"}, {"color": "blue", "id": -6917614363447607129, "label": "Segment", "level": 3, "shape": "dot", "title": "neo.core.segment.Segment"}, {"color": "blue", "id": 6692727517069113199, "label": "Quantity", "level": 7, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "blue", "id": 528098332979732894, "label": "Quantity", "level": 7, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "blue", "id": 4295785289097733358, "label": "float64", "level": 6, "shape": "dot", "title": "numpy.float64"}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": 5409983293520441065, "label": ".segments", "title": "attribute", "to": 615863736691817167}, {"arrows": "to", "from": 714665800518893945, "to": 5409983293520441065}, {"arrows": "to", "from": 7732583858951357290, "to": 2017082314299713087}, {"arrows": "to", "from": 7732583858951357290, "to": 1008136717897317048}, {"arrows": "to", "from": -3626531141470199413, "label": "[0]", "title": "subscript", "to": 7732583858951357290}, {"arrows": "to", "from": -3626531141470199413, "to": 1660629930991644935}, {"arrows": "to", "from": -6917614363447607129, "label": ".spiketrains", "title": "attribute", "to": -3626531141470199413}, {"arrows": "to", "from": 615863736691817167, "label": "[0]", "title": "subscript", "to": -6917614363447607129}, {"arrows": "to", "from": 2017082314299713087, "to": 6692727517069113199}, {"arrows": "to", "from": 1008136717897317048, "to": 528098332979732894}, {"arrows": "to", "from": 1660629930991644935, "to": 4295785289097733358}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "layout": {
+        "hierarchical": {
+            "blockShifting": true,
+            "edgeMinimization": true,
+            "enabled": true,
+            "levelSeparation": 150,
+            "parentCentralization": true,
+            "sortMethod": "hubsize",
+            "treeSpacing": 200
+        },
+        "improvedLayout": true,
+        "randomSeed": 0
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

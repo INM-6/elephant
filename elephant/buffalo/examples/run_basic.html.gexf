@@ -1,0 +1,291 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gexf version="1.2" xmlns="http://www.gexf.net/1.2draft" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.gexf.net/1.2draft http://www.gexf.net/1.2draft/gexf.xsd">
+  <meta lastmodifieddate="2022-01-11">
+    <creator>NetworkX 2.5.1</creator>
+  </meta>
+  <graph defaultedgetype="directed" mode="dynamic" name="" timeformat="double">
+    <attributes class="edge" mode="static">
+      <attribute id="11" title="title" type="string" />
+      <attribute id="12" title="params" type="string" />
+    </attributes>
+    <attributes class="node" mode="static">
+      <attribute id="0" title="title" type="string" />
+      <attribute id="1" title="type" type="string" />
+      <attribute id="2" title="x" type="long" />
+      <attribute id="3" title="y" type="long" />
+      <attribute id="4" title="name" type="string" />
+      <attribute id="5" title="params" type="string" />
+      <attribute id="6" title="shape" type="string" />
+      <attribute id="7" title="units" type="string" />
+      <attribute id="8" title="t_start" type="string" />
+      <attribute id="9" title="t_stop" type="string" />
+      <attribute id="10" title="dtype" type="string" />
+    </attributes>
+    <nodes>
+      <node end="1641929328.421193" id="ecdc77ca9697202b61099b674cb555a13d384cdc" label="Block" start="1641925743.932034">
+        <attvalues>
+          <attvalue for="0" value="neo.core.block.Block&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;name&lt;/i&gt;=Reachgrasp Recording [...]&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="1" />
+          <attvalue for="4" value="Reachgrasp Recording [...]" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b" label="&lt;File&gt;" start="1641925728.917591">
+        <attvalues>
+          <attvalue for="0" value="/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001.ns6&lt;br&gt;[sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b]" />
+          <attvalue for="1" value="file" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="-1" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="3644782099106067371" label="load_data" start="1641925728.917591">
+        <attvalues>
+          <attvalue for="0" value="__main__.load_data" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{}" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="0" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="27a3ac3675d58cd702f37e57853b163f5387b52f" label="SpikeTrain" start="1641925743.906509">
+        <attvalues>
+          <attvalue for="0" value="neo.core.spiketrain.SpikeTrain&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=(945,)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;units&lt;/i&gt;=(1.0/30000 * s)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_start&lt;/i&gt;=0.0&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_stop&lt;/i&gt;=30096367.0&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;name&lt;/i&gt;=Unit 10000&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="-1" />
+          <attvalue for="3" value="-1" />
+          <attvalue for="6" value="(945,)" />
+          <attvalue for="7" value="(1.0/30000 * s)" />
+          <attvalue for="8" value="0.0 (1.0/30000 * s)" />
+          <attvalue for="9" value="30096367.0 (1.0/30000 * s)" />
+          <attvalue for="4" value="Unit 10000" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3" label="list" start="1641925743.932034">
+        <attvalues>
+          <attvalue for="0" value="builtins.list" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="-1" />
+          <attvalue for="3" value="-1" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="e16ec70eacb47e5d537a570917f301772071e40e" label="Segment" start="1641925743.932034">
+        <attvalues>
+          <attvalue for="0" value="neo.core.segment.Segment&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_start&lt;/i&gt;=0.0&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_stop&lt;/i&gt;=30096367.0&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;name&lt;/i&gt;=Segment 0&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="-1" />
+          <attvalue for="3" value="-1" />
+          <attvalue for="8" value="0.0 (1.0/30000 * s)" />
+          <attvalue for="9" value="30096367.0 (1.0/30000 * s)" />
+          <attvalue for="4" value="Segment 0" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="cd274f681a1ef6afefb34198d70ff522d76ce164" label="list" start="1641925743.932034">
+        <attvalues>
+          <attvalue for="0" value="builtins.list" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="-1" />
+          <attvalue for="3" value="-1" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="d1e3df8e9606e773e644fd07e504972c21897448" label="Quantity" start="1641925743.89375">
+        <attvalues>
+          <attvalue for="0" value="quantities.quantity.Quantity&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=(944,)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;units&lt;/i&gt;=(1.0/30000 * s)&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="3" />
+          <attvalue for="6" value="(944,)" />
+          <attvalue for="7" value="(1.0/30000 * s)" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="4180377521567423103" label="isi" start="1641925743.89375">
+        <attvalues>
+          <attvalue for="0" value="elephant.statistics.isi&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;axis&lt;/i&gt;=0&lt;/font&gt;" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{'axis': 0}" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="2" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="b3d558e9df1a4ec0e5e31bb7ad74eec76a9c9da2" label="Quantity" start="1641925743.906509">
+        <attvalues>
+          <attvalue for="0" value="quantities.quantity.Quantity&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=()&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;units&lt;/i&gt;=1/(1.0/30000 * s)&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="5" />
+          <attvalue for="6" value="()" />
+          <attvalue for="7" value="1/(1.0/30000 * s)" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="-4192058524821937897" label="mean_firing_rate" start="1641925743.906509">
+        <attvalues>
+          <attvalue for="0" value="elephant.statistics.mean_firing_rate&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_start&lt;/i&gt;=None&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_stop&lt;/i&gt;=None&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;axis&lt;/i&gt;=None&lt;/font&gt;" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{'t_start': None, 't_stop': None, 'axis': None}" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="4" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="fc20afb40aabafec5832e6d24752619b90d7ea2a" label="SpikeTrain" start="1641925743.919463">
+        <attvalues>
+          <attvalue for="0" value="neo.core.spiketrain.SpikeTrain&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=(5815,)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;units&lt;/i&gt;=(1.0/30000 * s)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_start&lt;/i&gt;=0.0&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_stop&lt;/i&gt;=30096367.0&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;name&lt;/i&gt;=Unit 10001&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="-1" />
+          <attvalue for="3" value="-1" />
+          <attvalue for="6" value="(5815,)" />
+          <attvalue for="7" value="(1.0/30000 * s)" />
+          <attvalue for="8" value="0.0 (1.0/30000 * s)" />
+          <attvalue for="9" value="30096367.0 (1.0/30000 * s)" />
+          <attvalue for="4" value="Unit 10001" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="a5b62749e1b2014f166fe1a0f32328ecb21768d0" label="Quantity" start="1641925743.919463">
+        <attvalues>
+          <attvalue for="0" value="quantities.quantity.Quantity&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=(5814,)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;units&lt;/i&gt;=(1.0/30000 * s)&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="2" />
+          <attvalue for="3" value="3" />
+          <attvalue for="6" value="(5814,)" />
+          <attvalue for="7" value="(1.0/30000 * s)" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="5594266349422846039" label="isi" start="1641925743.919463">
+        <attvalues>
+          <attvalue for="0" value="elephant.statistics.isi&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;axis&lt;/i&gt;=0&lt;/font&gt;" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{'axis': 0}" />
+          <attvalue for="2" value="2" />
+          <attvalue for="3" value="2" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="54f586e3a807f2e3f9dee09dfb9790ca24b4370c" label="float64" start="1641925743.932034">
+        <attvalues>
+          <attvalue for="0" value="numpy.float64" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="7" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="5840378909059405069" label="fanofactor" start="1641925743.932034">
+        <attvalues>
+          <attvalue for="0" value="elephant.statistics.fanofactor&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;warn_tolerance&lt;/i&gt;=0.1&lt;/font&gt;" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{'warn_tolerance': array(0.1) * ms}" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="6" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="3004395bd3640acc68f0e0013d1a0997e42b04df" label="ndarray" start="1641925743.946875">
+        <attvalues>
+          <attvalue for="0" value="numpy.ndarray&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=(6,)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;dtype&lt;/i&gt;=float64&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="9" />
+          <attvalue for="6" value="(6,)" />
+          <attvalue for="10" value="float64" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="c5bb7895dc4c05e1317e65227a6ba83a1dab5d09" label="list" start="1641925743.946143">
+        <attvalues>
+          <attvalue for="0" value="builtins.list" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="7" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="-6522885903824565689" label="array" start="1641925743.946143">
+        <attvalues>
+          <attvalue for="0" value="numpy.array" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{}" />
+          <attvalue for="2" value="1" />
+          <attvalue for="3" value="8" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="e426f00d8a883f8a95212fc81208c24d81e4f424" label="ndarray" start="1641925743.94649">
+        <attvalues>
+          <attvalue for="0" value="numpy.ndarray&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;shape&lt;/i&gt;=(5,)&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;dtype&lt;/i&gt;=float64&lt;/font&gt;" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="3" />
+          <attvalue for="3" value="3" />
+          <attvalue for="6" value="(5,)" />
+          <attvalue for="10" value="float64" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="3567375605658774098" label="isi" start="1641925743.94649">
+        <attvalues>
+          <attvalue for="0" value="elephant.statistics.isi&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;axis&lt;/i&gt;=-1&lt;/font&gt;" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{'axis': -1}" />
+          <attvalue for="2" value="3" />
+          <attvalue for="3" value="2" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="f4bda3e7e77b8fc7f90e63f8a43d8ab348735dd6" label="float64" start="1641925743.946875">
+        <attvalues>
+          <attvalue for="0" value="numpy.float64" />
+          <attvalue for="1" value="data" />
+          <attvalue for="2" value="2" />
+          <attvalue for="3" value="5" />
+        </attvalues>
+      </node>
+      <node end="1641929328.421193" id="-3467155508943196863" label="mean_firing_rate" start="1641925743.946875">
+        <attvalues>
+          <attvalue for="0" value="elephant.statistics.mean_firing_rate&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_start&lt;/i&gt;=None&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;t_stop&lt;/i&gt;=None&lt;/font&gt;&lt;br&gt;&lt;font size=&quot;0.5&quot;&gt;&lt;i&gt;axis&lt;/i&gt;=None&lt;/font&gt;" />
+          <attvalue for="1" value="function" />
+          <attvalue for="5" value="{'t_start': None, 't_stop': None, 'axis': None}" />
+          <attvalue for="2" value="2" />
+          <attvalue for="3" value="4" />
+        </attvalues>
+      </node>
+    </nodes>
+    <edges>
+      <edge end="1641929328.421193" id="0" label=".segments" source="ecdc77ca9697202b61099b674cb555a13d384cdc" start="1641925743.932034" target="cd274f681a1ef6afefb34198d70ff522d76ce164" type="static">
+        <attvalues>
+          <attvalue for="11" value="attribute" />
+          <attvalue for="12" value="{'name': 'segments'}" />
+        </attvalues>
+      </edge>
+      <edge end="1641929328.421193" id="1" source="242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b" start="1641925728.917591" target="3644782099106067371" type="input" />
+      <edge end="1641929328.421193" id="2" source="3644782099106067371" start="1641925728.917591" target="ecdc77ca9697202b61099b674cb555a13d384cdc" type="output" />
+      <edge end="1641929328.421193" id="3" source="27a3ac3675d58cd702f37e57853b163f5387b52f" start="1641925743.89375" target="4180377521567423103" type="input" />
+      <edge end="1641929328.421193" id="4" source="27a3ac3675d58cd702f37e57853b163f5387b52f" start="1641925743.906509" target="-4192058524821937897" type="input" />
+      <edge end="1641929328.421193" id="5" label="[0]" source="9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3" start="1641925743.906509" target="27a3ac3675d58cd702f37e57853b163f5387b52f" type="static">
+        <attvalues>
+          <attvalue for="11" value="subscript" />
+          <attvalue for="12" value="{'index': 0}" />
+        </attvalues>
+      </edge>
+      <edge end="1641929328.421193" id="6" label="[1]" source="9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3" start="1641925743.919463" target="fc20afb40aabafec5832e6d24752619b90d7ea2a" type="static">
+        <attvalues>
+          <attvalue for="11" value="subscript" />
+          <attvalue for="12" value="{'index': 1}" />
+        </attvalues>
+      </edge>
+      <edge end="1641929328.421193" id="7" source="9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3" start="1641925743.932034" target="5840378909059405069" type="input" />
+      <edge end="1641929328.421193" id="8" label=".spiketrains" source="e16ec70eacb47e5d537a570917f301772071e40e" start="1641925743.932034" target="9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3" type="static">
+        <attvalues>
+          <attvalue for="11" value="attribute" />
+          <attvalue for="12" value="{'name': 'spiketrains'}" />
+        </attvalues>
+      </edge>
+      <edge end="1641929328.421193" id="9" label="[0]" source="cd274f681a1ef6afefb34198d70ff522d76ce164" start="1641925743.932034" target="e16ec70eacb47e5d537a570917f301772071e40e" type="static">
+        <attvalues>
+          <attvalue for="11" value="subscript" />
+          <attvalue for="12" value="{'index': 0}" />
+        </attvalues>
+      </edge>
+      <edge end="1641929328.421193" id="10" source="4180377521567423103" start="1641925743.89375" target="d1e3df8e9606e773e644fd07e504972c21897448" type="output" />
+      <edge end="1641929328.421193" id="11" source="-4192058524821937897" start="1641925743.906509" target="b3d558e9df1a4ec0e5e31bb7ad74eec76a9c9da2" type="output" />
+      <edge end="1641929328.421193" id="12" source="fc20afb40aabafec5832e6d24752619b90d7ea2a" start="1641925743.919463" target="5594266349422846039" type="input" />
+      <edge end="1641929328.421193" id="13" source="5594266349422846039" start="1641925743.919463" target="a5b62749e1b2014f166fe1a0f32328ecb21768d0" type="output" />
+      <edge end="1641929328.421193" id="14" source="5840378909059405069" start="1641925743.932034" target="54f586e3a807f2e3f9dee09dfb9790ca24b4370c" type="output" />
+      <edge end="1641929328.421193" id="15" source="3004395bd3640acc68f0e0013d1a0997e42b04df" start="1641925743.94649" target="3567375605658774098" type="input" />
+      <edge end="1641929328.421193" id="16" source="3004395bd3640acc68f0e0013d1a0997e42b04df" start="1641925743.946875" target="-3467155508943196863" type="input" />
+      <edge end="1641929328.421193" id="17" source="c5bb7895dc4c05e1317e65227a6ba83a1dab5d09" start="1641925743.946143" target="-6522885903824565689" type="input" />
+      <edge end="1641929328.421193" id="18" source="-6522885903824565689" start="1641925743.946143" target="3004395bd3640acc68f0e0013d1a0997e42b04df" type="output" />
+      <edge end="1641929328.421193" id="19" source="3567375605658774098" start="1641925743.94649" target="e426f00d8a883f8a95212fc81208c24d81e4f424" type="output" />
+      <edge end="1641929328.421193" id="20" source="-3467155508943196863" start="1641925743.946875" target="f4bda3e7e77b8fc7f90e63f8a43d8ab348735dd6" type="output" />
+    </edges>
+  </graph>
+</gexf>

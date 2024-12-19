@@ -1,0 +1,124 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 4568459475691708515, "label": "Block", "physics": false, "shape": "ellipse", "title": "neo.core.block.Block\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Reachgrasp Recording [...]\u003c/font\u003e", "x": 500, "y": 100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1801153867074501008, "label": "list", "physics": false, "shape": "ellipse", "title": "builtins.list", "x": -500, "y": -100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "green", "border": "green"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -4309634413408113532, "label": "\u003cFile\u003e", "physics": false, "shape": "database", "title": "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001.ns6\u003cbr\u003e[sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b]", "x": 500, "y": -100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1338939089892373420, "label": "load_data", "physics": false, "shape": "box", "title": "__main__.load_data", "x": 500, "y": 0}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 482870321273991585, "label": "SpikeTrain", "physics": false, "shape": "ellipse", "title": "neo.core.spiketrain.SpikeTrain\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(945,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Unit 10000\u003c/font\u003e", "x": -500, "y": -100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1874534512353729152, "label": "isi", "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=0\u003c/font\u003e", "x": 500, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1886215515608243946, "label": "mean_firing_rate", "physics": false, "shape": "box", "title": "elephant.statistics.mean_firing_rate\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=None\u003c/font\u003e", "x": 500, "y": 400}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1088978791530327159, "label": "list", "physics": false, "shape": "ellipse", "title": "builtins.list", "x": -500, "y": -100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -4465725749751951080, "label": "SpikeTrain", "physics": false, "shape": "ellipse", "title": "neo.core.spiketrain.SpikeTrain\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5815,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Unit 10001\u003c/font\u003e", "x": -500, "y": -100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1228692890632017167, "label": "fanofactor", "physics": false, "shape": "box", "title": "elephant.statistics.fanofactor\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ewarn_tolerance\u003c/i\u003e=0.1\u003c/font\u003e", "x": 500, "y": 600}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 6262854002884672629, "label": "Segment", "physics": false, "shape": "ellipse", "title": "neo.core.segment.Segment\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Segment 0\u003c/font\u003e", "x": -500, "y": -100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -7946780887662720119, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(944,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e", "x": 500, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -8407670764959377413, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=()\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=1/(1.0/30000 * s)\u003c/font\u003e", "x": 500, "y": 500}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 982580330995458137, "label": "isi", "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=0\u003c/font\u003e", "x": 1000, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -7292622359514271956, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5814,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e", "x": 1000, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -4208590277323371130, "label": "float64", "physics": false, "shape": "ellipse", "title": "numpy.float64", "x": 500, "y": 700}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 6286245996684193129, "label": "ndarray", "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(6,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=float64\u003c/font\u003e", "x": 500, "y": 900}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1261532596445080147, "label": "isi", "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=-1\u003c/font\u003e", "x": 1500, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1161312499729502912, "label": "mean_firing_rate", "physics": false, "shape": "box", "title": "elephant.statistics.mean_firing_rate\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=None\u003c/font\u003e", "x": 1000, "y": 400}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 6423354209376954326, "label": "list", "physics": false, "shape": "ellipse", "title": "builtins.list", "x": 500, "y": 700}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1911199885397177787, "label": "array", "physics": false, "shape": "box", "title": "numpy.array", "x": 500, "y": 800}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -7497608888604923262, "label": "ndarray", "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=float64\u003c/font\u003e", "x": 1500, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 3631672627875458696, "label": "float64", "physics": false, "shape": "ellipse", "title": "numpy.float64", "x": 1000, "y": 500}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": 4568459475691708515, "label": ".segments", "title": "attribute", "to": -1801153867074501008}, {"arrows": "to", "from": -4309634413408113532, "to": 1338939089892373420}, {"arrows": "to", "from": 1338939089892373420, "to": 4568459475691708515}, {"arrows": "to", "from": 482870321273991585, "to": 1874534512353729152}, {"arrows": "to", "from": 482870321273991585, "to": -1886215515608243946}, {"arrows": "to", "from": -1088978791530327159, "label": "[0]", "title": "subscript", "to": 482870321273991585}, {"arrows": "to", "from": -1088978791530327159, "label": "[1]", "title": "subscript", "to": -4465725749751951080}, {"arrows": "to", "from": -1088978791530327159, "to": 1228692890632017167}, {"arrows": "to", "from": 6262854002884672629, "label": ".spiketrains", "title": "attribute", "to": -1088978791530327159}, {"arrows": "to", "from": -1801153867074501008, "label": "[0]", "title": "subscript", "to": 6262854002884672629}, {"arrows": "to", "from": 1874534512353729152, "to": -7946780887662720119}, {"arrows": "to", "from": -1886215515608243946, "to": -8407670764959377413}, {"arrows": "to", "from": -4465725749751951080, "to": 982580330995458137}, {"arrows": "to", "from": 982580330995458137, "to": -7292622359514271956}, {"arrows": "to", "from": 1228692890632017167, "to": -4208590277323371130}, {"arrows": "to", "from": 6286245996684193129, "to": 1261532596445080147}, {"arrows": "to", "from": 6286245996684193129, "to": -1161312499729502912}, {"arrows": "to", "from": 6423354209376954326, "to": -1911199885397177787}, {"arrows": "to", "from": -1911199885397177787, "to": 6286245996684193129}, {"arrows": "to", "from": 1261532596445080147, "to": -7497608888604923262}, {"arrows": "to", "from": -1161312499729502912, "to": 3631672627875458696}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "arrowStrikethrough": false,
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false,
+        "multiselect": true,
+        "tooltipDelay": 0
+    },
+    "navigationButons": true,
+    "physics": {
+        "enabled": false,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

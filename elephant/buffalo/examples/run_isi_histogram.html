@@ -1,0 +1,124 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -247242742926271296, "label": "Block", "physics": false, "shape": "ellipse", "title": "neo.core.block.Block\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Reachgrasp Recording [...]\u003c/font\u003e", "x": 500, "y": 600}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -907840881916644771, "label": "list", "physics": false, "shape": "ellipse", "title": "builtins.list", "x": -500, "y": 700}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "green", "border": "green"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1433279241231096946, "label": "\u003cFile\u003e", "physics": false, "shape": "database", "title": "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001.ns6\u003cbr\u003e[sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b]", "x": 500, "y": 400}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1552479210833678162, "label": "load_data", "physics": false, "shape": "box", "title": "__main__.load_data", "x": 500, "y": 500}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -728273239004872405, "label": "SpikeTrain", "physics": false, "shape": "ellipse", "title": "neo.core.spiketrain.SpikeTrain\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(945,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0 (1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0 (1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Unit 10000\u003c/font\u003e", "x": -500, "y": 1500}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 773799735744586483, "label": "isi", "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=-1\u003c/font\u003e", "x": 500, "y": 1600}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1667540146190588025, "label": "list", "physics": false, "shape": "ellipse", "title": "builtins.list", "x": -500, "y": 900}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1139403024636828348, "label": "SpikeTrain", "physics": false, "shape": "ellipse", "title": "neo.core.spiketrain.SpikeTrain\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5815,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0 (1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0 (1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Unit 10001\u003c/font\u003e", "x": -500, "y": 1200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -346213085183357070, "label": "fanofactor", "physics": false, "shape": "box", "title": "elephant.statistics.fanofactor\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ewarn_tolerance\u003c/i\u003e=0.1 ms\u003c/font\u003e", "x": 500, "y": 1000}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -405228372049933892, "label": "Segment", "physics": false, "shape": "ellipse", "title": "neo.core.segment.Segment\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0 (1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=30096367.0 (1.0/30000 * s)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=Segment 0\u003c/font\u003e", "x": -500, "y": 800}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -674239137736599, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(944,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e", "x": 500, "y": 1700}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -372633578884277634, "label": "plot_isi_histograms", "physics": false, "shape": "box", "title": "__main__.plot_isi_histograms\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ebin_size\u003c/i\u003e=2.0 ms\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003emax_time\u003c/i\u003e=500.0 ms\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003egrid\u003c/i\u003e=(3, 1)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003etitles\u003c/i\u003e=[\"{\u0027unit_id\u0027: 0, \u0027channel_id\u0027: 10, \u0027electrode_reject_HFC\u0027: False, \u0027electrode_reject_LFC\u0027: False, \u0027electrode_reject_IFC\u0027: False, \u0027connector_aligned_id\u0027: 98, \u0027sua\u0027: False, \u0027mua\u0027: False, \u0027noise\u0027: True}\", \"{\u0027unit_id\u0027: 1, \u0027channel_id\u0027: 10, \u0027electrode_reject_HFC\u0027: False, \u0027electrode_reject_LFC\u0027: False, \u0027electrode_reject_IFC\u0027: False, \u0027connector_aligned_id\u0027: 98, \u0027sua\u0027: True, \u0027mua\u0027: False, \u0027noise\u0027: False, \u0027SNR\u0027: 2.77264267241, \u0027spike_duration\u0027: 466.666666667, \u0027spike_amplitude\u0027: 300.522957868, \u0027spike_count\u0027: 5815}\", \u0027Generated spike train\u0027]\u003c/font\u003e", "x": 500, "y": 1800}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 599482842971927730, "label": "isi", "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=-1\u003c/font\u003e", "x": 1000, "y": 1300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 909433943979514163, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5814,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=(1.0/30000 * s)\u003c/font\u003e", "x": 1000, "y": 1400}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 2251942919741183418, "label": "float64", "physics": false, "shape": "ellipse", "title": "numpy.float64", "x": 500, "y": 1100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -414686421667992429, "label": "ndarray", "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(47,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=float64\u003c/font\u003e", "x": 500, "y": 100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1920051556272904538, "label": "isi", "physics": false, "shape": "box", "title": "elephant.statistics.isi\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=-1\u003c/font\u003e", "x": 1500, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -888795772699952292, "label": "homogeneous_poisson_process", "physics": false, "shape": "box", "title": "elephant.spike_train_generation.homogeneous_poisson_process\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0 ms\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=1000.0 ms\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003erefractory_period\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003erate\u003c/i\u003e=50.0 Hz\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eas_array\u003c/i\u003e=True\u003c/font\u003e", "x": 500, "y": 0}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1572360665819030119, "label": "ndarray", "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(46,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=float64\u003c/font\u003e", "x": 1500, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1550901911813967055, "label": "Figure", "physics": false, "shape": "ellipse", "title": "matplotlib.figure.Figure", "x": 500, "y": 2000}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 774352556755393979, "label": "savefig", "physics": false, "shape": "box", "title": "matplotlib.figure.savefig\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003etransparent\u003c/i\u003e=None\u003c/font\u003e", "x": 500, "y": 2100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -2053404058657881130, "label": "ndarray", "physics": false, "shape": "ellipse", "title": "numpy.ndarray\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(3,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=object\u003c/font\u003e", "x": 500, "y": 1900}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 993099663652247309, "label": "NoneType", "physics": false, "shape": "ellipse", "title": "builtins.NoneType", "x": 500, "y": 2300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "green", "border": "green"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 2390192662584930218, "label": "\u003cFile\u003e", "physics": false, "shape": "database", "title": "isi.png\u003cbr\u003e[sha256:87a98718320416d69c1baf003a2b07b8da628d5160ee4cdc2dc0b42d3344e428]", "x": 500, "y": 2200}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": -247242742926271296, "label": ".segments", "title": "attribute", "to": -907840881916644771}, {"arrows": "to", "from": -1433279241231096946, "to": -1552479210833678162}, {"arrows": "to", "from": -1552479210833678162, "to": -247242742926271296}, {"arrows": "to", "from": -728273239004872405, "to": 773799735744586483}, {"arrows": "to", "from": -1667540146190588025, "label": "[0]", "title": "subscript", "to": -728273239004872405}, {"arrows": "to", "from": -1667540146190588025, "label": "[1]", "title": "subscript", "to": -1139403024636828348}, {"arrows": "to", "from": -1667540146190588025, "to": -346213085183357070}, {"arrows": "to", "from": -405228372049933892, "label": ".spiketrains", "title": "attribute", "to": -1667540146190588025}, {"arrows": "to", "from": -907840881916644771, "label": "[0]", "title": "subscript", "to": -405228372049933892}, {"arrows": "to", "from": -674239137736599, "to": -372633578884277634}, {"arrows": "to", "from": 773799735744586483, "to": -674239137736599}, {"arrows": "to", "from": -1139403024636828348, "to": 599482842971927730}, {"arrows": "to", "from": 909433943979514163, "to": -372633578884277634}, {"arrows": "to", "from": 599482842971927730, "to": 909433943979514163}, {"arrows": "to", "from": -346213085183357070, "to": 2251942919741183418}, {"arrows": "to", "from": -414686421667992429, "to": -1920051556272904538}, {"arrows": "to", "from": -888795772699952292, "to": -414686421667992429}, {"arrows": "to", "from": 1572360665819030119, "to": -372633578884277634}, {"arrows": "to", "from": -1920051556272904538, "to": 1572360665819030119}, {"arrows": "to", "from": 1550901911813967055, "to": 774352556755393979}, {"arrows": "to", "from": -372633578884277634, "to": 1550901911813967055}, {"arrows": "to", "from": -372633578884277634, "to": -2053404058657881130}, {"arrows": "to", "from": 774352556755393979, "to": 993099663652247309}, {"arrows": "to", "from": 774352556755393979, "to": 2390192662584930218}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "arrowStrikethrough": false,
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false,
+        "multiselect": true,
+        "tooltipDelay": 0
+    },
+    "navigationButons": true,
+    "physics": {
+        "enabled": false,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

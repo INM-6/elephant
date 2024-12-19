@@ -1,0 +1,130 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "blue", "id": 1664136242748745413, "label": "Block", "level": 2, "shape": "dot", "title": "neo.core.block.Block"}, {"color": "red", "id": -1386123040094415079, "label": "test", "level": 3, "shape": "square", "title": "__main__.test"}, {"color": "blue", "id": -804249092815641182, "label": "list", "level": 3, "shape": "dot", "title": "builtins.list"}, {"color": "green", "id": -7964919345261022625, "label": "\u003cFile\u003e", "level": 0, "shape": "triangle", "title": "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001.ns6\u003cbr\u003e[sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b]"}, {"color": "red", "id": 2226328592688545066, "label": "load_data", "level": 1, "shape": "square", "title": "__main__.load_data"}, {"color": "blue", "id": -1033182200545024872, "label": "SpikeTrain", "level": 6, "shape": "dot", "title": "neo.core.spiketrain.SpikeTrain"}, {"color": "red", "id": -1193982372892705920, "label": "isi", "level": 7, "shape": "square", "title": "elephant.statistics.isi"}, {"color": "red", "id": -1115898216949994834, "label": "mean_firing_rate", "level": 7, "shape": "square", "title": "elephant.statistics.mean_firing_rate"}, {"color": "blue", "id": -1204414428777642988, "label": "Quantity", "level": 8, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "blue", "id": -1266839358001473821, "label": "list", "level": 5, "shape": "dot", "title": "builtins.list"}, {"color": "blue", "id": -945874770427563095, "label": "SpikeTrain", "level": 6, "shape": "dot", "title": "neo.core.spiketrain.SpikeTrain"}, {"color": "red", "id": 193512716270606620, "label": "fanofactor", "level": 6, "shape": "square", "title": "elephant.statistics.fanofactor"}, {"color": "blue", "id": 220232490896248055, "label": "Segment", "level": 4, "shape": "dot", "title": "neo.core.segment.Segment"}, {"color": "blue", "id": -284048374020304274, "label": "Quantity", "level": 8, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "red", "id": 2278566449774385586, "label": "isi", "level": 7, "shape": "square", "title": "elephant.statistics.isi"}, {"color": "red", "id": -1037064914036880979, "label": "mean_firing_rate", "level": 7, "shape": "square", "title": "elephant.statistics.mean_firing_rate"}, {"color": "blue", "id": 700416062601650433, "label": "Quantity", "level": 8, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "blue", "id": 1397241573125318739, "label": "Quantity", "level": 8, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "blue", "id": 1325013717501873542, "label": "float64", "level": 7, "shape": "dot", "title": "numpy.float64"}, {"color": "blue", "id": 650121869381101588, "label": "ndarray", "level": 2, "shape": "dot", "title": "numpy.ndarray"}, {"color": "red", "id": -153397326381837199, "label": "isi", "level": 3, "shape": "square", "title": "elephant.statistics.isi"}, {"color": "blue", "id": -2257060361034396947, "label": "list", "level": 0, "shape": "dot", "title": "builtins.list"}, {"color": "red", "id": 528324376759384756, "label": "array", "level": 1, "shape": "square", "title": "numpy.array"}, {"color": "blue", "id": -2185686179109376956, "label": "ndarray", "level": 4, "shape": "dot", "title": "numpy.ndarray"}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": 1664136242748745413, "to": -1386123040094415079}, {"arrows": "to", "from": 1664136242748745413, "label": ".segments", "title": "attribute", "to": -804249092815641182}, {"arrows": "to", "from": -7964919345261022625, "to": 2226328592688545066}, {"arrows": "to", "from": 2226328592688545066, "to": 1664136242748745413}, {"arrows": "to", "from": -1033182200545024872, "to": -1193982372892705920}, {"arrows": "to", "from": -1033182200545024872, "to": -1115898216949994834}, {"arrows": "to", "from": -1193982372892705920, "to": -1204414428777642988}, {"arrows": "to", "from": -1266839358001473821, "label": "[0]", "title": "subscript", "to": -1033182200545024872}, {"arrows": "to", "from": -1266839358001473821, "label": "[1]", "title": "subscript", "to": -945874770427563095}, {"arrows": "to", "from": -1266839358001473821, "to": 193512716270606620}, {"arrows": "to", "from": 220232490896248055, "label": ".spiketrains", "title": "attribute", "to": -1266839358001473821}, {"arrows": "to", "from": -804249092815641182, "label": "[0]", "title": "subscript", "to": 220232490896248055}, {"arrows": "to", "from": -1115898216949994834, "to": -284048374020304274}, {"arrows": "to", "from": -945874770427563095, "to": 2278566449774385586}, {"arrows": "to", "from": -945874770427563095, "to": -1037064914036880979}, {"arrows": "to", "from": 2278566449774385586, "to": 700416062601650433}, {"arrows": "to", "from": -1037064914036880979, "to": 1397241573125318739}, {"arrows": "to", "from": 193512716270606620, "to": 1325013717501873542}, {"arrows": "to", "from": 650121869381101588, "to": -153397326381837199}, {"arrows": "to", "from": -2257060361034396947, "to": 528324376759384756}, {"arrows": "to", "from": 528324376759384756, "to": 650121869381101588}, {"arrows": "to", "from": -153397326381837199, "to": -2185686179109376956}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "layout": {
+        "hierarchical": {
+            "blockShifting": true,
+            "edgeMinimization": true,
+            "enabled": true,
+            "levelSeparation": 150,
+            "parentCentralization": true,
+            "sortMethod": "hubsize",
+            "treeSpacing": 200
+        },
+        "improvedLayout": true,
+        "randomSeed": 0
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

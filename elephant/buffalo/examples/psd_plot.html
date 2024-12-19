@@ -1,0 +1,121 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 592191038616764735, "label": "AnalogSignal", "physics": false, "shape": "ellipse", "title": "neo.core.analogsignal.AnalogSignal\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(90000, 5)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=uV\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_start\u003c/i\u003e=0.0 s\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=3.0 s\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ename\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003echannel_names\u003c/i\u003e=chan1,chan2,chan3,chan4,chan5\u003c/font\u003e", "x": 500, "y": 500}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 656702153666330445, "label": "welch_psd", "physics": false, "shape": "box", "title": "elephant.spectral.welch_psd\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003en_segments\u003c/i\u003e=8\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003elen_segment\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003efrequency_resolution\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eoverlap\u003c/i\u003e=0.5\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003efs\u003c/i\u003e=1.0\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ewindow\u003c/i\u003e=hanning\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003enfft\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edetrend\u003c/i\u003e=constant\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ereturn_onesided\u003c/i\u003e=True\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003escaling\u003c/i\u003e=density\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=-1\u003c/font\u003e", "x": 500, "y": 600}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 2219358400632283174, "label": "get_analog_signal", "physics": false, "shape": "box", "title": "elephant.buffalo.examples.utils.generate_data.get_analog_signal\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003efrequency\u003c/i\u003e=30.0 Hz\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003en_channels\u003c/i\u003e=5\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003et_stop\u003c/i\u003e=3.0 s\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eamplitude\u003c/i\u003e=50.0 uV\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003esampling_rate\u003c/i\u003e=30000.0 Hz\u003c/font\u003e", "x": 500, "y": 400}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1769090008482822884, "label": "PSDObject", "physics": false, "shape": "ellipse", "title": "elephant.buffalo.objects.spectral.PSDObject\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003epid\u003c/i\u003e=bd08eec8-96ef-11eb-ba0c-c99dac91c84b\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ecreate_time\u003c/i\u003e=2021-04-06 17:49:57.767848\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eparams\u003c/i\u003e={\u0027n_segments\u0027: 8, \u0027len_segment\u0027: None,\u003cbr\u003e\u0027frequency_resolution\u0027: None, \u0027overlap\u0027: 0.5, \u0027fs\u0027: 1.0,\u003cbr\u003e\u0027window\u0027: \u0027hanning\u0027, \u0027nfft\u0027: None, \u0027detrend\u0027: \u0027constant\u0027,\u003cbr\u003e\u0027return_onesided\u0027: True, \u0027scaling\u0027: \u0027density\u0027, \u0027axis\u0027: -1,\u003cbr\u003e\u0027wrapped_method\u0027: \u0027scipy.signal.welch\u0027, \u0027wrapped_params\u0027:\u003cbr\u003e{\u0027window\u0027: \u0027hanning\u0027, \u0027nfft\u0027: None, \u0027detrend\u0027: \u0027constant\u0027,\u003cbr\u003e\u0027return_onesided\u0027: True, \u0027scaling\u0027: \u0027density\u0027, \u0027axis\u0027: -1,\u003cbr\u003e\u0027fs\u0027: array(30000.), \u0027nperseg\u0027: 20000, \u0027noverlap\u0027: 10000}}\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003emethod\u003c/i\u003e=elephant.spectral.welch_psd\u003c/font\u003e", "x": 500, "y": 700}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 2001410195759139497, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(10001,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=Hz\u003c/font\u003e", "x": 500, "y": 800}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 247080842012763060, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(10001,)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=uV**2/Hz\u003c/font\u003e", "x": 500, "y": 300}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1208033861369112733, "label": "plot_lfp_psd", "physics": false, "shape": "box", "title": "__main__.plot_lfp_psd\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003etitle\u003c/i\u003e=AnalysisObject\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003efreq_range\u003c/i\u003e=[0, 49]\u003c/font\u003e", "x": 500, "y": 900}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 1732923054597387130, "label": "Quantity", "physics": false, "shape": "ellipse", "title": "quantities.quantity.Quantity\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eshape\u003c/i\u003e=(5, 10001)\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eunits\u003c/i\u003e=uV**2/Hz\u003c/font\u003e", "x": 500, "y": 100}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "red", "border": "red"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 2185910712655932753, "label": "mean", "physics": false, "shape": "box", "title": "numpy.mean\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003edtype\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eout\u003c/i\u003e=None\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003ekeepdims\u003c/i\u003e=\u003cno value\u003e\u003c/font\u003e\u003cbr\u003e\u003cfont size=\"0.5\"\u003e\u003ci\u003eaxis\u003c/i\u003e=0\u003c/font\u003e", "x": 500, "y": 200}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": -1497085564080943049, "label": "AxesSubplot", "physics": false, "shape": "ellipse", "title": "matplotlib.axes._subplots.AxesSubplot", "x": 500, "y": 0}, {"color": {"background": "rgba(120, 120, 120, 1)", "border": "rgba(120, 120, 120, 1)", "highlight": {"background": "blue", "border": "blue"}}, "font": {"color": "rgba(255, 255, 255, 1)"}, "id": 895696255728951822, "label": "NoneType", "physics": false, "shape": "ellipse", "title": "builtins.NoneType", "x": 500, "y": 1000}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": 592191038616764735, "to": 656702153666330445}, {"arrows": "to", "from": 2219358400632283174, "to": 592191038616764735}, {"arrows": "to", "from": 1769090008482822884, "label": ".frequencies", "title": "attribute", "to": 2001410195759139497}, {"arrows": "to", "from": 656702153666330445, "to": 1769090008482822884}, {"arrows": "to", "from": 247080842012763060, "to": -1208033861369112733}, {"arrows": "to", "from": 1732923054597387130, "to": 2185910712655932753}, {"arrows": "to", "from": 2185910712655932753, "to": 247080842012763060}, {"arrows": "to", "from": 2001410195759139497, "to": -1208033861369112733}, {"arrows": "to", "from": -1497085564080943049, "to": -1208033861369112733}, {"arrows": "to", "from": -1208033861369112733, "to": 895696255728951822}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "arrowStrikethrough": false,
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false,
+        "multiselect": true,
+        "tooltipDelay": 0
+    },
+    "navigationButons": true,
+    "physics": {
+        "enabled": false,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

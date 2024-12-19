@@ -1,0 +1,118 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "blue", "id": -8808157401936933286, "label": "Block", "level": 1, "shape": "dot", "title": "neo.core.block.Block"}, {"color": "blue", "id": -6510273874700734352, "label": "list", "level": 2, "shape": "dot", "title": "builtins.list"}, {"color": "red", "id": 411133785157896482, "label": "load_data", "level": 0, "shape": "square", "title": "__main__.load_data"}, {"color": "blue", "id": 3959225512621569789, "label": "SpikeTrain", "level": 5, "shape": "dot", "title": "neo.core.spiketrain.SpikeTrain"}, {"color": "red", "id": 360180684562408947, "label": "isi", "level": 6, "shape": "square", "title": "elephant.statistics.isi"}, {"color": "blue", "id": 7449449405213365250, "label": "list", "level": 4, "shape": "dot", "title": "builtins.list"}, {"color": "blue", "id": 5422382906186204900, "label": "SpikeTrain", "level": 5, "shape": "dot", "title": "neo.core.spiketrain.SpikeTrain"}, {"color": "blue", "id": 6029880378401057553, "label": "Segment", "level": 3, "shape": "dot", "title": "neo.core.segment.Segment"}, {"color": "blue", "id": 7794615471143101735, "label": "Quantity", "level": 7, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "red", "id": 325493780715505883, "label": "plot_isi_histograms", "level": 8, "shape": "square", "title": "__main__.plot_isi_histograms"}, {"color": "red", "id": 2145765916205835121, "label": "isi", "level": 6, "shape": "square", "title": "elephant.statistics.isi"}, {"color": "blue", "id": 4790573454678459512, "label": "Quantity", "level": 7, "shape": "dot", "title": "quantities.quantity.Quantity"}, {"color": "blue", "id": -9186612827345040144, "label": "Figure", "level": 9, "shape": "dot", "title": "matplotlib.figure.Figure"}, {"color": "blue", "id": -2416293516392011720, "label": "ndarray", "level": 9, "shape": "dot", "title": "numpy.ndarray"}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": -8808157401936933286, "label": ".segments", "title": "attribute", "to": -6510273874700734352}, {"arrows": "to", "from": 411133785157896482, "to": -8808157401936933286}, {"arrows": "to", "from": 3959225512621569789, "to": 360180684562408947}, {"arrows": "to", "from": 7449449405213365250, "label": "[0]", "title": "subscript", "to": 3959225512621569789}, {"arrows": "to", "from": 7449449405213365250, "label": "[1]", "title": "subscript", "to": 5422382906186204900}, {"arrows": "to", "from": 6029880378401057553, "label": ".spiketrains", "title": "attribute", "to": 7449449405213365250}, {"arrows": "to", "from": -6510273874700734352, "label": "[0]", "title": "subscript", "to": 6029880378401057553}, {"arrows": "to", "from": 7794615471143101735, "to": 325493780715505883}, {"arrows": "to", "from": 360180684562408947, "to": 7794615471143101735}, {"arrows": "to", "from": 5422382906186204900, "to": 2145765916205835121}, {"arrows": "to", "from": 4790573454678459512, "to": 325493780715505883}, {"arrows": "to", "from": 2145765916205835121, "to": 4790573454678459512}, {"arrows": "to", "from": 325493780715505883, "to": -9186612827345040144}, {"arrows": "to", "from": 325493780715505883, "to": -2416293516392011720}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "layout": {
+        "hierarchical": {
+            "blockShifting": true,
+            "edgeMinimization": true,
+            "enabled": true,
+            "levelSeparation": 150,
+            "parentCentralization": true,
+            "sortMethod": "hubsize",
+            "treeSpacing": 200
+        },
+        "improvedLayout": true,
+        "randomSeed": 0
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

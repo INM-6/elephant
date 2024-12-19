@@ -1,0 +1,118 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1280px;
+            height: 960px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "blue", "id": -5552913714331288302, "label": "list", "level": 0, "shape": "dot", "title": "builtins.list"}, {"color": "red", "id": 1520595587879670424, "label": "array", "level": 1, "shape": "square", "title": "numpy.array"}, {"color": "blue", "id": 326929134556575440, "label": "ndarray", "level": 2, "shape": "dot", "title": "numpy.ndarray"}, {"color": "blue", "id": -5156365878845260340, "label": "list", "level": 0, "shape": "dot", "title": "builtins.list"}, {"color": "red", "id": 342354281257214218, "label": "array", "level": 1, "shape": "square", "title": "numpy.array"}, {"color": "blue", "id": 5457749624815710034, "label": "ndarray", "level": 2, "shape": "dot", "title": "numpy.ndarray"}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": -5552913714331288302, "to": 1520595587879670424}, {"arrows": "to", "from": 1520595587879670424, "to": 326929134556575440}, {"arrows": "to", "from": -5156365878845260340, "to": 342354281257214218}, {"arrows": "to", "from": 342354281257214218, "to": 5457749624815710034}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "layout": {
+        "hierarchical": {
+            "blockShifting": true,
+            "edgeMinimization": true,
+            "enabled": true,
+            "levelSeparation": 150,
+            "parentCentralization": true,
+            "sortMethod": "hubsize",
+            "treeSpacing": 200
+        },
+        "improvedLayout": true,
+        "randomSeed": 0
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
