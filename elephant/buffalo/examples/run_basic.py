@@ -21,6 +21,7 @@ from elephant.statistics import isi, mean_firing_rate, fanofactor
 
 import elephant.buffalo as buffalo
 from elephant.buffalo.examples.utils.files import get_file_name
+import neo
 
 logging.basicConfig(level=logging.INFO)
 
@@ -70,6 +71,8 @@ def main(session_filename):
     isi_times = isi(block.segments[0].spiketrains[0], axis=0)
     firing_rate = mean_firing_rate(block.segments[0].spiketrains[0])
 
+    isi_times2 = isi(block.segments[0].spiketrains[1], axis=0)
+
     # Compute the Fano factor using all spiketrains in the segment
     fano_factor = fanofactor(block.segments[0].spiketrains)
 
@@ -80,10 +83,11 @@ def main(session_filename):
     firing_rate2 = mean_firing_rate(generated_spike_times)
 
     # Save the provenance as PROV, with optional plotting
-    file_format = "rdf"
+    file_format = "ttl"
     buffalo.save_provenance(
         get_file_name(__file__, extension=f".{file_format}"),
-        file_format=file_format, plot=True)
+        file_format=file_format, plot=True, show_element_attributes=False)
+    buffalo.save_graph("run_basic.html", show=True)
 
 
 if __name__ == "__main__":

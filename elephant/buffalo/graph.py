@@ -1,14 +1,21 @@
 import re
 import textwrap
 import uuid
+import dateutil.parser as duparser
 
 import networkx as nx
 from pyvis.network import Network
 
 from elephant.buffalo.types import ObjectInfo, VarArgs
-
+import datetime
 
 # TODO: get rid of pyvis in favor of prov
+now = datetime.datetime.now()
+
+
+def get_gephi_interval(analysis_step):
+    return duparser.parse(analysis_step.time_stamp_start).timestamp(),\
+           now.timestamp()
 
 
 class ObjectDescription(object):
@@ -18,13 +25,16 @@ class ObjectDescription(object):
     array_annotations = None
     converters = {}
 
-    def _add_line(self, key, value):
+    def _add_line(self, key, value, html=True):
         converter = self.converters.get(key)
         value = converter(value) if converter is not None else value
-        return f"<br><font size=\"0.5\"><i>{key}</i>={value}</font>"
+        if html:
+            return f"<br><font size=\"0.5\"><i>{key}</i>={value}</font>"
+        return str(value)
 
     def build_title(self, object_details, array_summary=True):
         title = ""
+        attrs = {}
 
         # Get values of the selected attributes
         if self.attributes is not None:
@@ -33,6 +43,7 @@ class ObjectDescription(object):
             for attr in attributes:
                 if attr in object_details:
                     title += self._add_line(attr, object_details[attr])
+                    attrs[attr] = self._add_line(attr, object_details[attr], html=False)
 
         # Get values of the selected annotations
         if self.annotations is not None and 'annotations' in object_details:
@@ -40,6 +51,7 @@ class ObjectDescription(object):
             for attr in self.annotations:
                 if attr in annotations_dict:
                     title += self._add_line(attr, annotations_dict[attr])
+                    attrs[attr] = self._add_line(attr, annotations_dict[attr], html=False)
 
         if (self.array_annotations is not None and
                 'array_annotations' in object_details):
@@ -50,8 +62,9 @@ class ObjectDescription(object):
                     if array_summary:
                         value = set(value)
                     title += self._add_line(attr, value)
+                    attrs[attr] = self._add_line(attr, value, html=False)
 
-        return title
+        return title, attrs
 
     def __init__(self, attributes=None, annotations=None,
                  array_annotations=None, converters=None):
@@ -185,31 +198,35 @@ class BuffaloProvenanceGraph(nx.DiGraph):
                              edge_title, multi_output, function_edge, **attrs):
 
         def _connect_edge(input_obj, output_obj):
+            start, end = get_gephi_interval(analysis_step)
+
             if function_edge:
-                title = self.description_map['_function'].build_title(
+                title, objattrs = self.description_map['_function'].build_title(
                     analysis_step.params)
                 x, y = self._get_x_y(analysis_step.vis, 0, function_edge)
                 self.add_node(function_edge, label=edge_label,
                               title=edge_title+title, type='function',
                               params=analysis_step.params,
-                              x=x, y=y)
+                              x=x, y=y, start=start, end=end)
                 if input_obj is not None:
                     self.add_edge(input_obj.hash, function_edge, type='input',
-                                  **attrs)
+                                  start=start, end=end, **attrs)
                 if output_obj is not None:
                     self.add_edge(function_edge, output_obj.hash, type='output',
-                                  **attrs)
+                                  start=start, end=end, **attrs)
             else:
                 self.add_edge(input_obj.hash, output_obj.hash, label=edge_label,
                               title=edge_title, params=analysis_step.params,
-                              type='static', **attrs)
+                              type='static', start=start, end=end, **attrs)
+
+        start, end = get_gephi_interval(analysis_step)
 
         if input_obj is not None:
-            obj_type, obj_label, node_type = self._get_type_and_label(input_obj)
+            obj_type, obj_label, node_type, objattrs = self._get_type_and_label(input_obj)
             x, y = self._get_x_y(analysis_step.vis, -1, input_obj.hash)
 
             self.add_node(input_obj.hash, label=obj_label, title=obj_type,
-                          type=node_type, x=x, y=y)
+                          type=node_type, x=x, y=y, start=start, end=end, **objattrs)
 
         if multi_output:
             for output_key, output_obj in analysis_step.output.items():
@@ -223,17 +240,18 @@ class BuffaloProvenanceGraph(nx.DiGraph):
             _connect_edge(input_obj, output_obj)
 
     def _get_type_and_label(self, obj):
+        attrs = {}
         if isinstance(obj, ObjectInfo):
             # Provenance of a Python object (ObjectInfo named tuple)
             obj_type = obj.type
             obj_label = obj_type.split(".")[-1]
             title = ""
             if obj_type in self.description_map:
-                title = self.description_map[obj_type].build_title(obj.details)
-            return obj_type + title, obj_label, "data"
+                title, attrs = self.description_map[obj_type].build_title(obj.details)
+            return obj_type + title, obj_label, "data", attrs
 
         # Provenance of a file (FileInfo named tuple)
-        return f"{obj.path}<br>[{obj.hash_type}:{obj.hash}]", "<File>", "file"
+        return f"{obj.path}<br>[{obj.hash_type}:{obj.hash}]", "<File>", "file", attrs
 
     @staticmethod
     def _get_edge_attrs_and_labels(analysis_step):
@@ -268,11 +286,13 @@ class BuffaloProvenanceGraph(nx.DiGraph):
 
     def add_step(self, analysis_step, **attr):
 
+        start, end = get_gephi_interval(analysis_step)
+
         for key, obj in analysis_step.output.items():
-            obj_type, obj_label, node_type = self._get_type_and_label(obj)
+            obj_type, obj_label, node_type, objattrs = self._get_type_and_label(obj)
             x, y = self._get_x_y(analysis_step.vis, 1, obj.hash)
             self.add_node(obj.hash, label=obj_label, title=obj_type,
-                          type=node_type, x=x, y=y)
+                          type=node_type, x=x, y=y, start=start, end=end, **objattrs)
         multi_output = len(analysis_step.output.keys()) > 1
 
         edge_label, edge_title, function_edge = \
@@ -370,7 +390,7 @@ class BuffaloProvenanceGraph(nx.DiGraph):
                        'function': 'red',
                        'file': 'green'}
 
-        self._adjust_node_positions()
+        #self._adjust_node_positions()
 
         edges = self.edges.data()
         nodes = self.nodes

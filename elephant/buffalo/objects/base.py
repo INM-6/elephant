@@ -8,6 +8,7 @@ in Elephant.
 
 import uuid
 from datetime import datetime
+import joblib
 
 
 class AnalysisObject(object):
@@ -21,7 +22,7 @@ class AnalysisObject(object):
 
     def __init__(self, *args, **kwargs):
         self._create_time = datetime.now()
-        self._pid = self._create_pid()
+        self._uuid = uuid.uuid1()
         self._annotations = None
         self._warnings_raised = False
 
@@ -32,11 +33,6 @@ class AnalysisObject(object):
 
     def _get_annotations(self):
         return self._annotations
-
-    @staticmethod
-    def _create_pid():
-        #TODO: integrate with persistence layer
-        return uuid.uuid1()
 
     @property
     def warnings_raised(self):
@@ -70,7 +66,10 @@ class AnalysisObject(object):
         -------
         str
         """
-        return self._pid
+        value_hash = joblib.hash(self)
+        type_information = type(self)
+        obj_type = f"{type_information.__module__}.{type_information.__name__}"
+        return f"urn:elephant:{obj_type}:{value_hash}"
 
     @property
     def ontology_path(self):

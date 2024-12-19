@@ -2,6 +2,8 @@ from copy import deepcopy
 from .base import AnalysisObject
 from collections import namedtuple
 
+import numpy as np
+
 
 class PSDObject(AnalysisObject, namedtuple('PSDObject', 'frequencies psd')):
     """
@@ -42,3 +44,7 @@ class PSDObject(AnalysisObject, namedtuple('PSDObject', 'frequencies psd')):
         super().__init__(self, frequencies, psd)
         self.method = method
         self.params = deepcopy(params)
+
+    @property
+    def frequency_resolution(self):
+        return np.diff(self.frequencies)[0]

@@ -51,10 +51,20 @@ class BuffaloFileHash(object):
     ----------
     file_path : str or path-like
         The path to the file that is being hashed.
+    use_content: bool, optional
+        If True, the file content will be used and a SHA256 hash will be
+        computed. If False, a hash based on file attributes (file path and
+        timestamps) will be computed.
+        Default: True
     """
 
+    # TODO: quick hashing based on file path and timestamps
     @staticmethod
-    def _get_file_hash(file_path, block_size=4096 * 1024):
+    def _get_attribute_file_hash(file_path):
+        return 0
+
+    @staticmethod
+    def _get_content_file_hash(file_path, block_size=4096 * 1024):
         file_hash = hashlib.sha256()
 
         with open(file_path, 'rb') as file:
@@ -63,10 +73,15 @@ class BuffaloFileHash(object):
 
         return file_hash.hexdigest()
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, use_content=True):
         self.file_path = file_path
-        self._hash_type = 'sha256'
-        self._hash = self._get_file_hash(file_path)
+
+        if use_content:
+            self._hash_type = 'sha256'
+            self._hash = self._get_content_file_hash(file_path)
+        else:
+            self._hash_type = 'attribute'
+            self._hash = self._get_attribute_file_hash(file_path)
 
     def __hash__(self):
         return self._hash
@@ -90,9 +105,11 @@ class BuffaloFileHash(object):
         FileInfo
             A named tuple with the following attributes:
             * hash : int
-                SHA256 hash of the file.
-            * hash_type: str
-                String storing the hash type (='sha256').
+                Hash of the file. If hashing is done using the content, this
+                is the SHA256 hash. Otherwise, it is a hash based on the
+                attributes of the file (file path and timestamps).
+            * hash_type: {'sha256', 'attribute'}
+                String storing the hash type.
             * path : str or path-like
                 The path to the file that was hashed.
         """
@@ -106,7 +123,7 @@ class BuffaloObjectHasher(object):
     Class for hashing Python objects, supporting memoization.
 
     The object hash value is obtaining by hashing a tuple consisting of the
-    object type, and the MD5 hash of its value.
+    object type, and the SHA1 hash of its value.
 
     The type is a string produced by the combination of the module where it
     was defined plus the type name (both returned by :func:`type`).
@@ -116,8 +133,14 @@ class BuffaloObjectHasher(object):
 
     The method `info` is called to obtain the provenance information
     associated with the object during tracking.
-
     """
+
+    # This is a list of object attributes that provide relevant provenance
+    # information. Whether the object has one defined, it will be captured
+    # together with the hash
+    _metadata_attributes = ('units', 'shape', 'dtype', 't_start', 't_stop',
+                            'id', 'nix_name', 'dimensionality', 'pid',
+                            'create_time')
 
     def __init__(self):
         self._hash_memoizer = dict()
@@ -158,18 +181,18 @@ class BuffaloObjectHasher(object):
             # function instead of joblib's. Multiple object hashes are
             # generated, since each time something is plotted the object
             # changes.
-            value_hash = hash(obj)
+            object_hash = hash(obj)
         elif array_of_matplotlib:  # or isinstance(self.value, list):
             # We also have to use an exception for NumPy arrays with Axes
             # objects, as those also change when the plot changes.
             # These are usually return by the `plt.subplots()` call.
-            value_hash = obj_id
+            object_hash = hash((obj_type, obj_id))
         else:
             # Other objects, like Neo, Quantity and NumPy arrays, use joblib
-            value_hash = joblib.hash(obj)
+            object_hash = joblib.hash(obj, hash_name='sha1')
 
         # Compute final hash by type and value
-        object_hash = hash((obj_type, value_hash))
+        # object_hash = hash((obj_type, value_hash))
 
         # Memoize the hash
         self._hash_memoizer[obj_id] = object_hash
@@ -179,6 +202,10 @@ class BuffaloObjectHasher(object):
     def info(self, obj):
         """
         Returns provenance information for the object.
+
+        Metadata (e.g., annotations in Neo objects) is also captured. Any
+        relevant attributes are also captured as metadata.
+
         If the object is None, then the hash is replaced by a unique id for
         the object.
 
@@ -200,7 +227,8 @@ class BuffaloObjectHasher(object):
             * details : dict
                 Extended information (metadata) on the object.
         """
-        obj_type = f"{type(obj).__module__}.{type(obj).__name__}"
+        type_information = type(obj)
+        obj_type = f"{type_information.__module__}.{type_information.__name__}"
         obj_id = id(obj)
 
         # All Nones will have the same hash. Use UUID instead
@@ -219,9 +247,7 @@ class BuffaloObjectHasher(object):
 
         # Store specific attributes that are relevant for arrays, quantities
         # Neo objects, and AnalysisObjects
-        for attr in ('units', 'shape', 'dtype', 't_start', 't_stop',
-                     'id', 'nix_name', 'dimensionality', 'pid',
-                     'create_time'):
+        for attr in self._metadata_attributes:
             if hasattr(obj, attr):
                 details[attr] = getattr(obj, attr)
 

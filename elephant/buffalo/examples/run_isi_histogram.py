@@ -176,7 +176,13 @@ def main(session_filename):
     figure.savefig("isi.png")
 
     # provenance.print_history()
-    buffalo.save_graph(get_file_name(__file__, extension=".html"), show=True)
+    # buffalo.save_graph(get_file_name(__file__, extension=".html"), show=True)
+
+    # Save the provenance as PROV, with optional plotting
+    file_format = "provn"
+    buffalo.save_provenance(
+        get_file_name(__file__, extension=f".{file_format}"),
+        file_format=file_format, plot=True)
 
 
 if __name__ == "__main__":

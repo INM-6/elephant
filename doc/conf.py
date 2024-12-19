@@ -106,8 +106,6 @@ exclude_patterns = [
 # output. They are ignored by default.
 #show_authors = False
 
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
@@ -118,6 +116,9 @@ nbsphinx_execute = 'auto'
 nbsphinx_kernel_name = 'python3'
 # Cancel compile on errors in notebooks
 nbsphinx_allow_errors = False
+
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = 'sphinx'
 
 # Required to automatically create a summary page for each function listed in
 # the autosummary fields of each module.

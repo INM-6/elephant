@@ -574,7 +574,7 @@ def save_graph(filename, show=False):
     Provenance.save_graph(filename, show=show)
 
 
-def save_provenance(filename=None, file_format='rdf', plot=False):
+def save_provenance(filename=None, file_format='rdf', plot=False, **kwargs):
     """
     Serialized provenance information according to the W3C Provenance Data
     Model (PROV).
@@ -589,7 +589,7 @@ def save_provenance(filename=None, file_format='rdf', plot=False):
     file_format : {'json', 'rdf', 'prov', 'xml'}, optional
         Serialization format. Formats currently supported are:
         * 'json' : PROV-JSON
-        * 'rdf' : PROV-O
+        * 'rdf'/'ttl' : PROV-O
         * 'prov' : PROV-N
         * 'xml : PROV-XML
         Default: 'rdf'
@@ -610,7 +610,9 @@ def save_provenance(filename=None, file_format='rdf', plot=False):
 
     """
     prov_document = Provenance.get_prov_info()
+    if file_format == 'ttl':
+        file_format = 'rdf'
     prov_data = prov_document.serialize(filename, format=file_format)
     if plot:
-        prov_document.plot()
+        prov_document.plot(**kwargs)
     return prov_data
