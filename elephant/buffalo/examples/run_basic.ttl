@@ -1,0 +1,283 @@
+@prefix annotation: <urn:alpaca:annotation:> .
+@prefix attribute: <urn:alpaca:attribute:> .
+@prefix container: <urn:alpaca:container:> .
+@prefix file: <urn:alpaca:file:> .
+@prefix function: <urn:alpaca:function:> .
+@prefix object: <urn:alpaca:object:> .
+@prefix parameter: <urn:alpaca:parameter:> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix script: <urn:alpaca:script:> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+{
+    <urn:alpaca:object:neo.core.block.Block:ecdc77ca9697202b61099b674cb555a13d384cdc> a prov:Entity ;
+        prov:hadMember <urn:alpaca:object:builtins.list:cd274f681a1ef6afefb34198d70ff522d76ce164> ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:__main__.load_data ;
+                prov:atTime "2022-01-12T13:23:19.994520"^^xsd:dateTime ] ;
+        prov:wasDerivedFrom <urn:alpaca:file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b> ;
+        annotation:array_serialnum "['8596-001139']"^^xsd:string ;
+        annotation:arraygrid_col_num "[10]"^^xsd:string ;
+        annotation:arraygrid_row_num "[10]"^^xsd:string ;
+        annotation:arraygrids_tot_num "[1]"^^xsd:string ;
+        annotation:avail_ccf true ;
+        annotation:avail_electrode_ids "[-1, [81], [83], [85], [88], [90], [92], [93], [96], -1, [79], [80], [84], [86], [87], [89], [91], [94], [63], [95], [77], [78], [82], [49], [53], [55], [57], [59], [61], [32], [75], [76], [45], [47], [51], [56], [58], [60], [64], [30], [73], [74], [41], [43], [44], [46], [52], [62], [31], [28], [71], [72], [39], [40], [42], [50], [54], [21], [29], [26], [69], [70], [37], [38], [48], [15], [19], [25], [27], [24], [67], [68], [35], [36], [5], [17], [13], [23], [20], [22], [65], [66], [33], [34], [7], [9], [11], [12], [16], [18], -1, [2], [1], [3], [4], [6], [8], [10], [14], -1]"^^xsd:string ;
+        annotation:avail_file_set "['ns2', 'ns6', 'nev', 'ccf', 'odml']"^^xsd:string ;
+        annotation:avail_nev true ;
+        annotation:avail_nsx "[2, 6]"^^xsd:string ;
+        annotation:avail_sif false ;
+        annotation:conditions "[1]"^^xsd:string ;
+        annotation:connector_type "['CerePort']"^^xsd:string ;
+        annotation:electrodes_pitch "[400.] um"^^xsd:string ;
+        annotation:electrodes_tot_num "[100]"^^xsd:string ;
+        annotation:nb_segments "1"^^xsd:int ;
+        annotation:project_name "['reach-to-grasp']"^^xsd:string ;
+        annotation:project_subtype "['motor behavior']"^^xsd:string ;
+        annotation:project_type "['electrophysiology']"^^xsd:string ;
+        annotation:rec_pauses false ;
+        annotation:setup_location "['Inst. de Neurosciences de la Timone (INT), UMR 7289, CNRS - Aix Marseille Univ., Marseille, France']"^^xsd:string ;
+        annotation:subject_activehand "['left']"^^xsd:string ;
+        annotation:subject_birthday "[datetime.date(2008, 5, 17)]"^^xsd:string ;
+        annotation:subject_gender "['male']"^^xsd:string ;
+        annotation:subject_name "['monkey_N']"^^xsd:string ;
+        annotation:taskdesigns "['TwoCues']"^^xsd:string ;
+        attribute:channel_indexes "[neo.core.channelindex.ChannelIndex(name=ChannelIndex 0, description=Container for units and groups analogsignals of one recording channel across segments.)]"^^xsd:string ;
+        attribute:description "Block of reach-to-grasp project data from Blackrock file set."^^xsd:string ;
+        attribute:file_datetime "None"^^xsd:string ;
+        attribute:file_origin "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001"^^xsd:string ;
+        attribute:groups "[]"^^xsd:string ;
+        attribute:index "None"^^xsd:string ;
+        attribute:name "Reachgrasp Recording Data Block"^^xsd:string ;
+        attribute:rec_datetime "2014-07-03 10:40:59.000288"^^xsd:string ;
+        attribute:regionsofinterest "[]"^^xsd:string ;
+        attribute:segments "[neo.core.segment.Segment(t_start=0.0 (1.0/30000 * s), t_stop=30096367.0 (1.0/30000 * s), name=Segment 0, description=Segment containing data from t_min to t_max.)]"^^xsd:string .
+
+    <urn:alpaca:object:numpy.float64:54f586e3a807f2e3f9dee09dfb9790ca24b4370c> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:elephant.statistics.fanofactor
+                ;
+                prov:atTime "2022-01-12T13:23:49.029130"^^xsd:dateTime ;
+                parameter:warn_tolerance "0.1 ms"^^xsd:string ] ;
+        prov:wasDerivedFrom [
+           <urn:alpaca:object:builtins.list:9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3> ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "()"^^xsd:string .
+
+    <urn:alpaca:object:numpy.float64:f4bda3e7e77b8fc7f90e63f8a43d8ab348735dd6> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:elephant.statistics.mean_firing_rate ;
+                prov:atTime "2022-01-12T13:23:49.052720"^^xsd:dateTime ;
+                parameter:axis "None"^^xsd:string ;
+                parameter:t_start "None"^^xsd:string ;
+                parameter:t_stop "None"^^xsd:string ] ;
+        prov:wasDerivedFrom <urn:alpaca:object:numpy.ndarray:3004395bd3640acc68f0e0013d1a0997e42b04df> ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "()"^^xsd:string .
+
+    <urn:alpaca:object:numpy.ndarray:e426f00d8a883f8a95212fc81208c24d81e4f424> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:elephant.statistics.isi ;
+                prov:atTime "2022-01-12T13:23:49.051743"^^xsd:dateTime ;
+                parameter:axis "-1"^^xsd:int ] ;
+        prov:wasDerivedFrom <urn:alpaca:object:numpy.ndarray:3004395bd3640acc68f0e0013d1a0997e42b04df> ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "(5,)"^^xsd:string .
+
+    <urn:alpaca:object:quantities.quantity.Quantity:a5b62749e1b2014f166fe1a0f32328ecb21768d0> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:elephant.statistics.isi ;
+                prov:atTime "2022-01-12T13:23:49.002695"^^xsd:dateTime ;
+                parameter:axis "0"^^xsd:int ] ;
+        prov:wasDerivedFrom <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:fc20afb40aabafec5832e6d24752619b90d7ea2a> ;
+        attribute:_dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "(5814,)"^^xsd:string ;
+        attribute:units "1.0 (1.0/30000 * s)"^^xsd:string .
+
+    <urn:alpaca:object:quantities.quantity.Quantity:b3d558e9df1a4ec0e5e31bb7ad74eec76a9c9da2> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:elephant.statistics.mean_firing_rate ;
+                prov:atTime "2022-01-12T13:23:48.978300"^^xsd:dateTime ;
+                parameter:axis "None"^^xsd:string ;
+                parameter:t_start "None"^^xsd:string ;
+                parameter:t_stop "None"^^xsd:string ] ;
+        prov:wasDerivedFrom <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:27a3ac3675d58cd702f37e57853b163f5387b52f> ;
+        attribute:_dimensionality "1/(1.0/30000 * s)"^^xsd:string ;
+        attribute:dimensionality "1/(1.0/30000 * s)"^^xsd:string ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "()"^^xsd:string ;
+        attribute:units "1.0 1/(1.0/30000 * s)"^^xsd:string .
+
+    <urn:alpaca:object:quantities.quantity.Quantity:d1e3df8e9606e773e644fd07e504972c21897448> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:elephant.statistics.isi ;
+                prov:atTime "2022-01-12T13:23:48.947362"^^xsd:dateTime ;
+                parameter:axis "0"^^xsd:int ] ;
+        prov:wasDerivedFrom <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:27a3ac3675d58cd702f37e57853b163f5387b52f> ;
+        attribute:_dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "(944,)"^^xsd:string ;
+        attribute:units "1.0 (1.0/30000 * s)"^^xsd:string .
+
+    function:__main__.load_data a prov:Activity ;
+        prov:qualifiedUsage [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:19.994520"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b> ] ;
+        prov:wasAttributedTo <urn:alpaca:script:run_basic.py?1b4f9e75c57480d15249017a348827a4e2ccb93e8764a06e61ec13d2e7dafc57> .
+
+    function:elephant.statistics.fanofactor a prov:Activity ;
+        prov:qualifiedUsage [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:49.029130"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:builtins.list:9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3> ;
+                parameter:warn_tolerance [
+                    rdf:value "0.1"^^xsd:decimal;
+                    alpaca:unit "ms"^^xsd:string ] ;
+        prov:wasAttributedTo <urn:alpaca:script:run_basic.py?1b4f9e75c57480d15249017a348827a4e2ccb93e8764a06e61ec13d2e7dafc57> .
+
+    function:numpy.array a prov:Activity ;
+        prov:qualifiedUsage [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:49.050976"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:builtins.list:c5bb7895dc4c05e1317e65227a6ba83a1dab5d09> ] ;
+        prov:wasAttributedTo <urn:alpaca:script:run_basic.py?1b4f9e75c57480d15249017a348827a4e2ccb93e8764a06e61ec13d2e7dafc57> .
+
+    <urn:alpaca:object:builtins.list:cd274f681a1ef6afefb34198d70ff522d76ce164> a prov:Entity ;
+        prov:hadMember <urn:alpaca:object:neo.core.segment.Segment:e16ec70eacb47e5d537a570917f301772071e40e> ;
+        container:attribute "segments"^^xsd:string .
+
+    <urn:alpaca:object:neo.core.segment.Segment:e16ec70eacb47e5d537a570917f301772071e40e> a prov:Entity ;
+        prov:hadMember <urn:alpaca:object:builtins.list:9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3> ;
+        annotation:condition "1"^^xsd:int ;
+        attribute:analogsignals "[]"^^xsd:string ;
+        attribute:block "neo.core.block.Block(name=Reachgrasp Recording Data Block, description=Block of reach-to-grasp project data from Blackrock file set.)"^^xsd:string ;
+        attribute:description "Segment containing data from t_min to t_max."^^xsd:string ;
+        attribute:epochs "[]"^^xsd:string ;
+        attribute:events "[neo.core.event.Event(shape=(1317,), dtype=float64, name=DigitalTrialEvents, description=Trial events of the digital input port), neo.core.event.Event(shape=(1128,), dtype=float64, name=AnalogTrialEvents, description=Events extracted from analog signals), neo.core.event.Event(shape=(2445,), dtype=float64, name=TrialEvents, description=All trial events (digital and analog))]"^^xsd:string ;
+        attribute:file_datetime "None"^^xsd:string ;
+        attribute:file_origin "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001"^^xsd:string ;
+        attribute:imagesequences "[]"^^xsd:string ;
+        attribute:index "0"^^xsd:int ;
+        attribute:irregularlysampledsignals "[]"^^xsd:string ;
+        attribute:name "Segment 0"^^xsd:string ;
+        attribute:rec_datetime "2014-07-03 10:40:59.000288"^^xsd:string ;
+        attribute:spiketrains "[neo.core.spiketrain.SpikeTrain(t_start=0.0 (1.0/30000 * s), t_stop=30096367.0 (1.0/30000 * s), shape=(945,), dtype=float64, name=Unit 10000, description=SpikeTrain from channel: 10, unit: unclassified), neo.core.spiketrain.SpikeTrain(t_start=0.0 (1.0/30000 * s), t_stop=30096367.0 (1.0/30000 * s), shape=(5815,), dtype=float64, name=Unit 10001, description=SpikeTrain from channel: 10, unit: 1)]"^^xsd:string ;
+        attribute:t_start "0.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:t_stop "30096367.0 (1.0/30000 * s)"^^xsd:string ;
+        container:index "0"^^xsd:int .
+
+    <urn:alpaca:file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b> a prov:Entity .
+
+    function:elephant.statistics.mean_firing_rate a prov:Activity ;
+        prov:qualifiedUsage [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:48.978300"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:27a3ac3675d58cd702f37e57853b163f5387b52f> ;
+                parameter:axis "None"^^xsd:string ;
+                parameter:t_start "None"^^xsd:string ;
+                parameter:t_stop "None"^^xsd:string ],
+            [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:49.052720"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:numpy.ndarray:3004395bd3640acc68f0e0013d1a0997e42b04df> ;
+                parameter:axis "None"^^xsd:string ;
+                parameter:t_start "None"^^xsd:string ;
+                parameter:t_stop "None"^^xsd:string ] ;
+        prov:wasAttributedTo <urn:alpaca:script:run_basic.py?1b4f9e75c57480d15249017a348827a4e2ccb93e8764a06e61ec13d2e7dafc57> .
+
+    <urn:alpaca:object:builtins.list:c5bb7895dc4c05e1317e65227a6ba83a1dab5d09> a prov:Entity .
+
+    function:elephant.statistics.isi a prov:Activity ;
+        prov:qualifiedUsage [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:48.947362"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:27a3ac3675d58cd702f37e57853b163f5387b52f> ;
+                parameter:axis "0"^^xsd:int ],
+            [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:49.051743"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:numpy.ndarray:3004395bd3640acc68f0e0013d1a0997e42b04df> ;
+                parameter:axis "-1"^^xsd:int ],
+            [ a prov:Usage ;
+                prov:atTime "2022-01-12T13:23:49.002695"^^xsd:dateTime ;
+                prov:entity <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:fc20afb40aabafec5832e6d24752619b90d7ea2a> ;
+                parameter:axis "0"^^xsd:int ] ;
+        prov:wasAttributedTo <urn:alpaca:script:run_basic.py?1b4f9e75c57480d15249017a348827a4e2ccb93e8764a06e61ec13d2e7dafc57> .
+
+    <urn:alpaca:object:builtins.list:9abfed8ea4f429d9f3d3fdc766ffc6e1ea177cb3> a prov:Entity ;
+        prov:hadMember <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:27a3ac3675d58cd702f37e57853b163f5387b52f>,
+            <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:fc20afb40aabafec5832e6d24752619b90d7ea2a> ;
+        container:attribute "spiketrains"^^xsd:string .
+
+    <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:fc20afb40aabafec5832e6d24752619b90d7ea2a> a prov:Entity ;
+        annotation:SNR 2.772643e+00 ;
+        annotation:channel_id "10"^^xsd:int ;
+        annotation:connector_aligned_id "98"^^xsd:int ;
+        annotation:electrode_reject_HFC false ;
+        annotation:electrode_reject_IFC false ;
+        annotation:electrode_reject_LFC false ;
+        annotation:mua false ;
+        annotation:noise false ;
+        annotation:spike_amplitude 3.00523e+02 ;
+        annotation:spike_count "5815"^^xsd:int ;
+        annotation:spike_duration 4.666667e+02 ;
+        annotation:sua true ;
+        annotation:unit_id "1"^^xsd:int ;
+        attribute:_dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:array_annotations "{}"^^xsd:string ;
+        attribute:description "SpikeTrain from channel: 10, unit: 1"^^xsd:string ;
+        attribute:dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:file_origin "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001-03.nev"^^xsd:string ;
+        attribute:left_sweep "None"^^xsd:string ;
+        attribute:name "Unit 10001"^^xsd:string ;
+        attribute:sampling_rate "1.0 Hz"^^xsd:string ;
+        attribute:segment "neo.core.segment.Segment(t_start=0.0 (1.0/30000 * s), t_stop=30096367.0 (1.0/30000 * s), name=Segment 0, description=Segment containing data from t_min to t_max.)"^^xsd:string ;
+        attribute:shape "(5815,)"^^xsd:string ;
+        attribute:t_start "0.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:t_stop "30096367.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:unit "<neo.core.unit.Unit object at 0x7f4e65ecd7d0>"^^xsd:string ;
+        attribute:units "1.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:waveforms "None"^^xsd:string ;
+        container:index "1"^^xsd:int .
+
+    <urn:alpaca:object:numpy.ndarray:3004395bd3640acc68f0e0013d1a0997e42b04df> a prov:Entity ;
+        prov:qualifiedGeneration [ a prov:Generation ;
+                prov:activity function:numpy.array ;
+                prov:atTime "2022-01-12T13:23:49.050976"^^xsd:dateTime ] ;
+        prov:wasDerivedFrom <urn:alpaca:object:builtins.list:c5bb7895dc4c05e1317e65227a6ba83a1dab5d09> ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:shape "(6,)"^^xsd:string .
+
+    <urn:alpaca:object:neo.core.spiketrain.SpikeTrain:27a3ac3675d58cd702f37e57853b163f5387b52f> a prov:Entity ;
+        annotation:channel_id "10"^^xsd:int ;
+        annotation:connector_aligned_id "98"^^xsd:int ;
+        annotation:electrode_reject_HFC false ;
+        annotation:electrode_reject_IFC false ;
+        annotation:electrode_reject_LFC false ;
+        annotation:mua false ;
+        annotation:noise true ;
+        annotation:sua false ;
+        annotation:unit_id "0"^^xsd:int ;
+        attribute:_dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:array_annotations "{}"^^xsd:string ;
+        attribute:description "SpikeTrain from channel: 10, unit: unclassified"^^xsd:string ;
+        attribute:dimensionality "(1.0/30000 * s)"^^xsd:string ;
+        attribute:dtype "float64"^^xsd:string ;
+        attribute:file_origin "/home/koehler/PycharmProjects/multielectrode_grasp/datasets/i140703-001-03.nev"^^xsd:string ;
+        attribute:left_sweep "None"^^xsd:string ;
+        attribute:name "Unit 10000"^^xsd:string ;
+        attribute:sampling_rate "1.0 Hz"^^xsd:string ;
+        attribute:segment "neo.core.segment.Segment(t_start=0.0 (1.0/30000 * s), t_stop=30096367.0 (1.0/30000 * s), name=Segment 0, description=Segment containing data from t_min to t_max.)"^^xsd:string ;
+        attribute:shape "(945,)"^^xsd:string ;
+        attribute:t_start "0.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:t_stop "30096367.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:unit "<neo.core.unit.Unit object at 0x7f4e60517b50>"^^xsd:string ;
+        attribute:units "1.0 (1.0/30000 * s)"^^xsd:string ;
+        attribute:waveforms "None"^^xsd:string ;
+        container:index "0"^^xsd:int .
+
+    <urn:alpaca:script:run_basic.py?1b4f9e75c57480d15249017a348827a4e2ccb93e8764a06e61ec13d2e7dafc57> a prov:Agent,
+            prov:SoftwareAgent ;
+        rdfs:label "/home/koehler/PycharmProjects/elephant/elephant/buffalo/examples/run_basic.py"^^xsd:string .
+}
+

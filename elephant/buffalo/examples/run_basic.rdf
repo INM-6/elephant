@@ -1,0 +1,93 @@
+@prefix : <urn:elephant> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+{
+    :object:numpy.float64:-5293950705002801097 a prov:Entity ;
+        prov:wasDerivedFrom :object:builtins.list:7906614822554195502 ;
+        prov:wasGeneratedBy :function:elephant.statistics.fanofactor .
+
+    :object:numpy.float64:-7774012007985552149 a prov:Entity ;
+        prov:wasDerivedFrom :object:numpy.ndarray:-8508456855764811416 ;
+        prov:wasGeneratedBy :function:elephant.statistics.mean_firing_rate .
+
+    :object:numpy.ndarray:984673361016400942 a prov:Entity ;
+        prov:wasDerivedFrom :object:numpy.ndarray:-8508456855764811416 ;
+        prov:wasGeneratedBy :function:elephant.statistics.isi .
+
+    :object:quantities.quantity.Quantity:-584144892338768131 a prov:Entity ;
+        prov:wasDerivedFrom :object:neo.core.spiketrain.SpikeTrain:-8984010013445861546 ;
+        prov:wasGeneratedBy :function:elephant.statistics.isi .
+
+    :object:quantities.quantity.Quantity:6341283088466401152 a prov:Entity ;
+        prov:wasDerivedFrom :object:neo.core.spiketrain.SpikeTrain:-8984010013445861546 ;
+        prov:wasGeneratedBy :function:elephant.statistics.mean_firing_rate .
+
+    :function:__main__.load_data a prov:Activity ;
+        prov:used :file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :function:elephant.statistics.fanofactor a prov:Activity ;
+        prov:used :object:builtins.list:7906614822554195502 ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :function:numpy.array a prov:Activity ;
+        prov:used :object:builtins.list:7111088857560886636 ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b a prov:Entity .
+
+    :function:.attribute a prov:Activity ;
+        prov:used :object:neo.core.block.Block:5806506201502000940,
+            :object:neo.core.segment.Segment:-1552515962527480174 ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :function:.subscript a prov:Activity ;
+        prov:used :object:builtins.list:-7499073031287383110,
+            :object:builtins.list:7906614822554195502 ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :function:elephant.statistics.isi a prov:Activity ;
+        prov:used :object:neo.core.spiketrain.SpikeTrain:-8984010013445861546,
+            :object:numpy.ndarray:-8508456855764811416 ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :function:elephant.statistics.mean_firing_rate a prov:Activity ;
+        prov:used :object:neo.core.spiketrain.SpikeTrain:-8984010013445861546,
+            :object:numpy.ndarray:-8508456855764811416 ;
+        prov:wasAttributedTo :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 .
+
+    :object:builtins.list:-7499073031287383110 a prov:Entity ;
+        prov:wasDerivedFrom :object:neo.core.block.Block:5806506201502000940 ;
+        prov:wasGeneratedBy :function:.attribute .
+
+    :object:builtins.list:7111088857560886636 a prov:Entity .
+
+    :object:neo.core.block.Block:5806506201502000940 a prov:Entity ;
+        prov:wasDerivedFrom :file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b ;
+        prov:wasGeneratedBy :function:__main__.load_data .
+
+    :object:neo.core.segment.Segment:-1552515962527480174 a prov:Entity ;
+        prov:wasDerivedFrom :object:builtins.list:-7499073031287383110 ;
+        prov:wasGeneratedBy :function:.subscript .
+
+    :object:builtins.list:7906614822554195502 a prov:Entity ;
+        prov:wasDerivedFrom :object:neo.core.segment.Segment:-1552515962527480174 ;
+        prov:wasGeneratedBy :function:.attribute .
+
+    :object:neo.core.spiketrain.SpikeTrain:-8984010013445861546 a prov:Entity ;
+        prov:wasDerivedFrom :object:builtins.list:7906614822554195502 ;
+        prov:wasGeneratedBy :function:.subscript .
+
+    :object:numpy.ndarray:-8508456855764811416 a prov:Entity ;
+        prov:wasDerivedFrom :object:builtins.list:7111088857560886636 ;
+        prov:wasGeneratedBy :function:numpy.array .
+
+    :script:run_basic.py:40c3f2812c7be58c77fa0b891e01c26aed7c34394c5ebbea795665cd29902c88 a prov:Agent,
+            prov:SoftwareAgent ;
+        rdfs:label "/home/koehler/PycharmProjects/elephant/elephant/buffalo/examples/run_basic.py"^^xsd:string .
+}
+

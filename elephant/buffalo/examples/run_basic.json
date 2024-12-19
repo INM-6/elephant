@@ -1,0 +1,63 @@
+{"prefix":
+  {"": "urn:elephant:",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "default": "urn:elephant:",
+  },
+  "agent": {
+    "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77": {
+      "prov:type": {
+        "$": "prov:SoftwareAgent",
+        "type": "prov:QUALIFIED_NAME",
+      },
+      "rdfs:label": "/home/koehler/PycharmProjects/elephant/elephant/buffalo/examples/run_basic.py",
+    },
+  },
+  "activity": {
+    "function:__main__.load_data": {},
+    "function:.subscript": [{}, {}, {}, {}, {}],
+    "function:.attribute": [{}, {}, {}, {}, {}, {}],
+    "function:elephant.statistics.isi": [{}, {}],
+    "function:elephant.statistics.mean_firing_rate": [{}, {}],
+    "function:elephant.statistics.fanofactor": {},
+    "function:numpy.array": {},
+  },
+  "entity": {
+    "file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b": {},
+    "object:neo.core.block.Block:3099037908832450014": [{}, {}, {}, {}],
+    "object:builtins.list:776218338037712445": [{}, {}, {}, {}, {}, {}],
+    "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203": [{}, {}, {}, {}],
+    "object:neo.core.segment.Segment:-2525343615867019730": [{}, {}, {}, {}, {}, {}],
+    "object:builtins.list:-5911927913957666137": [{}, {}, {}, {}, {}, {}],
+    "object:quantities.quantity.Quantity:9179232150953629971": {},
+    "object:quantities.quantity.Quantity:-3391151200844578325": {},
+    "object:numpy.float64:1941222934710264259": {},
+    "object:builtins.list:-2801156699370120562": {},
+    "object:numpy.ndarray:5940040053405311479": [{}, {}, {}],
+    "object:numpy.ndarray:-7752254278558627352": {},
+    "object:numpy.float64:-267089481258012737": {},
+  },
+  "used": {
+    "_:id1": {
+      "prov:activity": "function:__main__.load_data",
+      "prov:entity": "file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b",
+    },
+    "_:id5": [
+      {"prov:activity": "function:.subscript", "prov:entity": "object:builtins.list:776218338037712445"},
+      {"prov:activity": "function:.subscript", "prov:entity": "object:builtins.list:776218338037712445"}
+    ],
+    "_:id9": [
+      {"prov:activity": "function:.attribute", "prov:entity": "object:neo.core.segment.Segment:-2525343615867019730"},
+      {"prov:activity": "function:.attribute", "prov:entity": "object:neo.core.segment.Segment:-2525343615867019730"},
+      {"prov:activity": "function:.attribute", "prov:entity": "object:neo.core.segment.Segment:-2525343615867019730"}
+    ],
+    "_:id13": [
+      {"prov:activity": "function:.subscript", "prov:entity": "object:builtins.list:-5911927913957666137"},
+      {"prov:activity": "function:.subscript", "prov:entity": "object:builtins.list:-5911927913957666137"},
+      {"prov:activity": "function:.subscript", "prov:entity": "object:builtins.list:-5911927913957666137"}
+    ],
+    "_:id16": [
+      {"prov:activity": "function:.attribute", "prov:entity": "object:neo.core.block.Block:3099037908832450014"},
+      {"prov:activity": "function:.attribute", "prov:entity": "object:neo.core.block.Block:3099037908832450014"},
+      {"prov:activity": "function:.attribute", "prov:entity": "object:neo.core.block.Block:3099037908832450014"}
+    ],
+    "_:id19": {"prov:activity": "function:elephant.statistics.isi", "prov:entity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203"}, "_:id23": {"prov:activity": "function:elephant.statistics.mean_firing_rate", "prov:entity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203"}, "_:id27": {"prov:activity": "function:elephant.statistics.fanofactor", "prov:entity": "object:builtins.list:776218338037712445"}, "_:id31": {"prov:activity": "function:numpy.array", "prov:entity": "object:builtins.list:-2801156699370120562"}, "_:id35": {"prov:activity": "function:elephant.statistics.isi", "prov:entity": "object:numpy.ndarray:5940040053405311479"}, "_:id38": {"prov:activity": "function:elephant.statistics.mean_firing_rate", "prov:entity": "object:numpy.ndarray:5940040053405311479"}}, "wasGeneratedBy": {"_:id2": {"prov:entity": "object:neo.core.block.Block:3099037908832450014", "prov:activity": "function:__main__.load_data"}, "_:id6": [{"prov:entity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203", "prov:activity": "function:.subscript"}, {"prov:entity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203", "prov:activity": "function:.subscript"}], "_:id10": [{"prov:entity": "object:builtins.list:776218338037712445", "prov:activity": "function:.attribute"}, {"prov:entity": "object:builtins.list:776218338037712445", "prov:activity": "function:.attribute"}, {"prov:entity": "object:builtins.list:776218338037712445", "prov:activity": "function:.attribute"}], "_:id14": [{"prov:entity": "object:neo.core.segment.Segment:-2525343615867019730", "prov:activity": "function:.subscript"}, {"prov:entity": "object:neo.core.segment.Segment:-2525343615867019730", "prov:activity": "function:.subscript"}, {"prov:entity": "object:neo.core.segment.Segment:-2525343615867019730", "prov:activity": "function:.subscript"}], "_:id17": [{"prov:entity": "object:builtins.list:-5911927913957666137", "prov:activity": "function:.attribute"}, {"prov:entity": "object:builtins.list:-5911927913957666137", "prov:activity": "function:.attribute"}, {"prov:entity": "object:builtins.list:-5911927913957666137", "prov:activity": "function:.attribute"}], "_:id20": {"prov:entity": "object:quantities.quantity.Quantity:9179232150953629971", "prov:activity": "function:elephant.statistics.isi"}, "_:id24": {"prov:entity": "object:quantities.quantity.Quantity:-3391151200844578325", "prov:activity": "function:elephant.statistics.mean_firing_rate"}, "_:id28": {"prov:entity": "object:numpy.float64:1941222934710264259", "prov:activity": "function:elephant.statistics.fanofactor"}, "_:id32": {"prov:entity": "object:numpy.ndarray:5940040053405311479", "prov:activity": "function:numpy.array"}, "_:id36": {"prov:entity": "object:numpy.ndarray:-7752254278558627352", "prov:activity": "function:elephant.statistics.isi"}, "_:id39": {"prov:entity": "object:numpy.float64:-267089481258012737", "prov:activity": "function:elephant.statistics.mean_firing_rate"}}, "wasDerivedFrom": {"_:id3": {"prov:generatedEntity": "object:neo.core.block.Block:3099037908832450014", "prov:usedEntity": "file:sha256:242d614da6112be903c827c16cde740795a42008a9375055c5e75c05d369fb9b"}, "_:id7": [{"prov:generatedEntity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203", "prov:usedEntity": "object:builtins.list:776218338037712445"}, {"prov:generatedEntity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203", "prov:usedEntity": "object:builtins.list:776218338037712445"}], "_:id11": [{"prov:generatedEntity": "object:builtins.list:776218338037712445", "prov:usedEntity": "object:neo.core.segment.Segment:-2525343615867019730"}, {"prov:generatedEntity": "object:builtins.list:776218338037712445", "prov:usedEntity": "object:neo.core.segment.Segment:-2525343615867019730"}, {"prov:generatedEntity": "object:builtins.list:776218338037712445", "prov:usedEntity": "object:neo.core.segment.Segment:-2525343615867019730"}], "_:id15": [{"prov:generatedEntity": "object:neo.core.segment.Segment:-2525343615867019730", "prov:usedEntity": "object:builtins.list:-5911927913957666137"}, {"prov:generatedEntity": "object:neo.core.segment.Segment:-2525343615867019730", "prov:usedEntity": "object:builtins.list:-5911927913957666137"}, {"prov:generatedEntity": "object:neo.core.segment.Segment:-2525343615867019730", "prov:usedEntity": "object:builtins.list:-5911927913957666137"}], "_:id18": [{"prov:generatedEntity": "object:builtins.list:-5911927913957666137", "prov:usedEntity": "object:neo.core.block.Block:3099037908832450014"}, {"prov:generatedEntity": "object:builtins.list:-5911927913957666137", "prov:usedEntity": "object:neo.core.block.Block:3099037908832450014"}, {"prov:generatedEntity": "object:builtins.list:-5911927913957666137", "prov:usedEntity": "object:neo.core.block.Block:3099037908832450014"}], "_:id21": {"prov:generatedEntity": "object:quantities.quantity.Quantity:9179232150953629971", "prov:usedEntity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203"}, "_:id25": {"prov:generatedEntity": "object:quantities.quantity.Quantity:-3391151200844578325", "prov:usedEntity": "object:neo.core.spiketrain.SpikeTrain:-5173204542300778203"}, "_:id29": {"prov:generatedEntity": "object:numpy.float64:1941222934710264259", "prov:usedEntity": "object:builtins.list:776218338037712445"}, "_:id33": {"prov:generatedEntity": "object:numpy.ndarray:5940040053405311479", "prov:usedEntity": "object:builtins.list:-2801156699370120562"}, "_:id37": {"prov:generatedEntity": "object:numpy.ndarray:-7752254278558627352", "prov:usedEntity": "object:numpy.ndarray:5940040053405311479"}, "_:id40": {"prov:generatedEntity": "object:numpy.float64:-267089481258012737", "prov:usedEntity": "object:numpy.ndarray:5940040053405311479"}}, "wasAttributedTo": {"_:id4": {"prov:entity": "function:__main__.load_data", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, "_:id8": [{"prov:entity": "function:.subscript", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.subscript", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.subscript", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.subscript", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.subscript", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}], "_:id12": [{"prov:entity": "function:.attribute", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.attribute", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.attribute", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.attribute", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.attribute", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:.attribute", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}], "_:id22": [{"prov:entity": "function:elephant.statistics.isi", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:elephant.statistics.isi", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}], "_:id26": [{"prov:entity": "function:elephant.statistics.mean_firing_rate", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, {"prov:entity": "function:elephant.statistics.mean_firing_rate", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}], "_:id30": {"prov:entity": "function:elephant.statistics.fanofactor", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}, "_:id34": {"prov:entity": "function:numpy.array", "prov:agent": "script:run_basic.py:11488fe03d77de7c8538d657dbc3e9cd2154fc0707b8a8b7e5c28574828e6c77"}}}
