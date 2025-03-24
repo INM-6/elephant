@@ -347,6 +347,26 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
 
     TypeError
         If `peak_resolution` is None and `num_tapers` is not an int.
+
+
+    Examples
+    --------
+
+    >>> import numpy as np
+    >>> import quantities as pq
+    >>> import neo
+    >>> from elephant.spectral import multitaper_psd
+    >>> # Create a test signal: 10 Hz sine wave sampled at 1 kHz
+    >>> fs = 1000  # Sampling frequency in Hz
+    >>> t = np.arange(0, 1, 1/fs)  # create time array
+    >>> signal_data = np.sin(2 * np.pi * 10 * t) * pq.mV  # 10 Hz sine wave
+    >>> signal = neo.AnalogSignal(signal_data, sampling_rate=fs * pq.Hz)
+    >>> # Compute multitaper PSD
+    >>> freqs, psd = multitaper_psd(signal, fs=fs, nw=4)
+    >>> freqs[:10]
+    array([0., 1., 2., 3., 4., 5., 6., 7., 8., 9.]) * Hz
+    >>> psd.flatten()[:2]
+    array([1.50099321e-05, 3.23456419e-05]) * mV**2/Hz
     """
 
     # When the input is AnalogSignal, the data is added after rolling the axis
