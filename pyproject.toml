@@ -9,11 +9,15 @@ dependencies = [
     "numpy>=1.19.5,<2",
     "quantities>=0.14.1",
     "scipy>=1.10.0",
+    "scipy-stubs==1.16.2.0",
     "six>=1.10.0",
     "tqdm>=4.67.1",
 ]
 
 [dependency-groups]
+cuda = [
+    "pycuda>=2025.1.2",
+]
 dev = [
     "nixio>=1.5.0",
     "pytest>=8.4.2",
