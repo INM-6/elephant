@@ -12,7 +12,7 @@
 [![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green)](https://fair-software.eu)
 [![OpenSSF/CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/6191/badge)](https://bestpractices.coreinfrastructure.org/projects/6191)
 [![JURSE Code Pick](https://img.shields.io/badge/JuRSE_Code_Pick-Nov_2025-blue)](https://www.fz-juelich.de/en/rse/community-initiatives/jurse-code-of-the-month/november-2025)
-![HiRSE Code Promo](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&link=https%3A%2F%2Fgo.fzj.de%2FCodePromo)
+[![HiRSE Code Promo](https://img.shields.io/badge/Promo-8db427?label=HiRSE&labelColor=005aa0&)](https://go.fzj.de/CodePromo)
 
 
 *Elephant* package analyses all sorts of neurophysiological data:
