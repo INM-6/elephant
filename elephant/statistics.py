@@ -1084,14 +1084,14 @@ def time_histogram(spiketrains: Union[List[neo.SpikeTrain], neo.SpikeTrain],
         Start time of the histogram. Only events in `spiketrains` falling
         between `t_start` and `t_stop` (both included) are considered in the
         histogram.
-        If None, the maximum `t_start` of all :class:`neo.core.SpikeTrain`s is used as
+        If None, the maximum `t_start` of all :class:`neo.core.SpikeTrain` objects is used as
         `t_start`.
         Default: None
     t_stop : pq.Quantity, optional
         Stop time of the histogram. Only events in `spiketrains` falling
         between `t_start` and `t_stop` (both included) are considered in the
         histogram.
-        If None, the minimum `t_stop` of all :class:`neo.core.SpikeTrain` s is used as
+        If None, the minimum `t_stop` of all :class:`neo.core.SpikeTrain` objects is used as
         `t_stop`.
         Default: None
     output : {'counts', 'mean', 'rate'}, optional
@@ -1106,7 +1106,7 @@ def time_histogram(spiketrains: Union[List[neo.SpikeTrain], neo.SpikeTrain],
     binary : bool, optional
         If True, indicates whether all :class:`neo.core.SpikeTrain` objects should first
         be binned to a binary representation (using the
-        [:class:`elephant.conversion.BinnedSpikeTrain` class] and the calculation of the
+        :class:`elephant.conversion.BinnedSpikeTrain` class). The calculation of the
         histogram is based on this representation.
         Note that the output is not binary, but a histogram of the converted,
         binary representation.
@@ -1115,8 +1115,8 @@ def time_histogram(spiketrains: Union[List[neo.SpikeTrain], neo.SpikeTrain],
     Returns
     -------
     neo.AnalogSignal
-        A :class:`neo.core.SpikeTrain` object containing the histogram values.
-        :class:`neo.core.SpikeTrain `[j]` is the histogram computed between
+        A :class:`neo.core.AnalogSignal` object containing the histogram values.
+        :class:`neo.core.AnalogSignal``[j]` is the histogram computed between
         `t_start + j * bin_size` and `t_start + (j + 1) * bin_size`.
 
     Raises
