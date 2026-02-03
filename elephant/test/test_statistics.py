@@ -1090,18 +1090,23 @@ class TimeHistogramTestCase(unittest.TestCase):
             self.assertEqual(histogram.annotations['normalization'], output)
 
     def test_time_histogram_regression_648_single_spiketrain(self):
-        # Create a single spike train
+        # Create a single spike train and target results
         spiketrain = neo.SpikeTrain([0.1, 0.5, 1.0, 1.5, 2.0] * pq.s, t_stop=3.0 * pq.s)
+        targets = {'rate': [2., 2., 2., 2., 2., 0.]*pq.Hz,
+                   'counts': [1, 1, 1, 1, 1, 0]*pq.dimensionless,
+                   'mean': [1, 1, 1, 1, 1, 0]*pq.dimensionless }
 
-        # Run time_histogram with spiketrain directly and observe the incorrect result
-        histogram_direct = statistics.time_histogram(spiketrain, output='rate', bin_size=0.5 * pq.s)
+        for out_type, res in targets.items():
 
-        # Wrap spiketrain in a list and run time_histogram
-        histogram_wrapped = statistics.time_histogram([spiketrain], output='rate', bin_size=0.5 * pq.s)
-        # Check if passing a single spiketrain directly vs in a list gives same result
-        np.testing.assert_array_equal(histogram_direct.magnitude, histogram_wrapped.magnitude)
-        # Check if the spike rate calculation is correct for a single spike train
-        np.testing.assert_array_equal(histogram_direct.magnitude.flatten(), [2., 2., 2., 2., 2., 0.]*pq.Hz)
+            # Run time_histogram with spiketrain directly and wrapped as list
+            histogram_direct = statistics.time_histogram(spiketrain, output=out_type, bin_size=0.5 * pq.s)
+            histogram_wrapped = statistics.time_histogram([spiketrain], output=out_type, bin_size=0.5 * pq.s)
+
+            # Assert direct and wrapped produce same result
+            np.testing.assert_array_equal(histogram_direct.magnitude, histogram_wrapped.magnitude)
+
+            # Assert direct computation produces correct result a single spiketrain
+            np.testing.assert_array_equal(histogram_direct.magnitude.flatten(), res)
 
 
 class ComplexityTestCase(unittest.TestCase):
