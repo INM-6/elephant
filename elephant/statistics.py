@@ -613,7 +613,8 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
     Parameters
     ----------
-    spiketrains : neo.SpikeTrain, list of neo.SpikeTrain or elephant.trials.Trials
+    spiketrains : :class:`neo.SpikeTrain`, list of :class:`neo.SpikeTrain` or 
+        :class:`elephant.trials.Trials`
         Input spike train(s) for which the instantaneous firing rate is
         calculated. If a list of spike trains is supplied, the parameter
         pool_spike_trains determines the behavior of the function. If a Trials
@@ -623,7 +624,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         Time stamp resolution of the spike times. The same resolution will
         be assumed for the kernel.
     kernel : 'auto' or Kernel, optional
-        The string 'auto' or callable object of class `kernels.Kernel`.
+        The string 'auto' or callable object of class :class:`elephant.kernels.Kernel`.
         The kernel is used for convolution with the spike train and its
         standard deviation determines the time resolution of the instantaneous
         rate estimation. Currently, implemented kernel forms are rectangular,
@@ -705,20 +706,20 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
     Returns
     -------
-    rate : neo.AnalogSignal
+    object: :class:`neo.AnalogSignal`
         2D matrix that contains the rate estimation in unit hertz (Hz) of shape
-        ``(time, len(spiketrains))`` or ``(time, 1)`` in case of a single
-        input spiketrain. `rate.times` contains the time axis of the rate
+        `(time, len(spiketrains))` or `(time, 1)` in case of a single
+        input spiketrain. `object.times` contains the time axis of the rate
         estimate: the unit of this property is the same as the resolution that
         is given via the argument `sampling_period` to the function.
 
     Raises
     ------
     TypeError
-        *  If `spiketrain` is not an instance of `neo.SpikeTrain`.
+        *  If `spiketrain` is not an instance of :class:`neo.SpikeTrain`.
         *  If `sampling_period` is not a `pq.Quantity`.
         *  If `sampling_period` is not larger than zero.
-        *  If `kernel` is neither instance of `kernels.Kernel` nor string
+        *  If `kernel` is neither instance of :class:`kernels.Kernel` nor string
            'auto'.
         *  If `cutoff` is neither `float` nor `int`.
         *  If `t_start` and `t_stop` are neither None nor a `pq.Quantity`.
