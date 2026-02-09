@@ -1114,10 +1114,10 @@ def time_histogram(spiketrains: Union[List[neo.SpikeTrain], neo.SpikeTrain],
 
     Returns
     -------
-    neo.AnalogSignal
+    output : :class:`neo.core.AnalogSignal`
         A :class:`neo.core.AnalogSignal` object containing the histogram values.
-        The element at index 'j' of :class:`neo.core.AnalogSignal` is the histogram computed between
-        `t_start + j * bin_size` and `t_start + (j + 1) * bin_size`.
+        `output[j]` is the histogram computed between `t_start + j * bin_size` and
+        `t_start + (j + 1) * bin_size`.
 
     Raises
     ------
