@@ -718,7 +718,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         *  If `spiketrain` is not an instance of :class:`neo.core.SpikeTrain`.
         *  If `sampling_period` is not a `pq.Quantity`.
         *  If `sampling_period` is not larger than zero.
-        *  If `kernel` is neither instance of :mod:`elephant.kernel` nor string
+        *  If `kernel` is neither instance of :mod:`elephant.kernels` nor string
            'auto'.
         *  If `cutoff` is neither `float` nor `int`.
         *  If `t_start` and `t_stop` are neither None nor a `pq.Quantity`.
