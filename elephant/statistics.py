@@ -623,7 +623,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         Time stamp resolution of the spike times. The same resolution will
         be assumed for the kernel.
     kernel : 'auto' or Kernel, optional
-        The string 'auto' or callable object of class :class:`Kernel`.
+        The string 'auto' or callable object of class :mod:`elephant.kernels`.
         The kernel is used for convolution with the spike train and its
         standard deviation determines the time resolution of the instantaneous
         rate estimation. Currently, implemented kernel forms are rectangular,
@@ -705,10 +705,10 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
     Returns
     -------
-    object : :class:`neo.core.AnalogSignal`
+    output : :class:`neo.core.AnalogSignal`
         2D matrix that contains the rate estimation in unit hertz (Hz) of shape
         ``(time, len(spiketrains))`` or ``(time, 1)`` in case of a single
-        input spiketrain. ``object.times`` contains the time axis of the rate
+        input spiketrain. ``output.times`` contains the time axis of the rate
         estimate: the unit of this property is the same as the resolution that
         is given via the argument `sampling_period` to the function.
 
