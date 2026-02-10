@@ -613,7 +613,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
     Parameters
     ----------
-    spiketrains : :class:`neo.core.SpikeTrain`, list of :class:`neo.core.SpikeTrain` or :class:`Trials`
+    spiketrains : :class:`neo.core.SpikeTrain`, list of :class:`neo.core.SpikeTrain` or :mod:`elephant.trials`
         Input spike train(s) for which the instantaneous firing rate is
         calculated. If a list of spike trains is supplied, the parameter
         pool_spike_trains determines the behavior of the function. If a Trials
@@ -718,7 +718,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         *  If `spiketrain` is not an instance of :class:`neo.core.SpikeTrain`.
         *  If `sampling_period` is not a `pq.Quantity`.
         *  If `sampling_period` is not larger than zero.
-        *  If `kernel` is neither instance of :class:`Kernel` nor string
+        *  If `kernel` is neither instance of :mod:`elephant.kernel` nor string
            'auto'.
         *  If `cutoff` is neither `float` nor `int`.
         *  If `t_start` and `t_stop` are neither None nor a `pq.Quantity`.
