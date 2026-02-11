@@ -1127,7 +1127,7 @@ class InstantaneousRateTestCase(unittest.TestCase):
             pool_spike_trains=False,
             pool_trials=False)
         self.assertIsInstance(rate, neo.core.AnalogSignal)
-		self.assertEqual(rate.magnitude.shape[1], self.n_spiketrains)
+        self.assertEqual(rate.magnitude.shape[1], self.n_spiketrains)
 
 
 class TimeHistogramTestCase(unittest.TestCase):
