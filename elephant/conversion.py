@@ -1121,7 +1121,7 @@ class BinnedSpikeTrain(object):
 
         # Determine the appropriate units based on scaling
         if scaling == "normalized":
-            units = pq.Hz
+            units = pq.dimensionless
         else:  # counts
             units = pq.dimensionless
 
