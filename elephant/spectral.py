@@ -204,10 +204,7 @@ def welch_psd(signal, n_segments=8, len_segment=None,
 
     """
     if isinstance(signal,elephant.conversion.BinnedSpikeTrain):
-        # signal = neo.AnalogSignal(
-        #     signal.to_array().transpose()/signal.bin_size.rescale(pq.s).magnitude*pq.dimensionless,
-        #     t_start=signal.t_start,
-        #     sampling_period=signal.bin_size)
+        # Convert spike train to an analog signal with units of Hz
         signal = signal.to_analog_signal(scaling="normalized")
 
     # 'hanning' window was removed with release of scipy 1.9.0, it was

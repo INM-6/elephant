@@ -97,7 +97,7 @@ class WelchPSDTestCase(unittest.TestCase):
         for key, val in params.items():
             freqs, psd = elephant.spectral.welch_psd(
                 data, len_segment=1000, overlap=0, **{key: val})
-            freqs_spsig, psd_spsig = spsig.welch(np.rollaxis(data, 0, len(
+            freqs_spsig, psd_spsig = spsig.welch(np.rollaxis(data.magnitude, 0, len(
                 data.shape)), fs=1 / sampling_period, nperseg=1000,
                                                  noverlap=0, **{key: val})
             self.assertTrue(
@@ -144,6 +144,35 @@ class WelchPSDTestCase(unittest.TestCase):
         self.assertTrue(
             (freqs_neo == freqs_np).all() and (
                     psd_neo == psd_np).all())
+
+    def test_welch_psd_binned_spiketrain(self):
+        rate = 50 * pq.Hz
+        t_stop = 10 * pq.s
+        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=t_stop).generate_spiketrain()
+        bin_size = 2 * pq.ms
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrain, bin_size=bin_size)
+
+        freqs, psd = elephant.spectral.welch_psd(binned_st)
+
+        # Check units: should be Hz (from Hz^2/Hz)
+        self.assertEqual(freqs.units, pq.Hz)
+        self.assertEqual(psd.units, pq.Hz)
+
+        # Check scaling: for large frequencies, PSD should approach 2*rate
+        # (factor 2 because it is a one-sided PSD)
+        avg_psd = np.mean(psd[0, freqs > 100 * pq.Hz])
+        self.assertAlmostEqual(avg_psd.rescale('Hz').magnitude,
+                               2*rate.rescale('Hz').magnitude,
+                               delta=0.2 * 2 * rate.rescale('Hz').magnitude)
+
+        # Check behavior for an empty spiketrain
+        empty_st = neo.SpikeTrain([] * pq.s, t_start=0 * pq.s, t_stop=10 * pq.s)
+        binned_empty = elephant.conversion.BinnedSpikeTrain(
+            empty_st, bin_size=bin_size)
+        freqs_empty, psd_empty = elephant.spectral.welch_psd(binned_empty)
+        self.assertEqual(np.max(psd_empty), 0 * pq.Hz)
 
     def test_welch_psd_multidim_input(self):
         # generate multidimensional data
@@ -337,6 +366,34 @@ class MultitaperPSDTestCase(unittest.TestCase):
             (freqs_neo == freqs_np).all() and (
                     psd_neo == psd_np).all())
 
+    def test_multitaper_psd_binned_spiketrain(self):
+        rate = 50 * pq.Hz
+        t_stop = 10 * pq.s
+        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=t_stop).generate_spiketrain()
+        bin_size = 2 * pq.ms
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrain, bin_size=bin_size)
+
+        freqs, psd = elephant.spectral.multitaper_psd(binned_st)
+
+        # 3) Check units: should be Hz
+        self.assertEqual(freqs.units, pq.Hz)
+        self.assertEqual(psd.units, pq.Hz)
+
+        # 2) Check scaling: for large frequencies, PSD should approach 2*rate
+        avg_psd = np.mean(psd[0, freqs > 100 * pq.Hz])
+        self.assertAlmostEqual(avg_psd.rescale('Hz').magnitude,
+                               2 * rate.rescale('Hz').magnitude,
+                               delta=0.2 * 2 * rate.rescale('Hz').magnitude)
+
+        # 4) Check behavior for an empty spiketrain
+        empty_st = neo.SpikeTrain([] * pq.s, t_start=0 * pq.s, t_stop=10 * pq.s)
+        binned_empty = elephant.conversion.BinnedSpikeTrain(
+            empty_st, bin_size=bin_size)
+        freqs_empty, psd_empty = elephant.spectral.multitaper_psd(binned_empty)
+        self.assertEqual(np.max(psd_empty), 0 * pq.Hz)
+
 
 class SegmentedMultitaperPSDTestCase(unittest.TestCase):
     # The following assertions test _segmented_apply_func in the context
@@ -501,6 +558,36 @@ class SegmentedMultitaperPSDTestCase(unittest.TestCase):
         self.assertTrue(
             (freqs_neo == freqs_np).all() and (
                     psd_neo == psd_np).all())
+
+    def test_segmented_multitaper_psd_binned_spiketrain(self):
+        rate = 50 * pq.Hz
+        t_stop = 10 * pq.s
+        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=t_stop).generate_spiketrain()
+        bin_size = 2 * pq.ms
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrain, bin_size=bin_size)
+
+        freqs, psd = elephant.spectral.segmented_multitaper_psd(binned_st)
+
+        # 3) Check units: should be Hz
+        self.assertEqual(freqs.units, pq.Hz)
+        self.assertEqual(psd.units, pq.Hz)
+
+        # 2) Check scaling: for large frequencies, PSD should approach 2*rate
+        # Flattening because segmented_multitaper_psd might have extra dimension
+        avg_psd = np.mean(psd.flatten()[freqs > 100 * pq.Hz])
+        self.assertAlmostEqual(avg_psd.rescale('Hz').magnitude,
+                               2 * rate.rescale('Hz').magnitude,
+                               delta=0.2 * 2 * rate.rescale('Hz').magnitude)
+
+        # 4) Check behavior for an empty spiketrain
+        empty_st = neo.SpikeTrain([] * pq.s, t_start=0 * pq.s, t_stop=10 * pq.s)
+        binned_empty = elephant.conversion.BinnedSpikeTrain(
+            empty_st, bin_size=bin_size)
+        freqs_empty, psd_empty = elephant.spectral.segmented_multitaper_psd(
+            binned_empty)
+        self.assertEqual(np.max(psd_empty.real), 0)
 
 
 class MultitaperCrossSpectrumTestCase(unittest.TestCase):
