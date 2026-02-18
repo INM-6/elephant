@@ -1091,7 +1091,8 @@ class BinnedSpikeTrain(object):
         neo.AnalogSignal
             Signal containing spike counts or rates. Rows represent time bins
             and columns represent different spike trains.
-            If scaling="counts", the signal has dimensionless units.
+            If scaling="counts", the signal has units of 1/b in Hz, where b is
+            the bin size.
             If scaling="normalized", the signal has units of Hz (spikes/second).
 
         Examples
@@ -1103,7 +1104,7 @@ class BinnedSpikeTrain(object):
         ...                  t_stop=10.0 * pq.s)
         >>> x = conv.BinnedSpikeTrain(a, n_bins=10, bin_size=1 * pq.s,
         ...                           t_start=0 * pq.s)
-        >>> signal = x.to_analog_signal()  # counts (dimensionless)
+        >>> signal = x.to_analog_signal()  # counts (1/bin_size) Hz
         >>> signal = x.to_analog_signal(scaling="normalized")  # rates (Hz)
 
         See also
@@ -1121,9 +1122,9 @@ class BinnedSpikeTrain(object):
 
         # Determine the appropriate units based on scaling
         if scaling == "normalized":
-            units = pq.dimensionless
+            units = pq.Hz
         else:  # counts
-            units = pq.dimensionless
+            units = pq.CompoundUnit(f"1.0 / {self.bin_size.rescale('s').magnitude} * Hz")
 
         # Create the AnalogSignal
         # Note: AnalogSignal expects shape (time_steps, channels),
