@@ -684,31 +684,58 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         at the borders of the spike trains, i.e., close to t_start and t_stop.
         The correction is done by estimating the mass of the kernel outside
         these spike train borders under the assumption that the rate does not
-        change strongly.
-        Only possible in the case of a Gaussian kernel.
+        change strongly. Only possible in the case of a Gaussian kernel.
 
         Default: False
     pool_trials: bool, optional
-        If true, calculate firing rates averaged over trials if spiketrains is
-        of type elephant.trials.Trials
-        Has no effect for single spike train or lists of spike trains.
+        If True, calculate firing rates averaged over trials if `spiketrains` is
+        of type :mod:`elephant.trials`. Has no effect for single spike train
+        or lists of spike trains.
 
         Default: False
     pool_spike_trains: bool, optional
-        If true, calculate firing rates averaged over spike trains. If the
-        input is a Trials object, spike trains are pooled across spike trains
-        within each trial, and pool_trials determines whether spike trains are
-        additionally pooled across trials.
+        If True, calculate firing rates averaged over spike trains. If the
+        input is a :mod:`elephant.trials` object, spike trains are pooled
+        across spike trains within each trial, and pool_trials determines
+        whether spike trains are additionally pooled across trials.
         Has no effect for a single spike train.
 
         Default: False
 
     Returns
     -------
-    output : :class:`neo.core.AnalogSignal`
-        2D matrix that contains the rate estimation in unit hertz (Hz) of shape
-        ``(time, len(spiketrains))`` or ``(time, 1)`` in case of a single
-        input spiketrain. ``output.times`` contains the time axis of the rate
+    output : :class:`neo.core.AnalogSignal` or list of :class:`neo.core.AnalogSignal`
+        The output depends on the type of `spiketrains` and pooling options.
+
+        If `spiketrains` is :class:`neo.core.SpikeTrain` then output is a
+        single :class:`neo.core.AnalogSignal`. Its shape is `(n_bins, 1)`,
+        where `n_bins = (t_stop - t_start) / sampling_period`.
+
+        If `spiketrains` is a list of :class:`neo.core.SpikeTrain` then output
+        is a single :class:`neo.core.AnalogSignal`. Its shape is
+        `(n_bins, n_estimates)` where `n_bins = (t_stop - t_start) / sampling_period`
+        and `n_estimates` depends on pooling options:
+           -  `pool_spike_trains=True` results in `n_estimates = 1`.
+           -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
+
+        If `spiketrains` is a :mod:`elephant.trials` object then output is a
+        :class:`neo.core.AnalogSignal` or list of :class:`neo.core.AnalogSignal`.
+        The output type depends on `pool_trials`.
+           -  If `pool_trials=False` then output is a list of :class:`neo.core.AnalogSignal`
+             with length equal to number of trials, and where each element has shape
+             `(n_bins, n_estimates)`, where `n_bins = (t_stop - t_start) / sampling_period`
+             and `n_estimates` depends on the pooling of spike trains:
+               -  `pool_spike_trains=True` results in `n_estimates = 1`
+               -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
+           -  If `pool_trials=True` then output is a :class:`neo.core.AnalogSignal`
+             object with shape `(n_bins, n_estimates)`,
+             where `n_bins = (t_stop - t_start) / sampling_period` and `n_estimates`
+             depends on the pooling of spike trains:
+               -  `pool_spike_trains=True` results in `n_estimates = 1`
+               -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
+
+        For :class:`neo.core.AnalogSignal` objects in the output, the attribute
+        `output.times` contains the time axis of the rate
         estimate: the unit of this property is the same as the resolution that
         is given via the argument `sampling_period` to the function.
 
