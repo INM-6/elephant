@@ -620,8 +620,9 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         object is supplied, the behavior is determined by the parameters
         pool_spike_trains (within a trial) and pool_trials (across trials).
     sampling_period : pq.Quantity
-        Time stamp resolution of the spike times. The same resolution will
-        be assumed for the kernel.
+        Time resolution of the resulting rate estimate. The same resolution
+        will be used for the kernel. To avoid effects of binning, set this
+        value to the time stamp resolution of the spike train.
     kernel : 'auto' or Kernel, optional
         The string 'auto' or callable object of class :mod:`elephant.kernels`.
         The kernel is used for convolution with the spike train and its
