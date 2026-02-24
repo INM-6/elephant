@@ -738,13 +738,9 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
                -  `pool_spike_trains=True` results in `n_estimates = 1`
                -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
 
-        The table below summarizes the return type and array shape depending on
-        the input type and pooling options:
+        A table summarizing the return types and array shapes is given in the
+        notes below :ref:`_summary-outputs`.
 
-        (see below for testing)
-
-        Here, ``time`` denotes the number of time bins implied by the interval
-        ``[t_start, t_stop]`` and `sampling_period`.
     Raises
     ------
     TypeError
@@ -792,7 +788,9 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
        the last interval ``[4, 4.5]`` is excluded from all calculations.
 
-    * Summmry of outputs:
+    .. _summary-of-outputs:
+
+    * Summmry of the output type:
 
         +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
         | ``spiketrains`` type         | ``pool_trials`` | ``pool_spike_trains`` | Return type                    | Output shape (per AnalogSignal)          |
@@ -818,6 +816,8 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         |                              |                 |                       | :class:`neo.core.AnalogSignal` | trial (spike trains pooled within-trial) |
         +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
 
+        Here, ``time`` denotes the number of time bins implied by the interval
+        ``[t_start, t_stop]`` and `sampling_period`.
 
     Examples
     --------
