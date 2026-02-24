@@ -706,16 +706,20 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
     Returns
     -------
     output : :class:`neo.core.AnalogSignal` or list of :class:`neo.core.AnalogSignal`
-        The output depends on the type of `spiketrains` and pooling options.
+        In general, the returned rate estimates are provided as
+        :class:`neo.core.AnalogSignal` objects with units of Hertz (Hz). Its
+        shape is `(n_bins, n_estimates)` where
+        `n_bins = (t_stop - t_start) / sampling_period` and `n_estimates`
+        depends on pooling options as detailed below. The time axis is available
+        as ``output.times`` and has the same  units/resolution as specified by
+        `sampling_period`.
 
         If `spiketrains` is :class:`neo.core.SpikeTrain` then output is a
-        single :class:`neo.core.AnalogSignal`. Its shape is `(n_bins, 1)`,
-        where `n_bins = (t_stop - t_start) / sampling_period`.
+        single :class:`neo.core.AnalogSignal` with `n_estimates=1`.
 
         If `spiketrains` is a list of :class:`neo.core.SpikeTrain` then output
-        is a single :class:`neo.core.AnalogSignal`. Its shape is
-        `(n_bins, n_estimates)` where `n_bins = (t_stop - t_start) / sampling_period`
-        and `n_estimates` depends on pooling options:
+        is a single :class:`neo.core.AnalogSignal`. `n_estimates` depends on the
+        pooling options:
            -  `pool_spike_trains=True` results in `n_estimates = 1`.
            -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
 
@@ -723,61 +727,43 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         :class:`neo.core.AnalogSignal` or list of :class:`neo.core.AnalogSignal`.
         The output type depends on `pool_trials`.
            -  If `pool_trials=False` then output is a list of :class:`neo.core.AnalogSignal`
-             with length equal to number of trials, and where each element has shape
-             `(n_bins, n_estimates)`, where `n_bins = (t_stop - t_start) / sampling_period`
-             and `n_estimates` depends on the pooling of spike trains:
+             with length equal to number of trials. For each element, representing
+             the rate estimates of a given trial, `n_estimates` depends on the
+             pooling of spike trains within each trial:
                -  `pool_spike_trains=True` results in `n_estimates = 1`
                -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
-           -  If `pool_trials=True` then output is a :class:`neo.core.AnalogSignal`
-             object with shape `(n_bins, n_estimates)`,
-             where `n_bins = (t_stop - t_start) / sampling_period` and `n_estimates`
-             depends on the pooling of spike trains:
+           -  If `pool_trials=True` then output is a single :class:`neo.core.AnalogSignal`
+             with rates pooled across trials. `n_estimates` depends on the pooling
+             of spike trains within each trial:
                -  `pool_spike_trains=True` results in `n_estimates = 1`
                -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
-
-        For :class:`neo.core.AnalogSignal` objects in the output, the attribute
-        `output.times` contains the time axis of the rate
-        estimate: the unit of this property is the same as the resolution that
-        is given via the argument `sampling_period` to the function.
-
-    Alternative
-    output : :class:`neo.core.AnalogSignal` or list of :class:`neo.core.AnalogSignal`
-        The returned rate estimates are provided as :class:`neo.core.AnalogSignal`
-        objects with units of Hertz (Hz). The time axis is available as
-        ``output.times`` and has the same units/resolution as specified by
-        `sampling_period`.
 
         The table below summarizes the return type and array shape depending on
         the input type and pooling options:
 
-        | Input `spiketrains` type | `pool_trials` | `pool_spike_trains` | Return type | Output shape (per AnalogSignal) |
-        |---|---:|---:|---|---|
-        | `neo.SpikeTrain` | — | — (no effect) | `neo.AnalogSignal` | `(time, 1)` |
-        | list of `neo.SpikeTrain` | — | `False` | `neo.AnalogSignal` | `(time, len(spiketrains))` |
-        | list of `neo.SpikeTrain` | — | `True` | `neo.AnalogSignal` | `(time, 1)` |
-        | `elephant.trials.Trials` | `True` | `False` | `neo.AnalogSignal` | `(time, n_spiketrains)` (each column pooled across trials) |
-        | `elephant.trials.Trials` | `True` | `True` | `neo.AnalogSignal` | `(time, 1)` (pooled across trials and spike trains) |
-        | `elephant.trials.Trials` | `False` | `False` | list of `neo.AnalogSignal` | each entry: `(time, n_spiketrains)` for that trial |
-        | `elephant.trials.Trials` | `False` | `True` | list of `neo.AnalogSignal` | each entry: `(time, 1)` for that trial (spike trains pooled within-trial) |
-
-        +--------------------------------------+-----------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | Input ``spiketrains`` type           | ``pool_trials`` | ``pool_spike_trains`` | Return type                            | Output shape (per AnalogSignal)                               |
-        +======================================+=================+=======================+========================================+===============================================================+
-        | :class:`neo.core.SpikeTrain`         | —               | — (no effect)         | :class:`neo.core.AnalogSignal`         | ``(time, 1)``                                                 |
-        +-------------------------------+------------------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | list of :class:`neo.core.SpikeTrain` | —               | ``False``             | :class:`neo.core.AnalogSignal`         | ``(time, len(spiketrains))``                                  |
-        +-------------------------------+------------------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | list of :class:`neo.core.SpikeTrain` | —               | ``True``              | :class:`neo.core.AnalogSignal`         | ``(time, 1)``                                                 |
-        +--------------------------------------+-----------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | :class:`elephant.trials.Trials`      | ``True``        | ``False``             | :class:`neo.core.AnalogSignal`         | ``(time, n_spiketrains)`` (each column pooled across trials)  |
-        +--------------------------------------+-----------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | :class:`elephant.trials.Trials`      | ``True``        | ``True``              | :class:`neo.core.AnalogSignal`         | ``(time, 1)`` (pooled across trials and spike trains)         |
-        +--------------------------------------+-----------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | :class:`elephant.trials.Trials`      | ``False``       | ``False``             | list of :class:`neo.core.AnalogSignal` | each entry: ``(time, n_spiketrains)`` for that trial          |
-        +--------------------------------------+-----------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
-        | :class:`elephant.trials.Trials`      | ``False``       | ``True``              | list of :class:`neo.core.AnalogSignal` | each entry: ``(time, 1)`` for that trial (spike trains pooled |
-        |                                      |                 |                       |                                        | within-trial)                                                 |
-        +--------------------------------------+-----------------+-----------------------+----------------------------------------+---------------------------------------------------------------+
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | ``spiketrains`` type         | ``pool_trials`` | ``pool_spike_trains`` | Return type                    | Output shape (per AnalogSignal)          |
+        +==============================+=================+=======================+================================+==========================================+
+        | :class:`neo.core.SpikeTrain` | —               | — (no effect)         | :class:`neo.core.AnalogSignal` | ``(time, 1)``                            |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | list of                      | —               | ``False``             | :class:`neo.core.AnalogSignal` | ``(time, len(spiketrains))``             |
+        | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                          |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | list of                      | —               | ``True``              | :class:`neo.core.AnalogSignal` | ``(time, 1)``                            |
+        | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                          |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | :mod:`elephant.trials`       | ``True``        | ``False``             | :class:`neo.core.AnalogSignal` | ``(time, n_spiketrains)``                |
+        |                              |                 |                       |                                | (each column pooled across trials)       |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | :mod:`elephant.trials`       | ``True``        | ``True``              | :class:`neo.core.AnalogSignal` | ``(time, 1)``                            |
+        |                              |                 |                       |                                | (pooled across trials and spike trains)  |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | :mod:`elephant.trials`       | ``False``       | ``False``             | list of                        | each entry: ``(time, n_spiketrains)``    |
+        |                              |                 |                       | :class:`neo.core.AnalogSignal` | for that trial                           |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+        | :mod:`elephant.trials`       | ``False``       | ``True``              | list of                        | each entry: ``(time, 1)`` for that       |
+        |                              |                 |                       | :class:`neo.core.AnalogSignal` | trial (spike trains pooled within-trial) |
+        +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
 
         Here, ``time`` denotes the number of time bins implied by the interval
         ``[t_start, t_stop]`` and `sampling_period`.
