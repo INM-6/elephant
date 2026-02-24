@@ -739,7 +739,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
                -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
 
         A table summarizing the return types and array shapes is given in the
-        notes below :ref:`_summary-of-outputs`
+        notes below :ref:`Summary Table <_summary-of-outputs>`.
 
     Raises
     ------
