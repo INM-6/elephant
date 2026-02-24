@@ -705,12 +705,27 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
     Returns
     -------
-    output : :class:`neo.core.AnalogSignal`
-        2D matrix that contains the rate estimation in unit hertz (Hz) of shape
-        ``(time, len(spiketrains))`` or ``(time, 1)`` in case of a single
-        input spiketrain. ``output.times`` contains the time axis of the rate
-        estimate: the unit of this property is the same as the resolution that
-        is given via the argument `sampling_period` to the function.
+    output : :class:`neo.core.AnalogSignal` or list of :class:`neo.core.AnalogSignal`
+        The returned rate estimates are provided as :class:`neo.core.AnalogSignal`
+        objects with units of Hertz (Hz). The time axis is available as
+        ``output.times`` and has the same units/resolution as specified by
+        `sampling_period`.
+
+        The table below summarizes the return type and array shape depending on
+        the input type and pooling options:
+
+        | Input `spiketrains` type | `pool_trials` | `pool_spike_trains` | Return type | Output shape (per AnalogSignal) |
+        |---|---:|---:|---|---|
+        | `neo.SpikeTrain` | — | — (no effect) | `neo.AnalogSignal` | `(time, 1)` |
+        | list of `neo.SpikeTrain` | — | `False` | `neo.AnalogSignal` | `(time, len(spiketrains))` |
+        | list of `neo.SpikeTrain` | — | `True` | `neo.AnalogSignal` | `(time, 1)` |
+        | `elephant.trials.Trials` | `True` | `False` | `neo.AnalogSignal` | `(time, n_spiketrains)` (each column pooled across trials) |
+        | `elephant.trials.Trials` | `True` | `True` | `neo.AnalogSignal` | `(time, 1)` (pooled across trials and spike trains) |
+        | `elephant.trials.Trials` | `False` | `False` | list of `neo.AnalogSignal` | each entry: `(time, n_spiketrains)` for that trial |
+        | `elephant.trials.Trials` | `False` | `True` | list of `neo.AnalogSignal` | each entry: `(time, 1)` for that trial (spike trains pooled within-trial) |
+
+        Here, ``time`` denotes the number of time bins implied by the interval
+        ``[t_start, t_stop]`` and `sampling_period`.
 
     Raises
     ------
