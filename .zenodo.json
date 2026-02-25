@@ -29,6 +29,20 @@
     "related_identifiers": [
         {
             "scheme": "doi",
+            "identifier": "10.5281/zenodo.1186602",
+            "relation": "isVersionOf",
+            "resource_type": "software"
+        },
+
+        {
+            "scheme": "doi",
+            "identifier": "10.5281/zenodo.13133971",
+            "relation": "isNewVersionOf",
+            "resource_type": "software"
+        },
+
+        {
+            "scheme": "doi",
             "identifier": "10.12751/incf.ni2018.0019",
             "relation": "isDocumentedBy",
             "resource_type": "publication-article"
