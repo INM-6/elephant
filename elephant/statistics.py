@@ -739,7 +739,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
                -  `pool_spike_trains=False` results in `n_estimates = len(spiketrains)`
 
         A table summarizing the return types and array shapes is given in the
-        notes below :ref:`Summary Table <summary-of-outputs>`.
+        :ref:`notes below <summary-of-outputs>`.
 
     Raises
     ------
@@ -796,7 +796,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
             +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
             | ``spiketrains`` type         | ``pool_trials`` | ``pool_spike_trains`` | Return type                    | Output shape (per AnalogSignal)          |
             +==============================+=================+=======================+================================+==========================================+
-            | :class:`neo.core.SpikeTrain` | —               | — (no effect)         | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                          |
+            | :class:`neo.core.SpikeTrain` | —               | —                     | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                          |
             +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
             | list of                      | —               | ``False``             | :class:`neo.core.AnalogSignal` | ``(n_bins, len(spiketrains))``           |
             | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                          |
