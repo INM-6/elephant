@@ -8,14 +8,22 @@ on:
   pull_request_review:
     types: [ submitted ]
 
-# Building wheels on Ubuntu and Windows systems
+# Building wheels on Ubuntu, Windows and MacOS systems
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+          - os: windows-latest
+          # Intel runner (x86_64)
+          - os: macos-13
+            cibw_archs_macos: x86_64
+          # Apple Silicon runner (arm64)
+          - os: macos-14
+            cibw_archs_macos: arm64
 
     steps:
       - uses: actions/checkout@v4
