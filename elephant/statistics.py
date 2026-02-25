@@ -715,7 +715,7 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         `sampling_period`.
 
         If `spiketrains` is :class:`neo.core.SpikeTrain` then output is a
-        single :class:`neo.core.AnalogSignal` with `n_estimates=1`.
+        single :class:`neo.core.AnalogSignal` with `n_estimates = 1`.
 
         If `spiketrains` is a list of :class:`neo.core.SpikeTrain` then output
         is a single :class:`neo.core.AnalogSignal`. `n_estimates` depends on the
@@ -793,29 +793,32 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
     * Summary of the output type:
 
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | ``spiketrains`` type         | ``pool_trials`` | ``pool_spike_trains`` | Return type                    | Output shape (per AnalogSignal)          |
-            +==============================+=================+=======================+================================+==========================================+
-            | :class:`neo.core.SpikeTrain` | —               | —                     | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                          |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | list of                      | —               | ``False``             | :class:`neo.core.AnalogSignal` | ``(n_bins, len(spiketrains))``           |
-            | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                          |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | list of                      | —               | ``True``              | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                          |
-            | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                          |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | :mod:`elephant.trials`       | ``True``        | ``False``             | :class:`neo.core.AnalogSignal` | ``(n_bins, n_spiketrains)``              |
-            |                              |                 |                       |                                | (each column pooled across trials)       |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | :mod:`elephant.trials`       | ``True``        | ``True``              | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                          |
-            |                              |                 |                       |                                | (pooled across trials and spike trains)  |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | :mod:`elephant.trials`       | ``False``       | ``False``             | list of                        | each entry: ``(n_bins, n_spiketrains)``  |
-            |                              |                 |                       | :class:`neo.core.AnalogSignal` | for that trial                           |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
-            | :mod:`elephant.trials`       | ``False``       | ``True``              | list of                        | each entry: ``(n_bins, 1)`` for that     |
-            |                              |                 |                       | :class:`neo.core.AnalogSignal` | trial (spike trains pooled within-trial) |
-            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------------+
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | ``spiketrains`` type         | ``pool_trials`` | ``pool_spike_trains`` | Return type                    | Output shape (per AnalogSignal)    |
+            +==============================+=================+=======================+================================+====================================+
+            | :class:`neo.core.SpikeTrain` | —               | —                     | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                    |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | list of                      | —               | ``False``             | :class:`neo.core.AnalogSignal` | ``(n_bins, len(spiketrains))``     |
+            | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                    |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | list of                      | —               | ``True``              | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                    |
+            | :class:`neo.core.SpikeTrain` |                 |                       |                                |                                    |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | :mod:`elephant.trials`       | ``True``        | ``False``             | :class:`neo.core.AnalogSignal` | ``(n_bins, n_spiketrains)``        |
+            |                              |                 |                       |                                | (columns: estimate per spike train |
+            |                              |                 |                       |                                | pooled across trials)              |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | :mod:`elephant.trials`       | ``True``        | ``True``              | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)``                    |
+            |                              |                 |                       |                                | (pooled across trials              |
+            |                              |                 |                       |                                | and spike trains)                  |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | :mod:`elephant.trials`       | ``False``       | ``False``             | list of                        | each element (i.e., trial):        |
+            |                              |                 |                       | :class:`neo.core.AnalogSignal` | ``(n_bins, n_spiketrains)``        |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
+            | :mod:`elephant.trials`       | ``False``       | ``True``              | list of                        | each element (i.e., trial):        |
+            |                              |                 |                       | :class:`neo.core.AnalogSignal` | ``(n_bins, 1)`` (spike trains      |
+            |                              |                 |                       |                                | pooled within-trial)               |
+            +------------------------------+-----------------+-----------------------+--------------------------------+------------------------------------+
 
     Examples
     --------
