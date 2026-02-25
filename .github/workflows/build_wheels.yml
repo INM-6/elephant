@@ -7,6 +7,7 @@ on:
       - master
   pull_request_review:
     types: [ submitted ]
+  workflow_dispatch:
 
 # Building wheels on Ubuntu, Windows and MacOS systems
 jobs:
