@@ -37,14 +37,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
-          - os: windows-latest
-          # Intel runner (x86_64)
-          - os: macos-13
-            cibw_archs_macos: x86_64
-          # Apple Silicon runner (arm64)
-#          - os: macos-14
-#            cibw_archs_macos: arm64
+          os: [ubuntu-latest, windows-latest, macos-13, macos-14]
 
     steps:
       - uses: actions/checkout@v4
