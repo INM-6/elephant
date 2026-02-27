@@ -58,9 +58,6 @@ jobs:
         # llvm includes omp
         run: |
           uname -a
-          echo $ARCHFLAGS
-          echo $CFLAGS
-          echo $LDFLAGS
           brew install llvm libomp
           clang --version
 
@@ -70,7 +67,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 2
           CIBW_SKIP: "cp38-*"
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
-          CIBW_ARCHS: "auto64"
+          CIBW_ARCHS: "universal2"
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
       - uses: actions/upload-artifact@v4
