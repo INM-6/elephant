@@ -65,13 +65,17 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew --prefix libomp
+          echo | clang -E -Wp,-v - 2>&1 | grep include
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_ENVIRONMENT_MACOS: >
-            LDFLAGS="-L/usr/local/opt/libomp/lib -L/usr/local/opt/llvm/lib/c++ -L/usr/local/opt/llvm/lib/unwind -lunwind"
-            CPPFLAGS="-I/usr/local/opt/libomp/include -I/usr/local/opt/llvm/include"
+            LLVM_PREFIX=$(brew --prefix llvm)
+            LIBOMP_PREFIX=$(brew --prefix libomp)
+            CPPFLAGS="-I${LLVM_PREFIX}/include -I${LIBOMP_PREFIX}/include -I${LLVM_PREFIX}/include/c++/v1"
+            LDFLAGS="-L${LLVM_PREFIX}/lib -L${LIBOMP_PREFIX}/lib -lunwind"
+            CXXFLAGS="-stdlib=libc++"
           CIBW_BUILD_VERBOSITY: 2
           CIBW_SKIP: "cp38-*"
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.14"
