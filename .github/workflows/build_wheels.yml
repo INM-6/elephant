@@ -52,32 +52,41 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install cibuildwheel==3.3.1
 
-      - name: Install libomp
-        if: runner.os == 'macOS'
-        # run: brew install libomp
-        # llvm includes omp
-        run: |
-          uname -a
-          brew install llvm libomp
-          export PATH="$(brew --prefix llvm)/bin:$PATH"
-          export LLVM_PREFIX=$(brew --prefix llvm)
-          export LIBOMP_PREFIX=$(brew --prefix libomp)
-          export CC=$LLVM_PREFIX/bin/clang
-          export CXX=$LLVM_PREFIX/bin/clang++
-          export CPPFLAGS="-I${LLVM_PREFIX}/include -I${LIBOMP_PREFIX}/include -I${LLVM_PREFIX}/include/c++/v1"
-          export LDFLAGS="-L${LLVM_PREFIX}/lib -L${LIBOMP_PREFIX}/lib -lunwind"
-          export CXXFLAGS="-stdlib=libc++"
-          clang++ --version
+      # - name: Install libomp
+      #   if: runner.os == 'macOS'
+      #   run: |
+      #     uname -a
+      #     brew install llvm libomp
+      #     export PATH="$(brew --prefix llvm)/bin:$PATH"
+      #     export LLVM_PREFIX=$(brew --prefix llvm)
+      #     export LIBOMP_PREFIX=$(brew --prefix libomp)
+      #     export CC=$LLVM_PREFIX/bin/clang
+      #     export CXX=$LLVM_PREFIX/bin/clang++
+      #     export CPPFLAGS="-I${LLVM_PREFIX}/include -I${LIBOMP_PREFIX}/include -I${LLVM_PREFIX}/include/c++/v1"
+      #     export LDFLAGS="-L${LLVM_PREFIX}/lib -L${LIBOMP_PREFIX}/lib -lunwind"
+      #     export CXXFLAGS="-stdlib=libc++"
+      #     clang++ --version
 
-      - name: Debugg omp header avail
-        if: runner.os == 'macOS'
-        run: |
-          brew --prefix libomp
-          echo | clang -E -Wp,-v - 2>&1 | grep include
+      # - name: Debugg omp header avail
+      #   if: runner.os == 'macOS'
+      #   run: |
+      #     brew --prefix libomp
+      #     echo | clang -E -Wp,-v - 2>&1 | grep include
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
+          CIBW_BEFORE_BUILD_MACOS: |
+            brew install llvm libomp
+
+          CIBW_ENVIRONMENT_MACOS: >
+            PATH="$(brew --prefix llvm)/bin:$PATH"
+            CC=clang
+            CXX=clang++
+            CPPFLAGS="-I$(brew --prefix llvm)/include -I$(brew --prefix libomp)/include"
+            LDFLAGS="-L$(brew --prefix llvm)/lib -L$(brew --prefix libomp)/lib"
+            CXXFLAGS="-stdlib=libc++"
+            MACOSX_DEPLOYMENT_TARGET=11.0
           CIBW_BUILD_VERBOSITY: 2
           CIBW_SKIP: "cp38-*"
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.14"
