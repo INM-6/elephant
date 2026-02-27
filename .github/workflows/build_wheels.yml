@@ -61,13 +61,21 @@ jobs:
           brew install llvm libomp
           clang --version
 
+      - name: Debugg omp header avail
+        if: runner.os == 'macOS'
+        run: |
+          brew --prefix libomp
+
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
+          CIBW_ENVIRONMENT_MACOS: >
+            LDFLAGS="-L/usr/local/opt/libomp/lib"
+            CPPFLAGS="-I/usr/local/opt/libomp/include"
           CIBW_BUILD_VERBOSITY: 2
           CIBW_SKIP: "cp38-*"
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
-          CIBW_ARCHS: "universal2"
+          CIBW_ARCHS: "universal2" # change to CIBW_ARCHS_MACOS and reset auto for other targer archs
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
       - uses: actions/upload-artifact@v4
