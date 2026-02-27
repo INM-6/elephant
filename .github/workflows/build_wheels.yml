@@ -53,7 +53,10 @@ jobs:
 
       - name: Install libomp
         if: runner.os == 'macOS'
-        run: brew install libomp
+        # run: brew install libomp
+        # llvm includes omp
+        run: brew install llvm
+        run: clang --version # for debugg
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
