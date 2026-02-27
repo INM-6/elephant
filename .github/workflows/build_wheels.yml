@@ -52,34 +52,36 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install cibuildwheel==3.3.1
 
-      - name: Install libomp
-        if: runner.os == 'macOS'
+      # - name: Install libomp
+      #   if: runner.os == 'macOS'
         # run: brew install libomp
         # llvm includes omp
-        run: |
-          uname -a
-          brew install llvm libomp
-          clang --version
+        # run: |
+        #   uname -a
+        #   brew install llvm libomp
+        #   clang --version
 
-      - name: Debugg omp header avail
-        if: runner.os == 'macOS'
-        run: |
-          brew --prefix libomp
-          echo | clang -E -Wp,-v - 2>&1 | grep include
+      # - name: Debugg omp header avail
+      #   if: runner.os == 'macOS'
+      #   run: |
+      #     brew --prefix libomp
+      #     echo | clang -E -Wp,-v - 2>&1 | grep include
 
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_ENVIRONMENT_MACOS: >
-            LLVM_PREFIX=$(brew --prefix llvm)
-            LIBOMP_PREFIX=$(brew --prefix libomp)
-            CPPFLAGS="-I${LLVM_PREFIX}/include -I${LIBOMP_PREFIX}/include -I${LLVM_PREFIX}/include/c++/v1"
-            LDFLAGS="-L${LLVM_PREFIX}/lib -L${LIBOMP_PREFIX}/lib -lunwind"
-            CXXFLAGS="-stdlib=libc++"
+          CIBW_BEFORE_BUILD_MACOS: |
+            brew install llvm libomp
+            export LLVM_PREFIX=$(brew --prefix llvm)
+            export CC=$LLVM_PREFIX/bin/clang
+            export CXX=$LLVM_PREFIX/bin/clang++
+            export LDFLAGS="-L$(brew --prefix libomp)/lib"
+            export CPPFLAGS="-I$(brew --prefix libomp)/include"
+            clang++ --version
           CIBW_BUILD_VERBOSITY: 2
           CIBW_SKIP: "cp38-*"
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.14"
-          CIBW_ARCHS_MACOS: "universal2"
+          CIBW_ARCHS_MACOS: "universal2" # no free threading wheels, only need one with GIL
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
       - uses: actions/upload-artifact@v4
