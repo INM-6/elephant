@@ -58,6 +58,7 @@ jobs:
       - name: Build wheels
         run: python -m cibuildwheel --output-dir wheelhouse
         env:
+          CIBW_BUILD_VERBOSITY: 1
           CIBW_SKIP: "cp38-*"
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
           CIBW_ARCHS: "auto64"
