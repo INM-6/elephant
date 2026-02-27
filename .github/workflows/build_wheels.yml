@@ -71,10 +71,10 @@ jobs:
         env:
           CIBW_ENVIRONMENT_MACOS: >
             LDFLAGS="-L/usr/local/opt/libomp/lib -L/usr/local/opt/llvm/lib/c++ -L/usr/local/opt/llvm/lib/unwind -lunwind"
-            CPPFLAGS="-I/usr/local/opt/libomp/include"
+            CPPFLAGS="-I/usr/local/opt/libomp/include -I/usr/local/opt/llvm/include"
           CIBW_BUILD_VERBOSITY: 2
           CIBW_SKIP: "cp38-*"
-          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.9"
+          CIBW_PROJECT_REQUIRES_PYTHON: ">=3.14"
           CIBW_ARCHS_MACOS: "universal2"
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
