@@ -1,0 +1,1284 @@
+﻿2026-02-27T07:39:31.1503080Z Current runner version: '2.331.0'
+2026-02-27T07:39:31.1683220Z ##[group]Runner Image Provisioner
+2026-02-27T07:39:31.1686890Z Hosted Compute Agent
+2026-02-27T07:39:31.1706840Z Version: 20260213.493
+2026-02-27T07:39:31.1709080Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+2026-02-27T07:39:31.1711810Z Build Date: 2026-02-13T00:28:41Z
+2026-02-27T07:39:31.1713160Z Worker ID: {fd4a95a3-5e23-414b-b235-307a96acddcc}
+2026-02-27T07:39:31.1714590Z Azure Region: westus
+2026-02-27T07:39:31.1716740Z ##[endgroup]
+2026-02-27T07:39:31.1746480Z ##[group]Operating System
+2026-02-27T07:39:31.1750020Z macOS
+2026-02-27T07:39:31.1752770Z 15.7.4
+2026-02-27T07:39:31.1755480Z 24G517
+2026-02-27T07:39:31.1758150Z ##[endgroup]
+2026-02-27T07:39:31.1760700Z ##[group]Runner Image
+2026-02-27T07:39:31.1763190Z Image: macos-15
+2026-02-27T07:39:31.1767390Z Version: 20260224.0198.1
+2026-02-27T07:39:31.1775000Z Included Software: https://github.com/actions/runner-images/blob/macos-15/20260224.0198/images/macos/macos-15-Readme.md
+2026-02-27T07:39:31.1813110Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-15%2F20260224.0198
+2026-02-27T07:39:31.1821870Z ##[endgroup]
+2026-02-27T07:39:31.1834320Z ##[group]GITHUB_TOKEN Permissions
+2026-02-27T07:39:31.1858550Z Actions: read
+2026-02-27T07:39:31.1861370Z ArtifactMetadata: read
+2026-02-27T07:39:31.1863950Z Attestations: read
+2026-02-27T07:39:31.1867070Z Checks: read
+2026-02-27T07:39:31.1869240Z Contents: read
+2026-02-27T07:39:31.1872140Z Deployments: read
+2026-02-27T07:39:31.1882330Z Discussions: read
+2026-02-27T07:39:31.1884840Z Issues: read
+2026-02-27T07:39:31.1888610Z Metadata: read
+2026-02-27T07:39:31.1899210Z Models: read
+2026-02-27T07:39:31.1902170Z Packages: read
+2026-02-27T07:39:31.1904120Z Pages: read
+2026-02-27T07:39:31.1906680Z PullRequests: read
+2026-02-27T07:39:31.1908930Z RepositoryProjects: read
+2026-02-27T07:39:31.1911640Z SecurityEvents: read
+2026-02-27T07:39:31.1914070Z Statuses: read
+2026-02-27T07:39:31.1917230Z ##[endgroup]
+2026-02-27T07:39:31.1933060Z Secret source: None
+2026-02-27T07:39:31.1937800Z Prepare workflow directory
+2026-02-27T07:39:31.9698100Z Prepare all required actions
+2026-02-27T07:39:31.9800240Z Getting action download info
+2026-02-27T07:39:32.4994650Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-02-27T07:39:33.0025510Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-02-27T07:39:33.3976870Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-02-27T07:39:35.5343500Z Complete job name: Build wheels on macos-15-intel
+2026-02-27T07:39:36.9499050Z ##[group]Run actions/checkout@v4
+2026-02-27T07:39:36.9502090Z with:
+2026-02-27T07:39:36.9503470Z   repository: NeuralEnsemble/elephant
+2026-02-27T07:39:36.9505700Z   token: ***
+2026-02-27T07:39:36.9507000Z   ssh-strict: true
+2026-02-27T07:39:36.9509540Z   ssh-user: git
+2026-02-27T07:39:36.9510870Z   persist-credentials: true
+2026-02-27T07:39:36.9512460Z   clean: true
+2026-02-27T07:39:36.9513870Z   sparse-checkout-cone-mode: true
+2026-02-27T07:39:36.9515630Z   fetch-depth: 1
+2026-02-27T07:39:36.9517070Z   fetch-tags: false
+2026-02-27T07:39:36.9518630Z   show-progress: true
+2026-02-27T07:39:36.9520090Z   lfs: false
+2026-02-27T07:39:36.9521590Z   submodules: false
+2026-02-27T07:39:36.9523080Z   set-safe-directory: true
+2026-02-27T07:39:36.9526630Z ##[endgroup]
+2026-02-27T07:39:37.5862640Z Syncing repository: NeuralEnsemble/elephant
+2026-02-27T07:39:37.6873250Z ##[group]Getting Git version info
+2026-02-27T07:39:37.7217480Z Working directory is '/Users/runner/work/elephant/elephant'
+2026-02-27T07:39:37.7239780Z [command]/usr/local/bin/git version
+2026-02-27T07:39:37.7243380Z git version 2.53.0
+2026-02-27T07:39:37.7384800Z ##[endgroup]
+2026-02-27T07:39:37.7426570Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/bdb37e06-ce3d-4a12-a45b-390d56fcf97a/.gitconfig'
+2026-02-27T07:39:37.7889790Z Temporarily overriding HOME='/Users/runner/work/_temp/bdb37e06-ce3d-4a12-a45b-390d56fcf97a' before making global git config changes
+2026-02-27T07:39:37.7908750Z Adding repository directory to the temporary git global config as a safe directory
+2026-02-27T07:39:37.7988600Z [command]/usr/local/bin/git config --global --add safe.directory /Users/runner/work/elephant/elephant
+2026-02-27T07:39:37.8031500Z Deleting the contents of '/Users/runner/work/elephant/elephant'
+2026-02-27T07:39:37.8077720Z ##[group]Initializing the repository
+2026-02-27T07:39:37.8201060Z [command]/usr/local/bin/git init /Users/runner/work/elephant/elephant
+2026-02-27T07:39:37.8212100Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-02-27T07:39:37.8268330Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-02-27T07:39:37.8570110Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-02-27T07:39:37.8582560Z hint: call:
+2026-02-27T07:39:37.8744210Z hint:
+2026-02-27T07:39:37.8763970Z hint: 	git config --global init.defaultBranch <name>
+2026-02-27T07:39:37.8788010Z hint:
+2026-02-27T07:39:37.8800150Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-02-27T07:39:37.8974320Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-02-27T07:39:37.9018780Z hint:
+2026-02-27T07:39:37.9760970Z hint: 	git branch -m <name>
+2026-02-27T07:39:37.9780790Z hint:
+2026-02-27T07:39:37.9967010Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-02-27T07:39:37.9971780Z Initialized empty Git repository in /Users/runner/work/elephant/elephant/.git/
+2026-02-27T07:39:37.9981100Z [command]/usr/local/bin/git remote add origin https://github.com/NeuralEnsemble/elephant
+2026-02-27T07:39:37.9987710Z ##[endgroup]
+2026-02-27T07:39:37.9992390Z ##[group]Disabling automatic garbage collection
+2026-02-27T07:39:37.9996080Z [command]/usr/local/bin/git config --local gc.auto 0
+2026-02-27T07:39:38.0001250Z ##[endgroup]
+2026-02-27T07:39:38.0003850Z ##[group]Setting up auth
+2026-02-27T07:39:38.0006350Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-02-27T07:39:38.0014100Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-02-27T07:39:38.0186670Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-02-27T07:39:38.0399380Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-02-27T07:39:38.4068310Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-02-27T07:39:38.4467620Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-02-27T07:39:38.7096510Z [command]/usr/local/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-02-27T07:39:38.7369570Z ##[endgroup]
+2026-02-27T07:39:38.7449650Z ##[group]Fetching the repository
+2026-02-27T07:39:38.7525420Z [command]/usr/local/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +80b6c3f86f352c66c005cb5ee01f7699d7440aef:refs/remotes/pull/664/merge
+2026-02-27T07:39:39.9670830Z From https://github.com/NeuralEnsemble/elephant
+2026-02-27T07:39:39.9679110Z  * [new ref]         80b6c3f86f352c66c005cb5ee01f7699d7440aef -> pull/664/merge
+2026-02-27T07:39:40.0006920Z ##[endgroup]
+2026-02-27T07:39:40.0011180Z ##[group]Determining the checkout info
+2026-02-27T07:39:40.0017980Z ##[endgroup]
+2026-02-27T07:39:40.0025130Z [command]/usr/local/bin/git sparse-checkout disable
+2026-02-27T07:39:40.0305440Z [command]/usr/local/bin/git config --local --unset-all extensions.worktreeConfig
+2026-02-27T07:39:40.0534030Z ##[group]Checking out the ref
+2026-02-27T07:39:40.0539870Z [command]/usr/local/bin/git checkout --progress --force refs/remotes/pull/664/merge
+2026-02-27T07:39:40.2666120Z HEAD is now at 80b6c3f Merge 1c6a6ecb8cfa4e265a7c19916a30c347ac58ec2c into e8d1275265346e59e562c0ed82d54e40ecb8bc38
+2026-02-27T07:39:40.2699460Z ##[endgroup]
+2026-02-27T07:39:40.2709630Z [command]/usr/local/bin/git log -1 --format=%H
+2026-02-27T07:39:40.2713510Z 80b6c3f86f352c66c005cb5ee01f7699d7440aef
+2026-02-27T07:39:41.1841920Z ##[group]Run actions/setup-python@v5
+2026-02-27T07:39:41.1844240Z with:
+2026-02-27T07:39:41.1845750Z   python-version: 3.13
+2026-02-27T07:39:41.1847570Z   check-latest: false
+2026-02-27T07:39:41.1850530Z   token: ***
+2026-02-27T07:39:41.1852550Z   update-environment: true
+2026-02-27T07:39:41.1854620Z   allow-prereleases: false
+2026-02-27T07:39:41.1856580Z   freethreaded: false
+2026-02-27T07:39:41.1858300Z ##[endgroup]
+2026-02-27T07:39:41.6547510Z ##[group]Installed versions
+2026-02-27T07:39:42.0801870Z Successfully set up CPython (3.13.12)
+2026-02-27T07:39:42.0846750Z ##[endgroup]
+2026-02-27T07:39:42.6368040Z ##[group]Run python -m pip install --upgrade pip
+2026-02-27T07:39:42.6371200Z [36;1mpython -m pip install --upgrade pip[0m
+2026-02-27T07:39:42.6374130Z [36;1mpython -m pip install cibuildwheel==3.3.1[0m
+2026-02-27T07:39:42.6540690Z shell: /bin/bash -e {0}
+2026-02-27T07:39:42.6543330Z env:
+2026-02-27T07:39:42.6558910Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:42.6564490Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.12/x64/lib/pkgconfig
+2026-02-27T07:39:42.6569850Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:42.6577660Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:42.6585610Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:42.6589480Z ##[endgroup]
+2026-02-27T07:39:45.4173210Z Requirement already satisfied: pip in /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages (26.0.1)
+2026-02-27T07:39:47.7769760Z Collecting cibuildwheel==3.3.1
+2026-02-27T07:39:47.9695170Z   Downloading cibuildwheel-3.3.1-py3-none-any.whl.metadata (24 kB)
+2026-02-27T07:39:48.0435600Z Collecting bashlex!=0.13 (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.0509290Z   Downloading bashlex-0.18-py2.py3-none-any.whl.metadata (1.1 kB)
+2026-02-27T07:39:48.0934080Z Collecting bracex (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.1011640Z   Downloading bracex-2.6-py3-none-any.whl.metadata (3.6 kB)
+2026-02-27T07:39:48.1524880Z Collecting build>=1.0.0 (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.1568750Z   Downloading build-1.4.0-py3-none-any.whl.metadata (5.8 kB)
+2026-02-27T07:39:48.1783890Z Requirement already satisfied: certifi in /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages (from cibuildwheel==3.3.1) (2026.1.4)
+2026-02-27T07:39:48.2424520Z Collecting dependency-groups>=1.2 (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.2494240Z   Downloading dependency_groups-1.3.1-py3-none-any.whl.metadata (2.3 kB)
+2026-02-27T07:39:48.3042250Z Collecting filelock (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.3107980Z   Downloading filelock-3.24.3-py3-none-any.whl.metadata (2.0 kB)
+2026-02-27T07:39:48.3573700Z Collecting humanize (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.3636120Z   Downloading humanize-4.15.0-py3-none-any.whl.metadata (7.8 kB)
+2026-02-27T07:39:48.4058380Z Collecting packaging>=20.9 (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.4116490Z   Downloading packaging-26.0-py3-none-any.whl.metadata (3.3 kB)
+2026-02-27T07:39:48.4568560Z Collecting patchelf (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.4643510Z   Downloading patchelf-0.17.2.4-py3-none-macosx_10_9_universal2.whl.metadata (3.7 kB)
+2026-02-27T07:39:48.5078030Z Collecting platformdirs (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.5151260Z   Downloading platformdirs-4.9.2-py3-none-any.whl.metadata (4.7 kB)
+2026-02-27T07:39:48.5464770Z Collecting pyelftools>=0.29 (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.5530530Z   Downloading pyelftools-0.32-py3-none-any.whl.metadata (372 bytes)
+2026-02-27T07:39:48.5986450Z Collecting wheel>=0.33.6 (from cibuildwheel==3.3.1)
+2026-02-27T07:39:48.6051770Z   Downloading wheel-0.46.3-py3-none-any.whl.metadata (2.4 kB)
+2026-02-27T07:39:48.6483550Z Collecting pyproject_hooks (from build>=1.0.0->cibuildwheel==3.3.1)
+2026-02-27T07:39:48.6549310Z   Downloading pyproject_hooks-1.2.0-py3-none-any.whl.metadata (1.3 kB)
+2026-02-27T07:39:48.6849010Z Downloading cibuildwheel-3.3.1-py3-none-any.whl (127 kB)
+2026-02-27T07:39:48.7092450Z Downloading bashlex-0.18-py2.py3-none-any.whl (69 kB)
+2026-02-27T07:39:48.7297000Z Downloading build-1.4.0-py3-none-any.whl (24 kB)
+2026-02-27T07:39:48.7499920Z Downloading dependency_groups-1.3.1-py3-none-any.whl (8.7 kB)
+2026-02-27T07:39:48.7723540Z Downloading packaging-26.0-py3-none-any.whl (74 kB)
+2026-02-27T07:39:48.7926270Z Downloading pyelftools-0.32-py3-none-any.whl (188 kB)
+2026-02-27T07:39:48.8170630Z Downloading wheel-0.46.3-py3-none-any.whl (30 kB)
+2026-02-27T07:39:48.8404930Z Downloading bracex-2.6-py3-none-any.whl (11 kB)
+2026-02-27T07:39:48.8591780Z Downloading filelock-3.24.3-py3-none-any.whl (24 kB)
+2026-02-27T07:39:48.8779900Z Downloading humanize-4.15.0-py3-none-any.whl (132 kB)
+2026-02-27T07:39:48.8971890Z Downloading patchelf-0.17.2.4-py3-none-macosx_10_9_universal2.whl (184 kB)
+2026-02-27T07:39:48.9181310Z Downloading platformdirs-4.9.2-py3-none-any.whl (21 kB)
+2026-02-27T07:39:48.9380980Z Downloading pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
+2026-02-27T07:39:49.0237530Z Installing collected packages: pyelftools, pyproject_hooks, platformdirs, patchelf, packaging, humanize, filelock, bracex, bashlex, wheel, dependency-groups, build, cibuildwheel
+2026-02-27T07:39:50.2080940Z 
+2026-02-27T07:39:50.2193190Z Successfully installed bashlex-0.18 bracex-2.6 build-1.4.0 cibuildwheel-3.3.1 dependency-groups-1.3.1 filelock-3.24.3 humanize-4.15.0 packaging-26.0 patchelf-0.17.2.4 platformdirs-4.9.2 pyelftools-0.32 pyproject_hooks-1.2.0 wheel-0.46.3
+2026-02-27T07:39:50.4795370Z ##[group]Run brew install llvm libomp
+2026-02-27T07:39:50.4796430Z [36;1mbrew install llvm libomp[0m
+2026-02-27T07:39:50.4797260Z [36;1mclang --version[0m
+2026-02-27T07:39:50.4922200Z shell: /bin/bash -e {0}
+2026-02-27T07:39:50.4922860Z env:
+2026-02-27T07:39:50.4923730Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:50.4925310Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.12/x64/lib/pkgconfig
+2026-02-27T07:39:50.4926960Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:50.4928460Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:50.4929900Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:39:50.4930990Z ##[endgroup]
+2026-02-27T07:40:03.8733360Z [32m==>[0m [1mFetching downloads for: [32mllvm[39m and [32mlibomp[39m[0m
+2026-02-27T07:40:04.2361180Z ✔︎ Bottle Manifest llvm (21.1.8_1)
+2026-02-27T07:40:04.2362160Z ✔︎ Bottle Manifest libomp (21.1.8)
+2026-02-27T07:40:04.9832610Z ✔︎ Bottle Manifest z3 (4.15.4)
+2026-02-27T07:40:05.3661540Z ✔︎ Bottle libomp (21.1.8)
+2026-02-27T07:40:06.0688080Z ✔︎ Bottle z3 (4.15.4)
+2026-02-27T07:40:32.3757490Z ✔︎ Bottle llvm (21.1.8_1)
+2026-02-27T07:40:32.6562090Z [32m==>[0m [1mInstalling llvm dependency: [32mz3[39m[0m
+2026-02-27T07:40:32.6911790Z [34m==>[0m [1mPouring z3--4.15.4.sonoma.bottle.tar.gz[0m
+2026-02-27T07:40:37.7178390Z 🍺  /usr/local/Cellar/z3/4.15.4: 120 files, 34.4MB
+2026-02-27T07:40:37.7201980Z [34m==>[0m [1mPouring llvm--21.1.8_1.sonoma.bottle.tar.gz[0m
+2026-02-27T07:41:04.2811230Z [34m==>[0m [1mCaveats[0m
+2026-02-27T07:41:04.2812530Z CLANG_CONFIG_FILE_SYSTEM_DIR: /usr/local/etc/clang
+2026-02-27T07:41:04.2813750Z CLANG_CONFIG_FILE_USER_DIR:   ~/.config/clang
+2026-02-27T07:41:04.2814240Z 
+2026-02-27T07:41:04.2815150Z LLD is now provided in a separate formula:
+2026-02-27T07:41:04.2816280Z   brew install lld
+2026-02-27T07:41:04.2818350Z 
+2026-02-27T07:41:04.2819780Z Using `clang`, `clang++`, etc., requires a CLT installation at `/Library/Developer/CommandLineTools`.
+2026-02-27T07:41:04.2821300Z If you don't want to install the CLT, you can write appropriate configuration files pointing to your
+2026-02-27T07:41:04.2822390Z SDK at ~/.config/clang.
+2026-02-27T07:41:04.2822690Z 
+2026-02-27T07:41:04.2823060Z To use the bundled libunwind please use the following LDFLAGS:
+2026-02-27T07:41:04.2824150Z   LDFLAGS="-L/usr/local/opt/llvm/lib/unwind -lunwind"
+2026-02-27T07:41:04.2824670Z 
+2026-02-27T07:41:04.2825150Z To use the bundled libc++ please use the following LDFLAGS:
+2026-02-27T07:41:04.2826230Z   LDFLAGS="-L/usr/local/opt/llvm/lib/c++ -L/usr/local/opt/llvm/lib/unwind -lunwind"
+2026-02-27T07:41:04.2827010Z 
+2026-02-27T07:41:04.2827700Z NOTE: You probably want to use the libunwind and libc++ provided by macOS unless you know what you're doing.
+2026-02-27T07:41:04.2828640Z 
+2026-02-27T07:41:04.2829030Z llvm is keg-only, which means it was not symlinked into /usr/local,
+2026-02-27T07:41:04.2830190Z because macOS already provides this software and installing another version in
+2026-02-27T07:41:04.2831170Z parallel can cause all kinds of trouble.
+2026-02-27T07:41:04.2831600Z 
+2026-02-27T07:41:04.2831860Z If you need to have llvm first in your PATH, run:
+2026-02-27T07:41:04.2833060Z   echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> /Users/runner/.bash_profile
+2026-02-27T07:41:04.2833810Z 
+2026-02-27T07:41:04.2834070Z For compilers to find llvm you may need to set:
+2026-02-27T07:41:04.2835300Z   export LDFLAGS="-L/usr/local/opt/llvm/lib"
+2026-02-27T07:41:04.2836020Z   export CPPFLAGS="-I/usr/local/opt/llvm/include"
+2026-02-27T07:41:04.2836560Z 
+2026-02-27T07:41:04.2836780Z For cmake to find llvm you may need to set:
+2026-02-27T07:41:04.2837490Z   export CMAKE_PREFIX_PATH="/usr/local/opt/llvm"
+2026-02-27T07:41:04.2838300Z [34m==>[0m [1mSummary[0m
+2026-02-27T07:41:04.6816430Z 🍺  /usr/local/Cellar/llvm/21.1.8_1: 9,286 files, 1.9GB
+2026-02-27T07:41:04.7226960Z [34m==>[0m [1mPouring libomp--21.1.8.sonoma.bottle.tar.gz[0m
+2026-02-27T07:41:07.5487050Z [34m==>[0m [1mCaveats[0m
+2026-02-27T07:41:07.5488730Z libomp is keg-only, which means it was not symlinked into /usr/local,
+2026-02-27T07:41:07.5490180Z because it can override GCC headers and result in broken builds.
+2026-02-27T07:41:07.5491070Z 
+2026-02-27T07:41:07.5491380Z For compilers to find libomp you may need to set:
+2026-02-27T07:41:07.5492130Z   export LDFLAGS="-L/usr/local/opt/libomp/lib"
+2026-02-27T07:41:07.5492840Z   export CPPFLAGS="-I/usr/local/opt/libomp/include"
+2026-02-27T07:41:07.5493650Z [34m==>[0m [1mSummary[0m
+2026-02-27T07:41:07.5506640Z 🍺  /usr/local/Cellar/libomp/21.1.8: 9 files, 1.8MB
+2026-02-27T07:41:07.5521640Z [32m==>[0m [1mCaveats[0m
+2026-02-27T07:41:07.5522660Z [34m==>[0m [1mllvm[0m
+2026-02-27T07:41:07.5523470Z CLANG_CONFIG_FILE_SYSTEM_DIR: /usr/local/etc/clang
+2026-02-27T07:41:07.5524560Z CLANG_CONFIG_FILE_USER_DIR:   ~/.config/clang
+2026-02-27T07:41:07.5525230Z 
+2026-02-27T07:41:07.5525660Z LLD is now provided in a separate formula:
+2026-02-27T07:41:07.5526510Z   brew install lld
+2026-02-27T07:41:07.5526870Z 
+2026-02-27T07:41:07.5527620Z Using `clang`, `clang++`, etc., requires a CLT installation at `/Library/Developer/CommandLineTools`.
+2026-02-27T07:41:07.5529370Z If you don't want to install the CLT, you can write appropriate configuration files pointing to your
+2026-02-27T07:41:07.5531390Z SDK at ~/.config/clang.
+2026-02-27T07:41:07.5531710Z 
+2026-02-27T07:41:07.5532090Z To use the bundled libunwind please use the following LDFLAGS:
+2026-02-27T07:41:07.5533280Z   LDFLAGS="-L/usr/local/opt/llvm/lib/unwind -lunwind"
+2026-02-27T07:41:07.5533960Z 
+2026-02-27T07:41:07.5534450Z To use the bundled libc++ please use the following LDFLAGS:
+2026-02-27T07:41:07.5535850Z   LDFLAGS="-L/usr/local/opt/llvm/lib/c++ -L/usr/local/opt/llvm/lib/unwind -lunwind"
+2026-02-27T07:41:07.5536900Z 
+2026-02-27T07:41:07.5537860Z NOTE: You probably want to use the libunwind and libc++ provided by macOS unless you know what you're doing.
+2026-02-27T07:41:07.5540230Z 
+2026-02-27T07:41:07.5540780Z llvm is keg-only, which means it was not symlinked into /usr/local,
+2026-02-27T07:41:07.5542280Z because macOS already provides this software and installing another version in
+2026-02-27T07:41:07.5543630Z parallel can cause all kinds of trouble.
+2026-02-27T07:41:07.5544210Z 
+2026-02-27T07:41:07.5544580Z If you need to have llvm first in your PATH, run:
+2026-02-27T07:41:07.5545910Z   echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> /Users/runner/.bash_profile
+2026-02-27T07:41:07.5546900Z 
+2026-02-27T07:41:07.5547280Z For compilers to find llvm you may need to set:
+2026-02-27T07:41:07.5548500Z   export LDFLAGS="-L/usr/local/opt/llvm/lib"
+2026-02-27T07:41:07.5550300Z   export CPPFLAGS="-I/usr/local/opt/llvm/include"
+2026-02-27T07:41:07.5551100Z 
+2026-02-27T07:41:07.5551430Z For cmake to find llvm you may need to set:
+2026-02-27T07:41:07.5553090Z   export CMAKE_PREFIX_PATH="/usr/local/opt/llvm"
+2026-02-27T07:41:07.5554890Z [34m==>[0m [1mlibomp[0m
+2026-02-27T07:41:07.5557300Z libomp is keg-only, which means it was not symlinked into /usr/local,
+2026-02-27T07:41:07.5559350Z because it can override GCC headers and result in broken builds.
+2026-02-27T07:41:07.5560240Z 
+2026-02-27T07:41:07.5560640Z For compilers to find libomp you may need to set:
+2026-02-27T07:41:07.5561780Z   export LDFLAGS="-L/usr/local/opt/libomp/lib"
+2026-02-27T07:41:07.5562790Z   export CPPFLAGS="-I/usr/local/opt/libomp/include"
+2026-02-27T07:41:07.7413190Z Apple clang version 17.0.0 (clang-1700.0.13.5)
+2026-02-27T07:41:07.7415430Z Target: x86_64-apple-darwin24.6.0
+2026-02-27T07:41:07.7416460Z Thread model: posix
+2026-02-27T07:41:07.7418480Z InstalledDir: /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+2026-02-27T07:41:07.8181890Z ##[group]Run python -m cibuildwheel --output-dir wheelhouse
+2026-02-27T07:41:07.8183680Z [36;1mpython -m cibuildwheel --output-dir wheelhouse[0m
+2026-02-27T07:41:07.8294800Z shell: /bin/bash -e {0}
+2026-02-27T07:41:07.8295240Z env:
+2026-02-27T07:41:07.8295800Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:41:07.8296830Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.12/x64/lib/pkgconfig
+2026-02-27T07:41:07.8297880Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:41:07.8298800Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:41:07.8300450Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T07:41:07.8301600Z   CIBW_BUILD_VERBOSITY: 1
+2026-02-27T07:41:07.8302180Z   CIBW_SKIP: cp38-*
+2026-02-27T07:41:07.8302790Z   CIBW_PROJECT_REQUIRES_PYTHON: >=3.9
+2026-02-27T07:41:07.8303530Z   CIBW_ARCHS: auto64
+2026-02-27T07:41:07.8304240Z ##[endgroup]
+2026-02-27T07:41:08.9362650Z 
+2026-02-27T07:41:08.9368570Z      _ _       _ _   _       _           _
+2026-02-27T07:41:08.9371260Z  ___|_| |_ _ _|_| |_| |_ _ _| |_ ___ ___| |
+2026-02-27T07:41:08.9375820Z |  _| | . | | | | | . | | | |   | -_| -_| |
+2026-02-27T07:41:08.9380310Z |___|_|___|___|_|_|___|_____|_|_|___|___|_|
+2026-02-27T07:41:08.9382780Z 
+2026-02-27T07:41:08.9385380Z cibuildwheel version 3.3.1
+2026-02-27T07:41:08.9387920Z 
+2026-02-27T07:41:08.9389920Z Build options:
+2026-02-27T07:41:08.9392660Z   platform: macos
+2026-02-27T07:41:08.9655270Z   [38;5;244mallow_empty: False[0m
+2026-02-27T07:41:08.9657220Z   [38;5;244marchitectures: x86_64[0m
+2026-02-27T07:41:08.9659030Z   build_selector: 
+2026-02-27T07:41:08.9661780Z     build_config: *
+2026-02-27T07:41:08.9667160Z     skip_config: cp38-*
+2026-02-27T07:41:08.9669020Z     requires_python: >=3.9
+2026-02-27T07:41:08.9678740Z     enable: [][0m
+2026-02-27T07:41:08.9681340Z   output_dir: /Users/runner/work/elephant/elephant/wheelhouse[0m
+2026-02-27T07:41:08.9684220Z   package_dir: /Users/runner/work/elephant/elephant[0m
+2026-02-27T07:41:08.9686540Z   [38;5;244mtest_selector: 
+2026-02-27T07:41:08.9689540Z [38;5;244m    skip_config:[0m
+2026-02-27T07:41:08.9691780Z   [38;5;244mbefore_all: [0m
+2026-02-27T07:41:08.9693720Z   [38;5;244mbefore_build: [0m
+2026-02-27T07:41:08.9695540Z   [38;5;244mbefore_test: [0m
+2026-02-27T07:41:08.9697530Z   [38;5;244mbuild_frontend: build[0m
+2026-02-27T07:41:08.9699850Z   build_verbosity: 1[0m
+2026-02-27T07:41:08.9702200Z   [38;5;244mconfig_settings: [0m
+2026-02-27T07:41:08.9711230Z   [38;5;244mcontainer_engine: docker[0m
+2026-02-27T07:41:08.9714090Z   [38;5;244mdependency_constraints: pinned[0m
+2026-02-27T07:41:08.9715900Z   [38;5;244menvironment: [0m
+2026-02-27T07:41:08.9717350Z   [38;5;244mmanylinux_images: None[0m
+2026-02-27T07:41:08.9719200Z   [38;5;244mmusllinux_images: None[0m
+2026-02-27T07:41:08.9721260Z   [38;5;244mpyodide_version: None[0m
+2026-02-27T07:41:08.9723170Z   [38;5;244mrepair_command: delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}[0m
+2026-02-27T07:41:08.9724680Z   [38;5;244mtest_command: [0m
+2026-02-27T07:41:08.9725610Z   [38;5;244mtest_environment: [0m
+2026-02-27T07:41:08.9726380Z   [38;5;244mtest_extras: [0m
+2026-02-27T07:41:08.9726960Z   [38;5;244mtest_groups: [0m
+2026-02-27T07:41:08.9727570Z   [38;5;244mtest_requires: [0m
+2026-02-27T07:41:08.9728170Z   [38;5;244mtest_runtime: 
+2026-02-27T07:41:08.9728750Z [38;5;244m    args: ()[0m
+2026-02-27T07:41:08.9729350Z   [38;5;244mtest_sources: [0m
+2026-02-27T07:41:08.9729950Z   [38;5;244mxbuild_tools: None[0m
+2026-02-27T07:41:08.9730330Z 
+2026-02-27T07:41:08.9730690Z Cache folder: /Users/runner/Library/Caches/cibuildwheel
+2026-02-27T07:41:08.9731220Z 
+2026-02-27T07:41:08.9731390Z Here we go!
+2026-02-27T07:41:08.9732160Z 
+2026-02-27T07:41:08.9769330Z 
+2026-02-27T07:41:08.9793810Z [1m[34mBuilding cp39-macosx_x86_64 wheel[0m
+2026-02-27T07:41:08.9794630Z CPython 3.9 macOS x86_64
+2026-02-27T07:41:08.9799400Z 
+2026-02-27T07:41:08.9810020Z ##[group]Installing Python cp39...
+2026-02-27T07:41:08.9811590Z 
+2026-02-27T07:41:08.9813600Z + pkgutil --pkgs
+2026-02-27T07:41:09.0082800Z + Download https://www.python.org/ftp/python/3.9.13/python-3.9.13-macos11.pkg to /Users/runner/Library/Caches/cibuildwheel/cpython-installer/python-3.9.13-macos11.pkg
+2026-02-27T07:41:09.3944290Z + sudo installer -pkg /Users/runner/Library/Caches/cibuildwheel/cpython-installer/python-3.9.13-macos11.pkg -target /
+2026-02-27T07:41:51.4636630Z installer: Package name is Python
+2026-02-27T07:41:51.4637460Z installer: Upgrading at base path /
+2026-02-27T07:41:51.4638120Z installer: The upgrade was successful.
+2026-02-27T07:41:51.4701270Z + /Library/Frameworks/Python.framework/Versions/3.9/bin/python3 /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/cibuildwheel/resources/install_certifi.py
+2026-02-27T07:41:53.0692660Z Collecting certifi
+2026-02-27T07:41:53.1002990Z   Downloading certifi-2026.2.25-py3-none-any.whl (153 kB)
+2026-02-27T07:41:53.1323070Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 153.7/153.7 KB 5.5 MB/s eta 0:00:00
+2026-02-27T07:41:53.1869220Z Installing collected packages: certifi
+2026-02-27T07:41:53.2180860Z Successfully installed certifi-2026.2.25
+2026-02-27T07:41:53.3497490Z  -- pip install --upgrade certifi
+2026-02-27T07:41:53.3498750Z  -- removing any existing file or link
+2026-02-27T07:41:53.3499760Z  -- creating symlink to certifi certificate bundle
+2026-02-27T07:41:53.3500440Z  -- setting permissions
+2026-02-27T07:41:53.3500950Z  -- update complete
+2026-02-27T07:41:53.3587690Z ##[endgroup]
+2026-02-27T07:41:53.3589720Z                                                              [32m✓ [0m44.38s
+2026-02-27T07:41:53.3591150Z ##[group]Setting up build environment...
+2026-02-27T07:41:53.3591790Z 
+2026-02-27T07:41:53.3601400Z + Download https://github.com/pypa/get-virtualenv/releases/download/20.35.4/virtualenv.pyz to /Users/runner/Library/Caches/cibuildwheel/virtualenv-20.35.4.pyz
+2026-02-27T07:41:53.6091080Z + /Library/Frameworks/Python.framework/Versions/3.13/bin/python -sS /Users/runner/Library/Caches/cibuildwheel/virtualenv-20.35.4.pyz --activators= --no-periodic-update --pip=25.3 --no-setuptools --symlink-app-data --python /Library/Frameworks/Python.framework/Versions/3.9/bin/python3.9 /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv
+2026-02-27T07:41:56.7755640Z created virtual environment CPython3.9.13.final.0-64 in 2786ms
+2026-02-27T07:41:56.7800500Z   creator CPython3Posix(dest=/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv, clear=False, no_vcs_ignore=False, global=False)
+2026-02-27T07:41:56.8189550Z   seeder FromAppData(download=False, pip=25.3, via=symlink, app_data_dir=/Users/runner/Library/Application Support/virtualenv)
+2026-02-27T07:41:56.8239980Z     added seed packages: pip==25.3
+2026-02-27T07:41:56.8535370Z + which python
+2026-02-27T07:41:56.8681470Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/bin/python
+2026-02-27T07:41:56.8898000Z + python --version
+2026-02-27T07:41:56.8972030Z Python 3.9.13
+2026-02-27T07:41:56.9031990Z + which pip
+2026-02-27T07:41:57.0036090Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/bin/pip
+2026-02-27T07:41:57.0092620Z + pip --version
+2026-02-27T07:41:57.4754920Z pip 25.3 from /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/lib/python3.9/site-packages/pip (python 3.9)
+2026-02-27T07:41:57.5201430Z ##[endgroup]
+2026-02-27T07:41:57.5216870Z                                                               [32m✓ [0m4.13s
+2026-02-27T07:41:57.5226240Z ##[group]Installing build tools...
+2026-02-27T07:41:57.5269280Z 
+2026-02-27T07:41:57.5286230Z + pip install --upgrade delocate 'build[virtualenv]' -c file:///Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/cibuildwheel/resources/constraints-python39.txt
+2026-02-27T07:41:58.8045540Z Collecting delocate
+2026-02-27T07:41:58.9049240Z   Downloading delocate-0.13.0-py3-none-any.whl.metadata (15 kB)
+2026-02-27T07:41:58.9371490Z Collecting build[virtualenv]
+2026-02-27T07:41:59.0377880Z   Downloading build-1.3.0-py3-none-any.whl.metadata (5.6 kB)
+2026-02-27T07:41:59.0874960Z Collecting packaging>=20.9 (from delocate)
+2026-02-27T07:41:59.1015720Z   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+2026-02-27T07:41:59.2329740Z Collecting typing_extensions>=4.12.2 (from delocate)
+2026-02-27T07:41:59.2457120Z   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+2026-02-27T07:41:59.3091500Z Collecting macholib (from delocate)
+2026-02-27T07:41:59.3208280Z   Downloading macholib-1.16.4-py2.py3-none-any.whl.metadata (12 kB)
+2026-02-27T07:41:59.3631690Z Collecting pyproject_hooks (from build[virtualenv])
+2026-02-27T07:41:59.3731300Z   Using cached pyproject_hooks-1.2.0-py3-none-any.whl.metadata (1.3 kB)
+2026-02-27T07:41:59.4571250Z Collecting importlib-metadata>=4.6 (from build[virtualenv])
+2026-02-27T07:41:59.4680100Z   Downloading importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
+2026-02-27T07:41:59.5442440Z Collecting tomli>=1.1.0 (from build[virtualenv])
+2026-02-27T07:41:59.5562800Z   Downloading tomli-2.3.0-py3-none-any.whl.metadata (10 kB)
+2026-02-27T07:41:59.6949110Z Collecting virtualenv>=20.11 (from build[virtualenv])
+2026-02-27T07:41:59.7052510Z   Downloading virtualenv-20.35.4-py3-none-any.whl.metadata (4.6 kB)
+2026-02-27T07:41:59.7841020Z Collecting zipp>=3.20 (from importlib-metadata>=4.6->build[virtualenv])
+2026-02-27T07:41:59.7957300Z   Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+2026-02-27T07:41:59.8993990Z Collecting distlib<1,>=0.3.7 (from virtualenv>=20.11->build[virtualenv])
+2026-02-27T07:41:59.9123340Z   Downloading distlib-0.4.0-py2.py3-none-any.whl.metadata (5.2 kB)
+2026-02-27T07:42:00.0151180Z Collecting filelock<4,>=3.12.2 (from virtualenv>=20.11->build[virtualenv])
+2026-02-27T07:42:00.0276930Z   Downloading filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB)
+2026-02-27T07:42:00.0970170Z Collecting platformdirs<5,>=3.9.1 (from virtualenv>=20.11->build[virtualenv])
+2026-02-27T07:42:00.1123060Z   Downloading platformdirs-4.4.0-py3-none-any.whl.metadata (12 kB)
+2026-02-27T07:42:00.4758190Z Collecting altgraph>=0.17 (from macholib->delocate)
+2026-02-27T07:42:00.5505990Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+2026-02-27T07:42:00.7171680Z Downloading delocate-0.13.0-py3-none-any.whl (238 kB)
+2026-02-27T07:42:00.7713130Z Downloading build-1.3.0-py3-none-any.whl (23 kB)
+2026-02-27T07:42:00.7959000Z Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+2026-02-27T07:42:00.8159170Z Downloading packaging-25.0-py3-none-any.whl (66 kB)
+2026-02-27T07:42:00.8362240Z Downloading tomli-2.3.0-py3-none-any.whl (14 kB)
+2026-02-27T07:42:00.8550360Z Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+2026-02-27T07:42:00.8764290Z Downloading virtualenv-20.35.4-py3-none-any.whl (6.0 MB)
+2026-02-27T07:42:00.9595160Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 75.4 MB/s  0:00:00
+2026-02-27T07:42:00.9722030Z Downloading distlib-0.4.0-py2.py3-none-any.whl (469 kB)
+2026-02-27T07:42:01.0292910Z Downloading filelock-3.19.1-py3-none-any.whl (15 kB)
+2026-02-27T07:42:01.0532000Z Downloading platformdirs-4.4.0-py3-none-any.whl (18 kB)
+2026-02-27T07:42:01.1168270Z Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
+2026-02-27T07:42:01.2647390Z Downloading macholib-1.16.4-py2.py3-none-any.whl (38 kB)
+2026-02-27T07:42:01.2878610Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-02-27T07:42:01.3059850Z Using cached pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
+2026-02-27T07:42:01.4265440Z Installing collected packages: distlib, altgraph, zipp, typing_extensions, tomli, pyproject_hooks, platformdirs, packaging, macholib, filelock, virtualenv, importlib-metadata, delocate, build
+2026-02-27T07:42:02.8061930Z 
+2026-02-27T07:42:02.8168520Z Successfully installed altgraph-0.17.5 build-1.3.0 delocate-0.13.0 distlib-0.4.0 filelock-3.19.1 importlib-metadata-8.7.1 macholib-1.16.4 packaging-25.0 platformdirs-4.4.0 pyproject_hooks-1.2.0 tomli-2.3.0 typing_extensions-4.15.0 virtualenv-20.35.4 zipp-3.23.0
+2026-02-27T07:42:02.9119570Z + python -m pip freeze --all
+2026-02-27T07:42:03.5351210Z ##[endgroup]
+2026-02-27T07:42:03.5355530Z                                                               [32m✓ [0m6.05s
+2026-02-27T07:42:03.5365520Z ##[group]Building wheel...
+2026-02-27T07:42:03.5368370Z 
+2026-02-27T07:42:03.5371890Z + python -m build /Users/runner/work/elephant/elephant --wheel --outdir=/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/built_wheel
+2026-02-27T07:42:03.7466560Z * Creating isolated environment: venv+pip...
+2026-02-27T07:42:03.7561100Z * Installing packages in isolated environment:
+2026-02-27T07:42:06.1319480Z   - setuptools >= 40.8.0
+2026-02-27T07:42:06.1321040Z * Getting build dependencies for wheel...
+2026-02-27T07:42:06.7302440Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+2026-02-27T07:42:06.7305640Z !!
+2026-02-27T07:42:06.7305970Z 
+2026-02-27T07:42:06.7306440Z         ********************************************************************************
+2026-02-27T07:42:06.7308130Z         Please consider removing the following classifiers in favor of a SPDX license expression:
+2026-02-27T07:42:06.7309420Z 
+2026-02-27T07:42:06.7309930Z         License :: OSI Approved :: BSD License
+2026-02-27T07:42:06.7310590Z 
+2026-02-27T07:42:06.7311610Z         See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+2026-02-27T07:42:06.7313830Z         ********************************************************************************
+2026-02-27T07:42:06.7314640Z 
+2026-02-27T07:42:06.7314930Z !!
+2026-02-27T07:42:06.7315610Z   self._finalize_license_expression()
+2026-02-27T07:42:06.7659870Z running egg_info
+2026-02-27T07:42:06.7686370Z creating elephant.egg-info
+2026-02-27T07:42:06.7688870Z writing elephant.egg-info/PKG-INFO
+2026-02-27T07:42:06.7733250Z writing dependency_links to elephant.egg-info/dependency_links.txt
+2026-02-27T07:42:06.7768980Z writing requirements to elephant.egg-info/requires.txt
+2026-02-27T07:42:06.7775450Z writing top-level names to elephant.egg-info/top_level.txt
+2026-02-27T07:42:06.7781740Z writing manifest file 'elephant.egg-info/SOURCES.txt'
+2026-02-27T07:42:06.8216020Z reading manifest file 'elephant.egg-info/SOURCES.txt'
+2026-02-27T07:42:06.8220280Z reading manifest template 'MANIFEST.in'
+2026-02-27T07:42:06.8325450Z no previously-included directories found matching 'doc/_build'
+2026-02-27T07:42:06.8330230Z no previously-included directories found matching 'doc/tutorials/.ipynb_checkpoints'
+2026-02-27T07:42:06.8334870Z no previously-included directories found matching 'doc/reference/toctree'
+2026-02-27T07:42:06.8336860Z warning: no files found matching 'doc/reference/toctree/kernels/*'
+2026-02-27T07:42:06.8343540Z warning: no previously-included files matching '*.h5' found under directory '*'
+2026-02-27T07:42:06.8350020Z warning: no previously-included files matching '*~' found under directory '*'
+2026-02-27T07:42:06.8351780Z adding license file 'LICENSE.txt'
+2026-02-27T07:42:06.8407570Z writing manifest file 'elephant.egg-info/SOURCES.txt'
+2026-02-27T07:42:06.8687850Z * Building wheel...
+2026-02-27T07:42:07.1291790Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+2026-02-27T07:42:07.1295000Z !!
+2026-02-27T07:42:07.1295340Z 
+2026-02-27T07:42:07.1295820Z         ********************************************************************************
+2026-02-27T07:42:07.1298600Z         Please consider removing the following classifiers in favor of a SPDX license expression:
+2026-02-27T07:42:07.1300110Z 
+2026-02-27T07:42:07.1300910Z         License :: OSI Approved :: BSD License
+2026-02-27T07:42:07.1301610Z 
+2026-02-27T07:42:07.1302770Z         See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+2026-02-27T07:42:07.1304480Z         ********************************************************************************
+2026-02-27T07:42:07.1305410Z 
+2026-02-27T07:42:07.1305700Z !!
+2026-02-27T07:42:07.1306360Z   self._finalize_license_expression()
+2026-02-27T07:42:07.1540450Z running bdist_wheel
+2026-02-27T07:42:07.1724840Z running build
+2026-02-27T07:42:07.1725710Z running build_py
+2026-02-27T07:42:07.1785500Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.1793950Z copying elephant/current_source_density.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.1803700Z copying elephant/trials.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.1813450Z copying elephant/neo_tools.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.1821690Z copying elephant/cubic.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.1832010Z copying elephant/unitary_event_analysis.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.1842570Z copying elephant/sta.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2553950Z copying elephant/spike_train_surrogates.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2557430Z copying elephant/cell_assembly_detection.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2559650Z copying elephant/conversion.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2561850Z copying elephant/datasets.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2564110Z copying elephant/waveform_features.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2566610Z copying elephant/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2569140Z copying elephant/spike_train_dissimilarity.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2572800Z copying elephant/change_point_detection.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2576280Z copying elephant/spike_train_synchrony.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2580280Z copying elephant/functional_connectivity.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2586650Z copying elephant/utils.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2596000Z copying elephant/spike_train_correlation.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2600830Z copying elephant/spike_train_generation.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2606290Z copying elephant/kernels.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2610760Z copying elephant/spectral.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2613930Z copying elephant/statistics.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2618640Z copying elephant/phase_analysis.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2622350Z copying elephant/spade.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2625900Z copying elephant/signal_processing.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.2631250Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2632710Z copying elephant/test/test_sta.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2634960Z copying elephant/test/test_spike_train_generation.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2638010Z copying elephant/test/test_utils.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2639620Z copying elephant/test/test_statistics.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2641460Z copying elephant/test/test_cell_assembly_detection.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2643050Z copying elephant/test/test_gpfa.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2644470Z copying elephant/test/test_datasets.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2646520Z copying elephant/test/test_phase_analysis.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2648220Z copying elephant/test/test_spike_train_synchrony.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2650070Z copying elephant/test/test_total_spiking_probability_edges.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2653810Z copying elephant/test/test_signal_processing.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2657000Z copying elephant/test/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2659650Z copying elephant/test/test_spade.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2661890Z copying elephant/test/test_conversion.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2663340Z copying elephant/test/test_kernels.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2665460Z copying elephant/test/test_trials.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2666870Z copying elephant/test/test_parallel.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2668690Z copying elephant/test/test_unitary_event_analysis.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2670350Z copying elephant/test/test_cubic.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2671690Z copying elephant/test/test_icsd.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2674100Z copying elephant/test/test_neo_tools.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2675480Z copying elephant/test/test_asset.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2676810Z copying elephant/test/test_kcsd.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2679710Z copying elephant/test/test_current_source_density.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2682630Z copying elephant/test/make_spike_extraction_test_data.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2685120Z copying elephant/test/test_causality.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2687700Z copying elephant/test/test_spike_train_dissimilarity.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2690970Z copying elephant/test/test_change_point_detection.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2693530Z copying elephant/test/test_spike_train_correlation.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2695810Z copying elephant/test/test_waveform_features.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2700130Z copying elephant/test/test_spike_train_surrogates.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2702520Z copying elephant/test/test_spectral.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.2703930Z running egg_info
+2026-02-27T07:42:07.2704580Z writing elephant.egg-info/PKG-INFO
+2026-02-27T07:42:07.2705700Z writing dependency_links to elephant.egg-info/dependency_links.txt
+2026-02-27T07:42:07.2727500Z writing requirements to elephant.egg-info/requires.txt
+2026-02-27T07:42:07.2732240Z writing top-level names to elephant.egg-info/top_level.txt
+2026-02-27T07:42:07.2819220Z reading manifest file 'elephant.egg-info/SOURCES.txt'
+2026-02-27T07:42:07.2882090Z reading manifest template 'MANIFEST.in'
+2026-02-27T07:42:07.2983210Z no previously-included directories found matching 'doc/_build'
+2026-02-27T07:42:07.2987660Z no previously-included directories found matching 'doc/tutorials/.ipynb_checkpoints'
+2026-02-27T07:42:07.2992120Z no previously-included directories found matching 'doc/reference/toctree'
+2026-02-27T07:42:07.2993860Z warning: no files found matching 'doc/reference/toctree/kernels/*'
+2026-02-27T07:42:07.2999150Z warning: no previously-included files matching '*.h5' found under directory '*'
+2026-02-27T07:42:07.3004940Z warning: no previously-included files matching '*~' found under directory '*'
+2026-02-27T07:42:07.3006550Z adding license file 'LICENSE.txt'
+2026-02-27T07:42:07.3071440Z writing manifest file 'elephant.egg-info/SOURCES.txt'
+2026-02-27T07:42:07.3096200Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.asset' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3099490Z !!
+2026-02-27T07:42:07.3099760Z 
+2026-02-27T07:42:07.3100160Z         ********************************************************************************
+2026-02-27T07:42:07.3101160Z         ############################
+2026-02-27T07:42:07.3101970Z         # Package would be ignored #
+2026-02-27T07:42:07.3102560Z         ############################
+2026-02-27T07:42:07.3103570Z         Python recognizes 'elephant.asset' as an importable package[^1],
+2026-02-27T07:42:07.3104950Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3105760Z 
+2026-02-27T07:42:07.3106490Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3108160Z         package, please make sure that 'elephant.asset' is explicitly added
+2026-02-27T07:42:07.3109340Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3109930Z 
+2026-02-27T07:42:07.3111640Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3113060Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3114290Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3114900Z 
+2026-02-27T07:42:07.3115550Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3116530Z 
+2026-02-27T07:42:07.3117170Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3118140Z 
+2026-02-27T07:42:07.3118720Z         If you don't want 'elephant.asset' to be distributed and are
+2026-02-27T07:42:07.3119890Z         already explicitly excluding 'elephant.asset' via
+2026-02-27T07:42:07.3121240Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3122710Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3124280Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3125370Z 
+2026-02-27T07:42:07.3126010Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3126990Z 
+2026-02-27T07:42:07.3127540Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3128400Z 
+2026-02-27T07:42:07.3128410Z 
+2026-02-27T07:42:07.3128940Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3130570Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3131820Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3133130Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3135230Z         ********************************************************************************
+2026-02-27T07:42:07.3135990Z 
+2026-02-27T07:42:07.3136180Z !!
+2026-02-27T07:42:07.3136680Z   check.warn(importable)
+2026-02-27T07:42:07.3139520Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.causality' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3142420Z !!
+2026-02-27T07:42:07.3142660Z 
+2026-02-27T07:42:07.3142990Z         ********************************************************************************
+2026-02-27T07:42:07.3143860Z         ############################
+2026-02-27T07:42:07.3144680Z         # Package would be ignored #
+2026-02-27T07:42:07.3145570Z         ############################
+2026-02-27T07:42:07.3147550Z         Python recognizes 'elephant.causality' as an importable package[^1],
+2026-02-27T07:42:07.3148730Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3149310Z 
+2026-02-27T07:42:07.3149870Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3165540Z         package, please make sure that 'elephant.causality' is explicitly added
+2026-02-27T07:42:07.3166520Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3166950Z 
+2026-02-27T07:42:07.3167330Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3168340Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3169180Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3169610Z 
+2026-02-27T07:42:07.3170060Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3170770Z 
+2026-02-27T07:42:07.3171240Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3171920Z 
+2026-02-27T07:42:07.3172300Z         If you don't want 'elephant.causality' to be distributed and are
+2026-02-27T07:42:07.3173190Z         already explicitly excluding 'elephant.causality' via
+2026-02-27T07:42:07.3175000Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3176140Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3177210Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3177850Z 
+2026-02-27T07:42:07.3178300Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3179020Z 
+2026-02-27T07:42:07.3179410Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3180020Z 
+2026-02-27T07:42:07.3180030Z 
+2026-02-27T07:42:07.3180410Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3181290Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3182130Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3183040Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3183830Z         ********************************************************************************
+2026-02-27T07:42:07.3184330Z 
+2026-02-27T07:42:07.3184480Z !!
+2026-02-27T07:42:07.3184810Z   check.warn(importable)
+2026-02-27T07:42:07.3188660Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.current_source_density_src' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3191130Z !!
+2026-02-27T07:42:07.3191330Z 
+2026-02-27T07:42:07.3191580Z         ********************************************************************************
+2026-02-27T07:42:07.3192220Z         ############################
+2026-02-27T07:42:07.3193170Z         # Package would be ignored #
+2026-02-27T07:42:07.3197020Z         ############################
+2026-02-27T07:42:07.3198080Z         Python recognizes 'elephant.current_source_density_src' as an importable package[^1],
+2026-02-27T07:42:07.3199230Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3199780Z 
+2026-02-27T07:42:07.3200260Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3201680Z         package, please make sure that 'elephant.current_source_density_src' is explicitly added
+2026-02-27T07:42:07.3202700Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3203110Z 
+2026-02-27T07:42:07.3203500Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3204520Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3205370Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3205800Z 
+2026-02-27T07:42:07.3206260Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3206980Z 
+2026-02-27T07:42:07.3207440Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3208140Z 
+2026-02-27T07:42:07.3208630Z         If you don't want 'elephant.current_source_density_src' to be distributed and are
+2026-02-27T07:42:07.3209790Z         already explicitly excluding 'elephant.current_source_density_src' via
+2026-02-27T07:42:07.3210910Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3212050Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3213130Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3213760Z 
+2026-02-27T07:42:07.3214220Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3214950Z 
+2026-02-27T07:42:07.3215360Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3215980Z 
+2026-02-27T07:42:07.3215980Z 
+2026-02-27T07:42:07.3216380Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3221580Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3222790Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3224100Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3225210Z         ********************************************************************************
+2026-02-27T07:42:07.3225930Z 
+2026-02-27T07:42:07.3226120Z !!
+2026-02-27T07:42:07.3226640Z   check.warn(importable)
+2026-02-27T07:42:07.3231080Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.functional_connectivity_src' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3234800Z !!
+2026-02-27T07:42:07.3235110Z 
+2026-02-27T07:42:07.3235510Z         ********************************************************************************
+2026-02-27T07:42:07.3237620Z         ############################
+2026-02-27T07:42:07.3238410Z         # Package would be ignored #
+2026-02-27T07:42:07.3239670Z         ############################
+2026-02-27T07:42:07.3240600Z         Python recognizes 'elephant.functional_connectivity_src' as an importable package[^1],
+2026-02-27T07:42:07.3241750Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3242300Z 
+2026-02-27T07:42:07.3242790Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3244940Z         package, please make sure that 'elephant.functional_connectivity_src' is explicitly added
+2026-02-27T07:42:07.3245980Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3246400Z 
+2026-02-27T07:42:07.3247490Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3248530Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3250150Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3250580Z 
+2026-02-27T07:42:07.3251040Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3251760Z 
+2026-02-27T07:42:07.3252220Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3252910Z 
+2026-02-27T07:42:07.3253410Z         If you don't want 'elephant.functional_connectivity_src' to be distributed and are
+2026-02-27T07:42:07.3254590Z         already explicitly excluding 'elephant.functional_connectivity_src' via
+2026-02-27T07:42:07.3255720Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3259490Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3261020Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3261900Z 
+2026-02-27T07:42:07.3262420Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3263210Z 
+2026-02-27T07:42:07.3263770Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3264720Z 
+2026-02-27T07:42:07.3264730Z 
+2026-02-27T07:42:07.3265130Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3266290Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3267280Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3268300Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3269860Z         ********************************************************************************
+2026-02-27T07:42:07.3270390Z 
+2026-02-27T07:42:07.3270560Z !!
+2026-02-27T07:42:07.3271140Z   check.warn(importable)
+2026-02-27T07:42:07.3273370Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.gpfa' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3276930Z !!
+2026-02-27T07:42:07.3277130Z 
+2026-02-27T07:42:07.3277510Z         ********************************************************************************
+2026-02-27T07:42:07.3278200Z         ############################
+2026-02-27T07:42:07.3278790Z         # Package would be ignored #
+2026-02-27T07:42:07.3279360Z         ############################
+2026-02-27T07:42:07.3280260Z         Python recognizes 'elephant.gpfa' as an importable package[^1],
+2026-02-27T07:42:07.3281610Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3282410Z 
+2026-02-27T07:42:07.3282970Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3284340Z         package, please make sure that 'elephant.gpfa' is explicitly added
+2026-02-27T07:42:07.3285310Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3285810Z 
+2026-02-27T07:42:07.3286350Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3288780Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3289640Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3290280Z 
+2026-02-27T07:42:07.3290760Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3291470Z 
+2026-02-27T07:42:07.3291930Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3292630Z 
+2026-02-27T07:42:07.3292950Z         If you don't want 'elephant.gpfa' to be distributed and are
+2026-02-27T07:42:07.3293760Z         already explicitly excluding 'elephant.gpfa' via
+2026-02-27T07:42:07.3296680Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3298130Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3299240Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3299880Z 
+2026-02-27T07:42:07.3300340Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3301180Z 
+2026-02-27T07:42:07.3301850Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3302500Z 
+2026-02-27T07:42:07.3302500Z 
+2026-02-27T07:42:07.3302890Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3303760Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3304590Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3305520Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3306500Z         ********************************************************************************
+2026-02-27T07:42:07.3307040Z 
+2026-02-27T07:42:07.3307190Z !!
+2026-02-27T07:42:07.3307660Z   check.warn(importable)
+2026-02-27T07:42:07.3309790Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.parallel' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3312170Z !!
+2026-02-27T07:42:07.3312390Z 
+2026-02-27T07:42:07.3312680Z         ********************************************************************************
+2026-02-27T07:42:07.3313440Z         ############################
+2026-02-27T07:42:07.3313940Z         # Package would be ignored #
+2026-02-27T07:42:07.3314480Z         ############################
+2026-02-27T07:42:07.3315270Z         Python recognizes 'elephant.parallel' as an importable package[^1],
+2026-02-27T07:42:07.3316440Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3317140Z 
+2026-02-27T07:42:07.3317780Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3319810Z         package, please make sure that 'elephant.parallel' is explicitly added
+2026-02-27T07:42:07.3320760Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3321370Z 
+2026-02-27T07:42:07.3321930Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3323020Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3324220Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3324700Z 
+2026-02-27T07:42:07.3325200Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3325950Z 
+2026-02-27T07:42:07.3326460Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3327330Z 
+2026-02-27T07:42:07.3327800Z         If you don't want 'elephant.parallel' to be distributed and are
+2026-02-27T07:42:07.3329060Z         already explicitly excluding 'elephant.parallel' via
+2026-02-27T07:42:07.3330240Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3331710Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3332980Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3333860Z 
+2026-02-27T07:42:07.3334480Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3335300Z 
+2026-02-27T07:42:07.3335860Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3336760Z 
+2026-02-27T07:42:07.3336770Z 
+2026-02-27T07:42:07.3337180Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3339080Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3340180Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3341270Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3342380Z         ********************************************************************************
+2026-02-27T07:42:07.3343040Z 
+2026-02-27T07:42:07.3343180Z !!
+2026-02-27T07:42:07.3343660Z   check.warn(importable)
+2026-02-27T07:42:07.3346810Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.spade_src' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3349480Z !!
+2026-02-27T07:42:07.3349820Z 
+2026-02-27T07:42:07.3350150Z         ********************************************************************************
+2026-02-27T07:42:07.3350980Z         ############################
+2026-02-27T07:42:07.3351640Z         # Package would be ignored #
+2026-02-27T07:42:07.3352280Z         ############################
+2026-02-27T07:42:07.3353140Z         Python recognizes 'elephant.spade_src' as an importable package[^1],
+2026-02-27T07:42:07.3354390Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3355030Z 
+2026-02-27T07:42:07.3355620Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3356950Z         package, please make sure that 'elephant.spade_src' is explicitly added
+2026-02-27T07:42:07.3357960Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3358710Z 
+2026-02-27T07:42:07.3359220Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3360380Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3361360Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3361850Z 
+2026-02-27T07:42:07.3362340Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3364450Z 
+2026-02-27T07:42:07.3365110Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3367210Z 
+2026-02-27T07:42:07.3367690Z         If you don't want 'elephant.spade_src' to be distributed and are
+2026-02-27T07:42:07.3368770Z         already explicitly excluding 'elephant.spade_src' via
+2026-02-27T07:42:07.3370410Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3371940Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3373250Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3373960Z 
+2026-02-27T07:42:07.3374420Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3375190Z 
+2026-02-27T07:42:07.3375670Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3376490Z 
+2026-02-27T07:42:07.3376500Z 
+2026-02-27T07:42:07.3376960Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3378170Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3379290Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3380260Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3381050Z         ********************************************************************************
+2026-02-27T07:42:07.3381610Z 
+2026-02-27T07:42:07.3381750Z !!
+2026-02-27T07:42:07.3382140Z   check.warn(importable)
+2026-02-27T07:42:07.3384670Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.spade_src.include' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3387110Z !!
+2026-02-27T07:42:07.3387330Z 
+2026-02-27T07:42:07.3388370Z         ********************************************************************************
+2026-02-27T07:42:07.3389170Z         ############################
+2026-02-27T07:42:07.3389840Z         # Package would be ignored #
+2026-02-27T07:42:07.3390590Z         ############################
+2026-02-27T07:42:07.3391610Z         Python recognizes 'elephant.spade_src.include' as an importable package[^1],
+2026-02-27T07:42:07.3392840Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3393460Z 
+2026-02-27T07:42:07.3394010Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3395400Z         package, please make sure that 'elephant.spade_src.include' is explicitly added
+2026-02-27T07:42:07.3397010Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3397480Z 
+2026-02-27T07:42:07.3397910Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3399270Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3400210Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3400670Z 
+2026-02-27T07:42:07.3401180Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3402100Z 
+2026-02-27T07:42:07.3402590Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3403430Z 
+2026-02-27T07:42:07.3403950Z         If you don't want 'elephant.spade_src.include' to be distributed and are
+2026-02-27T07:42:07.3405380Z         already explicitly excluding 'elephant.spade_src.include' via
+2026-02-27T07:42:07.3406950Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3408610Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3410150Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3411080Z 
+2026-02-27T07:42:07.3411740Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3412970Z 
+2026-02-27T07:42:07.3415230Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3416200Z 
+2026-02-27T07:42:07.3416210Z 
+2026-02-27T07:42:07.3416710Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3418090Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3419310Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3420570Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3421650Z         ********************************************************************************
+2026-02-27T07:42:07.3422160Z 
+2026-02-27T07:42:07.3422300Z !!
+2026-02-27T07:42:07.3422750Z   check.warn(importable)
+2026-02-27T07:42:07.3428400Z /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/lib/python3.9/site-packages/setuptools/command/build_py.py:215: _Warning: Package 'elephant.spade_src.src' is absent from the `packages` configuration.
+2026-02-27T07:42:07.3431840Z !!
+2026-02-27T07:42:07.3432470Z 
+2026-02-27T07:42:07.3432850Z         ********************************************************************************
+2026-02-27T07:42:07.3433740Z         ############################
+2026-02-27T07:42:07.3435190Z         # Package would be ignored #
+2026-02-27T07:42:07.3435950Z         ############################
+2026-02-27T07:42:07.3437000Z         Python recognizes 'elephant.spade_src.src' as an importable package[^1],
+2026-02-27T07:42:07.3438430Z         but it is absent from setuptools' `packages` configuration.
+2026-02-27T07:42:07.3439130Z 
+2026-02-27T07:42:07.3439800Z         This leads to an ambiguous overall configuration. If you want to distribute this
+2026-02-27T07:42:07.3444840Z         package, please make sure that 'elephant.spade_src.src' is explicitly added
+2026-02-27T07:42:07.3446760Z         to the `packages` configuration field.
+2026-02-27T07:42:07.3447380Z 
+2026-02-27T07:42:07.3449640Z         Alternatively, you can also rely on setuptools' discovery methods
+2026-02-27T07:42:07.3451480Z         (for example by using `find_namespace_packages(...)`/`find_namespace:`
+2026-02-27T07:42:07.3452740Z         instead of `find_packages(...)`/`find:`).
+2026-02-27T07:42:07.3453380Z 
+2026-02-27T07:42:07.3454060Z         You can read more about "package discovery" on setuptools documentation page:
+2026-02-27T07:42:07.3455050Z 
+2026-02-27T07:42:07.3455650Z         - https://setuptools.pypa.io/en/latest/userguide/package_discovery.html
+2026-02-27T07:42:07.3456600Z 
+2026-02-27T07:42:07.3457160Z         If you don't want 'elephant.spade_src.src' to be distributed and are
+2026-02-27T07:42:07.3458530Z         already explicitly excluding 'elephant.spade_src.src' via
+2026-02-27T07:42:07.3459920Z         `find_namespace_packages(...)/find_namespace` or `find_packages(...)/find`,
+2026-02-27T07:42:07.3461520Z         you can try to use `exclude_package_data`, or `include-package-data=False` in
+2026-02-27T07:42:07.3463870Z         combination with a more fine grained `package-data` configuration.
+2026-02-27T07:42:07.3464920Z 
+2026-02-27T07:42:07.3465890Z         You can read more about "package data files" on setuptools documentation page:
+2026-02-27T07:42:07.3466960Z 
+2026-02-27T07:42:07.3467800Z         - https://setuptools.pypa.io/en/latest/userguide/datafiles.html
+2026-02-27T07:42:07.3468760Z 
+2026-02-27T07:42:07.3468770Z 
+2026-02-27T07:42:07.3469350Z         [^1]: For Python, any directory (with suitable naming) can be imported,
+2026-02-27T07:42:07.3470650Z               even if it does not contain any `.py` files.
+2026-02-27T07:42:07.3471880Z               On the other hand, currently there is no concept of package data
+2026-02-27T07:42:07.3473260Z               directory, all directories are treated like packages.
+2026-02-27T07:42:07.3474440Z         ********************************************************************************
+2026-02-27T07:42:07.3475210Z 
+2026-02-27T07:42:07.3475410Z !!
+2026-02-27T07:42:07.3475940Z   check.warn(importable)
+2026-02-27T07:42:07.3477460Z copying elephant/VERSION -> build/lib.macosx-10.9-x86_64-cpython-39/elephant
+2026-02-27T07:42:07.3478560Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3479750Z copying elephant/asset/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3481100Z copying elephant/asset/asset.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3482480Z copying elephant/asset/joint_pmat.cl -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3483980Z copying elephant/asset/joint_pmat.cu -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3485500Z copying elephant/asset/joint_pmat_old.cu -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3487100Z copying elephant/asset/pmat_neighbors.cl -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3488670Z copying elephant/asset/pmat_neighbors.cu -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset
+2026-02-27T07:42:07.3490000Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/causality
+2026-02-27T07:42:07.3491700Z copying elephant/causality/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/causality
+2026-02-27T07:42:07.3493250Z copying elephant/causality/granger.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/causality
+2026-02-27T07:42:07.3494650Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3496360Z copying elephant/current_source_density_src/KCSD.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3498440Z copying elephant/current_source_density_src/README.md -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3501200Z copying elephant/current_source_density_src/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3503720Z copying elephant/current_source_density_src/basis_functions.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3505880Z copying elephant/current_source_density_src/icsd.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3508030Z copying elephant/current_source_density_src/test_data.mat -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3510520Z copying elephant/current_source_density_src/utility_functions.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src
+2026-02-27T07:42:07.3513160Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/functional_connectivity_src
+2026-02-27T07:42:07.3515180Z copying elephant/functional_connectivity_src/total_spiking_probability_edges.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/functional_connectivity_src
+2026-02-27T07:42:07.3517260Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa
+2026-02-27T07:42:07.3518600Z copying elephant/gpfa/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa
+2026-02-27T07:42:07.3519900Z copying elephant/gpfa/gpfa.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa
+2026-02-27T07:42:07.3521350Z copying elephant/gpfa/gpfa_core.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa
+2026-02-27T07:42:07.3523160Z copying elephant/gpfa/gpfa_util.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa
+2026-02-27T07:42:07.3524580Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel
+2026-02-27T07:42:07.3525830Z copying elephant/parallel/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel
+2026-02-27T07:42:07.3527390Z copying elephant/parallel/mpi.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel
+2026-02-27T07:42:07.3528960Z copying elephant/parallel/parallel.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel
+2026-02-27T07:42:07.3530710Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src
+2026-02-27T07:42:07.3532680Z copying elephant/spade_src/LICENSE -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src
+2026-02-27T07:42:07.3534460Z copying elephant/spade_src/__init__.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src
+2026-02-27T07:42:07.3536020Z copying elephant/spade_src/fast_fca.py -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src
+2026-02-27T07:42:07.3537660Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3630790Z copying elephant/spade_src/include/ClosedDetect.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3634570Z copying elephant/spade_src/include/ClosedTree.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3638900Z copying elephant/spade_src/include/Defines.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3642780Z copying elephant/spade_src/include/FPGrowth.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3650050Z copying elephant/spade_src/include/FPNode.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3652610Z copying elephant/spade_src/include/FPTree.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3656850Z copying elephant/spade_src/include/FrequencyRef.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3661290Z copying elephant/spade_src/include/HeapAlloc.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3663660Z copying elephant/spade_src/include/Logger.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3666970Z copying elephant/spade_src/include/Memory.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3669620Z copying elephant/spade_src/include/Pattern.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3672880Z copying elephant/spade_src/include/SigTerm.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3675670Z copying elephant/spade_src/include/Timer.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3678120Z copying elephant/spade_src/include/Types.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3680550Z copying elephant/spade_src/include/Utils.h -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include
+2026-02-27T07:42:07.3682640Z creating build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/src
+2026-02-27T07:42:07.3684450Z copying elephant/spade_src/src/fim.cpp -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/src
+2026-02-27T07:42:07.3686780Z copying elephant/test/spike_extraction_test_data.txt -> build/lib.macosx-10.9-x86_64-cpython-39/elephant/test
+2026-02-27T07:42:07.3720190Z running build_ext
+2026-02-27T07:42:08.8422490Z building 'elephant.spade_src.fim' extension
+2026-02-27T07:42:08.8424900Z creating build/temp.macosx-10.9-x86_64-cpython-39/elephant/spade_src/src
+2026-02-27T07:42:08.8439110Z g++ -Wno-unused-result -Wsign-compare -Wunreachable-code -fno-common -dynamic -DNDEBUG -g -fwrapv -O3 -Wall -g -arch x86_64 -Ielephant/spade_src/include -I/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/build-env-rwbkdo6r/include -I/Library/Frameworks/Python.framework/Versions/3.9/include/python3.9 -c elephant/spade_src/src/fim.cpp -o build/temp.macosx-10.9-x86_64-cpython-39/elephant/spade_src/src/fim.o -DMODULE_NAME=fim -DUSE_OPENMP -DWITH_SIG_TERM -Dfim_EXPORTS -O3 -pedantic -Wextra -Weffc++ -Wunused-result -Werror -Werror=return-type -Xpreprocessor -fopenmp -std=gnu++17
+2026-02-27T07:42:14.5455590Z In file included from elephant/spade_src/src/fim.cpp:41:
+2026-02-27T07:42:14.5456770Z elephant/spade_src/include/FPGrowth.h:40:10: fatal error: 'omp.h' file not found
+2026-02-27T07:42:14.5459290Z    40 | #include <omp.h>
+2026-02-27T07:42:14.5459930Z       |          ^~~~~~~
+2026-02-27T07:42:14.6391830Z 1 error generated.
+2026-02-27T07:42:14.6486990Z warning: build_ext: building extension "elephant.spade_src.fim" failed: command '/usr/bin/g++' failed with exit code 1
+2026-02-27T07:42:14.6488530Z 
+2026-02-27T07:42:14.6560300Z installing to build/bdist.macosx-10.9-x86_64/wheel
+2026-02-27T07:42:14.6561320Z running install
+2026-02-27T07:42:14.6694100Z running install_lib
+2026-02-27T07:42:14.6768410Z creating build/bdist.macosx-10.9-x86_64/wheel
+2026-02-27T07:42:14.6774110Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant
+2026-02-27T07:42:14.6779540Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.6787480Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/causality
+2026-02-27T07:42:14.6791830Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/causality/granger.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/causality
+2026-02-27T07:42:14.6800310Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/causality/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/causality
+2026-02-27T07:42:14.6806540Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/trials.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.6813100Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/neo_tools.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.6820750Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/parallel
+2026-02-27T07:42:14.6825530Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/parallel
+2026-02-27T07:42:14.6835440Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel/mpi.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/parallel
+2026-02-27T07:42:14.6841610Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/parallel/parallel.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/parallel
+2026-02-27T07:42:14.6847690Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/cubic.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.6855630Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/unitary_event_analysis.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.6865120Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/asset
+2026-02-27T07:42:14.6869290Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/pmat_neighbors.cu -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6876720Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/asset.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6886450Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6896360Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/joint_pmat.cl -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6905610Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/pmat_neighbors.cl -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6912520Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/joint_pmat_old.cu -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6919450Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/asset/joint_pmat.cu -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/asset
+2026-02-27T07:42:14.6929710Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/test
+2026-02-27T07:42:14.6939230Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_sta.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.6947860Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spike_train_generation.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.6958640Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_utils.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.6964230Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_statistics.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7871230Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_cell_assembly_detection.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7874330Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_gpfa.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7879520Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_datasets.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7883230Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_phase_analysis.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7886990Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spike_train_synchrony.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7890590Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/spike_extraction_test_data.txt -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7896250Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_total_spiking_probability_edges.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7903050Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_signal_processing.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7912270Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7916910Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spade.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7921990Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_conversion.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7936280Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_kernels.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7939430Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_trials.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7941910Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_parallel.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7944320Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_unitary_event_analysis.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7946710Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_cubic.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7949360Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_icsd.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7952010Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_neo_tools.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7954620Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_asset.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7957230Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_kcsd.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7959590Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_current_source_density.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7962660Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/make_spike_extraction_test_data.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7966180Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_causality.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7968580Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spike_train_dissimilarity.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7971490Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_change_point_detection.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7974600Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spike_train_correlation.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7977860Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_waveform_features.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7981450Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spike_train_surrogates.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7983760Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/test/test_spectral.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/test
+2026-02-27T07:42:14.7985320Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/spade_src
+2026-02-27T07:42:14.7986840Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/LICENSE -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src
+2026-02-27T07:42:14.7988490Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/spade_src/include
+2026-02-27T07:42:14.7990810Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/FPNode.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.7994740Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/FPTree.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.7998230Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Utils.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8001710Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/HeapAlloc.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8006120Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/FrequencyRef.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8009590Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Types.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8012490Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/FPGrowth.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8015590Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Pattern.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8018180Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Defines.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8021050Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Timer.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8023430Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Memory.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8026070Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/SigTerm.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8028630Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/Logger.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8031100Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/ClosedTree.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8034040Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/include/ClosedDetect.h -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/include
+2026-02-27T07:42:14.8037590Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src
+2026-02-27T07:42:14.8040080Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/fast_fca.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src
+2026-02-27T07:42:14.8042170Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/spade_src/src
+2026-02-27T07:42:14.8044440Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade_src/src/fim.cpp -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/spade_src/src
+2026-02-27T07:42:14.8047070Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/sta.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8049400Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spike_train_surrogates.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8051230Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/functional_connectivity_src
+2026-02-27T07:42:14.8053500Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/functional_connectivity_src/total_spiking_probability_edges.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/functional_connectivity_src
+2026-02-27T07:42:14.8056180Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/cell_assembly_detection.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8058940Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/conversion.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8062510Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/datasets.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8064490Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/waveform_features.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8065940Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/gpfa
+2026-02-27T07:42:14.8067430Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa/gpfa.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/gpfa
+2026-02-27T07:42:14.8069460Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa/gpfa_util.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/gpfa
+2026-02-27T07:42:14.8071470Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa/gpfa_core.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/gpfa
+2026-02-27T07:42:14.8073440Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/gpfa/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/gpfa
+2026-02-27T07:42:14.8075360Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8077350Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spike_train_dissimilarity.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8079480Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/change_point_detection.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8081660Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spike_train_synchrony.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8083840Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/functional_connectivity.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8086170Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/VERSION -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8088770Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/utils.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8091420Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spike_train_correlation.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8093870Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant/current_source_density_src
+2026-02-27T07:42:14.8095970Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/utility_functions.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8099290Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/test_data.mat -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8102050Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/__init__.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8105150Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/README.md -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8108000Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/KCSD.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8110680Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/icsd.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8113880Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/current_source_density_src/basis_functions.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant/current_source_density_src
+2026-02-27T07:42:14.8116910Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spike_train_generation.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8118890Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/kernels.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8121140Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spectral.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8123070Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/statistics.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8125000Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/phase_analysis.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8126880Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/spade.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8128910Z copying build/lib.macosx-10.9-x86_64-cpython-39/elephant/signal_processing.py -> build/bdist.macosx-10.9-x86_64/wheel/./elephant
+2026-02-27T07:42:14.8130200Z running install_egg_info
+2026-02-27T07:42:14.8131180Z Copying elephant.egg-info to build/bdist.macosx-10.9-x86_64/wheel/./elephant-1.2.0-py3.9.egg-info
+2026-02-27T07:42:14.8132690Z running install_scripts
+2026-02-27T07:42:14.8134130Z creating build/bdist.macosx-10.9-x86_64/wheel/elephant-1.2.0.dist-info/WHEEL
+2026-02-27T07:42:14.9140300Z creating '/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/built_wheel/.tmp-kow50fid/elephant-1.2.0-cp39-cp39-macosx_10_9_x86_64.whl' and adding 'build/bdist.macosx-10.9-x86_64/wheel' to it
+2026-02-27T07:42:14.9415730Z adding 'elephant/VERSION'
+2026-02-27T07:42:14.9417410Z adding 'elephant/__init__.py'
+2026-02-27T07:42:14.9456790Z adding 'elephant/cell_assembly_detection.py'
+2026-02-27T07:42:14.9458920Z adding 'elephant/change_point_detection.py'
+2026-02-27T07:42:14.9522290Z adding 'elephant/conversion.py'
+2026-02-27T07:42:14.9524190Z adding 'elephant/cubic.py'
+2026-02-27T07:42:14.9525870Z adding 'elephant/current_source_density.py'
+2026-02-27T07:42:14.9527580Z adding 'elephant/datasets.py'
+2026-02-27T07:42:14.9529210Z adding 'elephant/functional_connectivity.py'
+2026-02-27T07:42:14.9530900Z adding 'elephant/kernels.py'
+2026-02-27T07:42:14.9532000Z adding 'elephant/neo_tools.py'
+2026-02-27T07:42:14.9533490Z adding 'elephant/phase_analysis.py'
+2026-02-27T07:42:14.9535630Z adding 'elephant/signal_processing.py'
+2026-02-27T07:42:14.9536260Z adding 'elephant/spade.py'
+2026-02-27T07:42:14.9537260Z adding 'elephant/spectral.py'
+2026-02-27T07:42:14.9537810Z adding 'elephant/spike_train_correlation.py'
+2026-02-27T07:42:14.9538490Z adding 'elephant/spike_train_dissimilarity.py'
+2026-02-27T07:42:14.9539210Z adding 'elephant/spike_train_generation.py'
+2026-02-27T07:42:14.9539830Z adding 'elephant/spike_train_surrogates.py'
+2026-02-27T07:42:14.9540460Z adding 'elephant/spike_train_synchrony.py'
+2026-02-27T07:42:14.9541040Z adding 'elephant/sta.py'
+2026-02-27T07:42:14.9541500Z adding 'elephant/statistics.py'
+2026-02-27T07:42:14.9542000Z adding 'elephant/trials.py'
+2026-02-27T07:42:14.9542510Z adding 'elephant/unitary_event_analysis.py'
+2026-02-27T07:42:14.9543100Z adding 'elephant/utils.py'
+2026-02-27T07:42:14.9543580Z adding 'elephant/waveform_features.py'
+2026-02-27T07:42:14.9544160Z adding 'elephant/asset/__init__.py'
+2026-02-27T07:42:14.9544690Z adding 'elephant/asset/asset.py'
+2026-02-27T07:42:14.9545220Z adding 'elephant/asset/joint_pmat.cl'
+2026-02-27T07:42:14.9545780Z adding 'elephant/asset/joint_pmat.cu'
+2026-02-27T07:42:14.9546360Z adding 'elephant/asset/joint_pmat_old.cu'
+2026-02-27T07:42:14.9546970Z adding 'elephant/asset/pmat_neighbors.cl'
+2026-02-27T07:42:14.9547620Z adding 'elephant/asset/pmat_neighbors.cu'
+2026-02-27T07:42:14.9548220Z adding 'elephant/causality/__init__.py'
+2026-02-27T07:42:14.9548800Z adding 'elephant/causality/granger.py'
+2026-02-27T07:42:14.9549460Z adding 'elephant/current_source_density_src/KCSD.py'
+2026-02-27T07:42:14.9550210Z adding 'elephant/current_source_density_src/README.md'
+2026-02-27T07:42:14.9551000Z adding 'elephant/current_source_density_src/__init__.py'
+2026-02-27T07:42:14.9551870Z adding 'elephant/current_source_density_src/basis_functions.py'
+2026-02-27T07:42:14.9552700Z adding 'elephant/current_source_density_src/icsd.py'
+2026-02-27T07:42:14.9553790Z adding 'elephant/current_source_density_src/test_data.mat'
+2026-02-27T07:42:14.9554700Z adding 'elephant/current_source_density_src/utility_functions.py'
+2026-02-27T07:42:14.9555810Z adding 'elephant/functional_connectivity_src/total_spiking_probability_edges.py'
+2026-02-27T07:42:14.9556730Z adding 'elephant/gpfa/__init__.py'
+2026-02-27T07:42:14.9557270Z adding 'elephant/gpfa/gpfa.py'
+2026-02-27T07:42:14.9557780Z adding 'elephant/gpfa/gpfa_core.py'
+2026-02-27T07:42:14.9558330Z adding 'elephant/gpfa/gpfa_util.py'
+2026-02-27T07:42:14.9558880Z adding 'elephant/parallel/__init__.py'
+2026-02-27T07:42:14.9559440Z adding 'elephant/parallel/mpi.py'
+2026-02-27T07:42:14.9559990Z adding 'elephant/parallel/parallel.py'
+2026-02-27T07:42:14.9560560Z adding 'elephant/spade_src/LICENSE'
+2026-02-27T07:42:14.9561110Z adding 'elephant/spade_src/__init__.py'
+2026-02-27T07:42:14.9561690Z adding 'elephant/spade_src/fast_fca.py'
+2026-02-27T07:42:14.9562320Z adding 'elephant/spade_src/include/ClosedDetect.h'
+2026-02-27T07:42:14.9563030Z adding 'elephant/spade_src/include/ClosedTree.h'
+2026-02-27T07:42:14.9563700Z adding 'elephant/spade_src/include/Defines.h'
+2026-02-27T07:42:14.9564360Z adding 'elephant/spade_src/include/FPGrowth.h'
+2026-02-27T07:42:14.9565010Z adding 'elephant/spade_src/include/FPNode.h'
+2026-02-27T07:42:14.9565650Z adding 'elephant/spade_src/include/FPTree.h'
+2026-02-27T07:42:14.9566320Z adding 'elephant/spade_src/include/FrequencyRef.h'
+2026-02-27T07:42:14.9567030Z adding 'elephant/spade_src/include/HeapAlloc.h'
+2026-02-27T07:42:14.9567680Z adding 'elephant/spade_src/include/Logger.h'
+2026-02-27T07:42:14.9568320Z adding 'elephant/spade_src/include/Memory.h'
+2026-02-27T07:42:14.9568970Z adding 'elephant/spade_src/include/Pattern.h'
+2026-02-27T07:42:14.9569620Z adding 'elephant/spade_src/include/SigTerm.h'
+2026-02-27T07:42:14.9570260Z adding 'elephant/spade_src/include/Timer.h'
+2026-02-27T07:42:14.9570880Z adding 'elephant/spade_src/include/Types.h'
+2026-02-27T07:42:14.9571510Z adding 'elephant/spade_src/include/Utils.h'
+2026-02-27T07:42:14.9572120Z adding 'elephant/spade_src/src/fim.cpp'
+2026-02-27T07:42:14.9572690Z adding 'elephant/test/__init__.py'
+2026-02-27T07:42:14.9573360Z adding 'elephant/test/make_spike_extraction_test_data.py'
+2026-02-27T07:42:14.9574400Z adding 'elephant/test/spike_extraction_test_data.txt'
+2026-02-27T07:42:14.9575080Z adding 'elephant/test/test_asset.py'
+2026-02-27T07:42:14.9575640Z adding 'elephant/test/test_causality.py'
+2026-02-27T07:42:14.9576320Z adding 'elephant/test/test_cell_assembly_detection.py'
+2026-02-27T07:42:14.9577090Z adding 'elephant/test/test_change_point_detection.py'
+2026-02-27T07:42:14.9577780Z adding 'elephant/test/test_conversion.py'
+2026-02-27T07:42:14.9578380Z adding 'elephant/test/test_cubic.py'
+2026-02-27T07:42:14.9579020Z adding 'elephant/test/test_current_source_density.py'
+2026-02-27T07:42:14.9579700Z adding 'elephant/test/test_datasets.py'
+2026-02-27T07:42:14.9580270Z adding 'elephant/test/test_gpfa.py'
+2026-02-27T07:42:14.9580820Z adding 'elephant/test/test_icsd.py'
+2026-02-27T07:42:14.9581380Z adding 'elephant/test/test_kcsd.py'
+2026-02-27T07:42:14.9581930Z adding 'elephant/test/test_kernels.py'
+2026-02-27T07:42:14.9582510Z adding 'elephant/test/test_neo_tools.py'
+2026-02-27T07:42:14.9583130Z adding 'elephant/test/test_parallel.py'
+2026-02-27T07:42:14.9583750Z adding 'elephant/test/test_phase_analysis.py'
+2026-02-27T07:42:14.9584410Z adding 'elephant/test/test_signal_processing.py'
+2026-02-27T07:42:14.9585060Z adding 'elephant/test/test_spade.py'
+2026-02-27T07:42:14.9585620Z adding 'elephant/test/test_spectral.py'
+2026-02-27T07:42:14.9586300Z adding 'elephant/test/test_spike_train_correlation.py'
+2026-02-27T07:42:14.9587110Z adding 'elephant/test/test_spike_train_dissimilarity.py'
+2026-02-27T07:42:14.9587900Z adding 'elephant/test/test_spike_train_generation.py'
+2026-02-27T07:42:14.9588670Z adding 'elephant/test/test_spike_train_surrogates.py'
+2026-02-27T07:42:14.9589440Z adding 'elephant/test/test_spike_train_synchrony.py'
+2026-02-27T07:42:14.9590540Z adding 'elephant/test/test_sta.py'
+2026-02-27T07:42:14.9591120Z adding 'elephant/test/test_statistics.py'
+2026-02-27T07:42:14.9591870Z adding 'elephant/test/test_total_spiking_probability_edges.py'
+2026-02-27T07:42:14.9592620Z adding 'elephant/test/test_trials.py'
+2026-02-27T07:42:14.9593270Z adding 'elephant/test/test_unitary_event_analysis.py'
+2026-02-27T07:42:14.9593940Z adding 'elephant/test/test_utils.py'
+2026-02-27T07:42:14.9594540Z adding 'elephant/test/test_waveform_features.py'
+2026-02-27T07:42:14.9595270Z adding 'elephant-1.2.0.dist-info/licenses/LICENSE.txt'
+2026-02-27T07:42:14.9595960Z adding 'elephant-1.2.0.dist-info/METADATA'
+2026-02-27T07:42:14.9596560Z adding 'elephant-1.2.0.dist-info/WHEEL'
+2026-02-27T07:42:14.9597170Z adding 'elephant-1.2.0.dist-info/top_level.txt'
+2026-02-27T07:42:14.9597800Z adding 'elephant-1.2.0.dist-info/RECORD'
+2026-02-27T07:42:14.9598410Z removing build/bdist.macosx-10.9-x86_64/wheel
+2026-02-27T07:42:15.0525640Z Successfully built elephant-1.2.0-cp39-cp39-macosx_10_9_x86_64.whl
+2026-02-27T07:42:15.0695140Z ##[endgroup]
+2026-02-27T07:42:15.0696560Z                                                              [32m✓ [0m11.53s
+2026-02-27T07:42:15.0697730Z ##[group]Repairing wheel...
+2026-02-27T07:42:15.0699620Z 
+2026-02-27T07:42:15.0706730Z + delocate-wheel --require-archs x86_64 -w /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/repaired_wheel -v /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/built_wheel/elephant-1.2.0-cp39-cp39-macosx_10_9_x86_64.whl
+2026-02-27T07:42:15.6424170Z Traceback (most recent call last):
+2026-02-27T07:42:15.6425780Z Fixing: /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/built_wheel/elephant-1.2.0-cp39-cp39-macosx_10_9_x86_64.whl
+2026-02-27T07:42:15.6441680Z   File "/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/bin/delocate-wheel", line 7, in <module>
+2026-02-27T07:42:15.6443410Z     sys.exit(main())
+2026-02-27T07:42:15.6445210Z   File "/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/lib/python3.9/site-packages/delocate/cmd/delocate_wheel.py", line 115, in main
+2026-02-27T07:42:15.6447630Z     copied = delocate_wheel(
+2026-02-27T07:42:15.6449520Z   File "/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/lib/python3.9/site-packages/delocate/delocating.py", line 1106, in delocate_wheel
+2026-02-27T07:42:15.6451490Z     out_wheel_fixed = _check_and_update_wheel_name(
+2026-02-27T07:42:15.6453660Z   File "/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/lib/python3.9/site-packages/delocate/delocating.py", line 917, in _check_and_update_wheel_name
+2026-02-27T07:42:15.6455850Z     new_name, problematic_files = _calculate_minimum_wheel_name(
+2026-02-27T07:42:15.6458200Z   File "/private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/build/venv/lib/python3.9/site-packages/delocate/delocating.py", line 851, in _calculate_minimum_wheel_name
+2026-02-27T07:42:15.6460290Z     raise DelocationError(
+2026-02-27T07:42:15.6461260Z delocate.libsana.DelocationError: Failed to find any binary with the required architecture: 'x86_64'
+2026-02-27T07:42:15.7412240Z ##[error]cibuildwheel: Command delocate-wheel --require-archs x86_64 -w /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/repaired_wheel -v /private/var/folders/x_/wstzc9d10r926lhsf8fsv7q80000gn/T/cibw-run-v_462pjq/cp39-macosx_x86_64/built_wheel/elephant-1.2.0-cp39-cp39-macosx_10_9_x86_64.whl failed with code 1. 
+2026-02-27T07:42:15.7432610Z ##[endgroup]
+2026-02-27T07:42:15.7432900Z 
+2026-02-27T07:42:15.7433440Z                                                               [31m✕ [0m0.67s
+2026-02-27T07:42:15.8175110Z ##[error]Process completed with exit code 1.
+2026-02-27T07:42:16.1100950Z Post job cleanup.
+2026-02-27T07:42:16.4079260Z [command]/usr/local/bin/git version
+2026-02-27T07:42:16.4361040Z git version 2.53.0
+2026-02-27T07:42:16.4476300Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/4bdb1505-cd3a-4501-bb03-948691a528a9/.gitconfig'
+2026-02-27T07:42:16.4478830Z Temporarily overriding HOME='/Users/runner/work/_temp/4bdb1505-cd3a-4501-bb03-948691a528a9' before making global git config changes
+2026-02-27T07:42:16.4480640Z Adding repository directory to the temporary git global config as a safe directory
+2026-02-27T07:42:16.4482140Z [command]/usr/local/bin/git config --global --add safe.directory /Users/runner/work/elephant/elephant
+2026-02-27T07:42:16.4547240Z [command]/usr/local/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-02-27T07:42:16.4697190Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-02-27T07:42:16.6581540Z [command]/usr/local/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-02-27T07:42:16.6689680Z http.https://github.com/.extraheader
+2026-02-27T07:42:16.6708580Z [command]/usr/local/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-02-27T07:42:16.6851670Z [command]/usr/local/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-02-27T07:42:16.8805830Z [command]/usr/local/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-02-27T07:42:16.8953740Z [command]/usr/local/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-02-27T07:42:17.1413750Z Cleaning up orphan processes

@@ -1,0 +1,29 @@
+﻿2026-02-27T14:03:26.9325902Z ##[group]Run actions/upload-artifact/merge@v4
+2026-02-27T14:03:26.9326835Z with:
+2026-02-27T14:03:26.9327262Z   name: all-wheels
+2026-02-27T14:03:26.9327704Z   pattern: wheels-*
+2026-02-27T14:03:26.9328168Z   separate-directories: false
+2026-02-27T14:03:26.9328673Z   compression-level: 6
+2026-02-27T14:03:26.9329131Z   delete-merged: false
+2026-02-27T14:03:26.9329588Z   include-hidden-files: false
+2026-02-27T14:03:26.9330264Z ##[endgroup]
+2026-02-27T14:03:27.2968541Z Found 1 artifact(s)
+2026-02-27T14:03:27.2986213Z Preparing to download the following artifacts:
+2026-02-27T14:03:27.2987565Z - wheels-macos-15-intel (ID: 5691167247, Size: 1090824)
+2026-02-27T14:03:27.4158352Z Redirecting to blob download url: https://productionresultssa7.blob.core.windows.net/actions-results/8782c033-91f6-44eb-8dbf-52c5621af797/workflow-job-run-536bdbb7-75a8-542f-8888-f956af6836a4/artifacts/4eca8f0ccca97b165c4a1ab157d96140287a95618c1d8fd484d0f307b4615528.zip
+2026-02-27T14:03:27.4161390Z Starting download of artifact to: merge-artifactkVq7wt
+2026-02-27T14:03:27.5659099Z (node:2173) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-02-27T14:03:27.7655358Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-02-27T14:03:27.7658472Z SHA256 digest of downloaded artifact is 9290a37c76f18b2faf0befc3b8e03c89e73eccd886a6df0fdba56f5d1824affe
+2026-02-27T14:03:27.7661176Z Artifact download completed successfully.
+2026-02-27T14:03:27.7715741Z Artifact name is valid!
+2026-02-27T14:03:27.7717665Z Root directory input is valid!
+2026-02-27T14:03:27.8384565Z Beginning upload of artifact content to blob storage
+2026-02-27T14:03:28.1743119Z Uploaded bytes 1090824
+2026-02-27T14:03:28.2104587Z Finished uploading artifact content to blob storage!
+2026-02-27T14:03:28.2106425Z SHA256 digest of uploaded artifact zip is 26ed58ebaec8b540c0b3f21aa114175b264042ea88cac3b55eff4c23446d4192
+2026-02-27T14:03:28.2108331Z Finalizing artifact upload
+2026-02-27T14:03:28.3184475Z Artifact all-wheels.zip successfully finalized. Artifact ID 5691169660
+2026-02-27T14:03:28.3187172Z Artifact all-wheels has been successfully uploaded! Final size is 1090824 bytes. Artifact ID is 5691169660
+2026-02-27T14:03:28.3194304Z Artifact download URL: https://github.com/NeuralEnsemble/elephant/actions/runs/22489178228/artifacts/5691169660
+2026-02-27T14:03:28.3196387Z The 1 artifact(s) have been successfully merged!

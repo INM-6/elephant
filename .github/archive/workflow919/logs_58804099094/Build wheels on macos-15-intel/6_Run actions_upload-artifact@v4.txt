@@ -1,0 +1,26 @@
+﻿2026-02-27T14:03:16.8008230Z ##[group]Run actions/upload-artifact@v4
+2026-02-27T14:03:16.8008720Z with:
+2026-02-27T14:03:16.8008990Z   name: wheels-macos-15-intel
+2026-02-27T14:03:16.8009360Z   path: ./wheelhouse/*.whl
+2026-02-27T14:03:16.8009720Z   if-no-files-found: warn
+2026-02-27T14:03:16.8010060Z   compression-level: 6
+2026-02-27T14:03:16.8010380Z   overwrite: false
+2026-02-27T14:03:16.8010680Z   include-hidden-files: false
+2026-02-27T14:03:16.8011040Z env:
+2026-02-27T14:03:16.8011450Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:03:16.8012260Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.12/x64/lib/pkgconfig
+2026-02-27T14:03:16.8013070Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:03:16.8013780Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:03:16.8014510Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:03:16.8015090Z ##[endgroup]
+2026-02-27T14:03:17.2077700Z With the provided path, there will be 2 files uploaded
+2026-02-27T14:03:17.2084950Z Artifact name is valid!
+2026-02-27T14:03:17.2086660Z Root directory input is valid!
+2026-02-27T14:03:17.7594720Z Beginning upload of artifact content to blob storage
+2026-02-27T14:03:18.6011560Z Uploaded bytes 1090824
+2026-02-27T14:03:18.6834000Z Finished uploading artifact content to blob storage!
+2026-02-27T14:03:18.6836850Z SHA256 digest of uploaded artifact zip is 9290a37c76f18b2faf0befc3b8e03c89e73eccd886a6df0fdba56f5d1824affe
+2026-02-27T14:03:18.6837830Z Finalizing artifact upload
+2026-02-27T14:03:18.8374090Z Artifact wheels-macos-15-intel.zip successfully finalized. Artifact ID 5691167247
+2026-02-27T14:03:18.8375530Z Artifact wheels-macos-15-intel has been successfully uploaded! Final size is 1090824 bytes. Artifact ID is 5691167247
+2026-02-27T14:03:18.8386280Z Artifact download URL: https://github.com/NeuralEnsemble/elephant/actions/runs/22489178228/artifacts/5691167247

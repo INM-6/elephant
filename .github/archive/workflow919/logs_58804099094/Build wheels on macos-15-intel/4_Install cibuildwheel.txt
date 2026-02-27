@@ -1,0 +1,55 @@
+﻿2026-02-27T14:00:07.6983580Z ##[group]Run python -m pip install --upgrade pip
+2026-02-27T14:00:07.6986090Z [36;1mpython -m pip install --upgrade pip[0m
+2026-02-27T14:00:07.6988370Z [36;1mpython -m pip install cibuildwheel==3.3.1[0m
+2026-02-27T14:00:07.7085010Z shell: /bin/bash -e {0}
+2026-02-27T14:00:07.7086630Z env:
+2026-02-27T14:00:07.7088540Z   pythonLocation: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:00:07.7092100Z   PKG_CONFIG_PATH: /Users/runner/hostedtoolcache/Python/3.13.12/x64/lib/pkgconfig
+2026-02-27T14:00:07.7095720Z   Python_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:00:07.7098850Z   Python2_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:00:07.7102010Z   Python3_ROOT_DIR: /Users/runner/hostedtoolcache/Python/3.13.12/x64
+2026-02-27T14:00:07.7105080Z ##[endgroup]
+2026-02-27T14:00:09.3940370Z Requirement already satisfied: pip in /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages (26.0.1)
+2026-02-27T14:00:11.0214710Z Collecting cibuildwheel==3.3.1
+2026-02-27T14:00:11.0897950Z   Downloading cibuildwheel-3.3.1-py3-none-any.whl.metadata (24 kB)
+2026-02-27T14:00:11.1214860Z Collecting bashlex!=0.13 (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.1270510Z   Downloading bashlex-0.18-py2.py3-none-any.whl.metadata (1.1 kB)
+2026-02-27T14:00:11.1628110Z Collecting bracex (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.1693310Z   Downloading bracex-2.6-py3-none-any.whl.metadata (3.6 kB)
+2026-02-27T14:00:11.2855650Z Collecting build>=1.0.0 (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.3858240Z   Downloading build-1.4.0-py3-none-any.whl.metadata (5.8 kB)
+2026-02-27T14:00:11.3985380Z Requirement already satisfied: certifi in /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages (from cibuildwheel==3.3.1) (2026.1.4)
+2026-02-27T14:00:11.4261640Z Collecting dependency-groups>=1.2 (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.4323840Z   Downloading dependency_groups-1.3.1-py3-none-any.whl.metadata (2.3 kB)
+2026-02-27T14:00:11.4328790Z Collecting filelock (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.4335500Z   Downloading filelock-3.24.3-py3-none-any.whl.metadata (2.0 kB)
+2026-02-27T14:00:11.4340720Z Collecting humanize (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.4345130Z   Downloading humanize-4.15.0-py3-none-any.whl.metadata (7.8 kB)
+2026-02-27T14:00:11.4348610Z Collecting packaging>=20.9 (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.4359560Z   Downloading packaging-26.0-py3-none-any.whl.metadata (3.3 kB)
+2026-02-27T14:00:11.4768850Z Collecting patchelf (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.4850430Z   Downloading patchelf-0.17.2.4-py3-none-macosx_10_9_universal2.whl.metadata (3.7 kB)
+2026-02-27T14:00:11.5251850Z Collecting platformdirs (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.5298150Z   Downloading platformdirs-4.9.2-py3-none-any.whl.metadata (4.7 kB)
+2026-02-27T14:00:11.5520330Z Collecting pyelftools>=0.29 (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.5569430Z   Downloading pyelftools-0.32-py3-none-any.whl.metadata (372 bytes)
+2026-02-27T14:00:11.5894970Z Collecting wheel>=0.33.6 (from cibuildwheel==3.3.1)
+2026-02-27T14:00:11.5945090Z   Downloading wheel-0.46.3-py3-none-any.whl.metadata (2.4 kB)
+2026-02-27T14:00:11.6211350Z Collecting pyproject_hooks (from build>=1.0.0->cibuildwheel==3.3.1)
+2026-02-27T14:00:11.6259030Z   Downloading pyproject_hooks-1.2.0-py3-none-any.whl.metadata (1.3 kB)
+2026-02-27T14:00:11.6464710Z Downloading cibuildwheel-3.3.1-py3-none-any.whl (127 kB)
+2026-02-27T14:00:11.6606960Z Downloading bashlex-0.18-py2.py3-none-any.whl (69 kB)
+2026-02-27T14:00:11.6732230Z Downloading build-1.4.0-py3-none-any.whl (24 kB)
+2026-02-27T14:00:11.6864090Z Downloading dependency_groups-1.3.1-py3-none-any.whl (8.7 kB)
+2026-02-27T14:00:11.7006060Z Downloading packaging-26.0-py3-none-any.whl (74 kB)
+2026-02-27T14:00:11.7146320Z Downloading pyelftools-0.32-py3-none-any.whl (188 kB)
+2026-02-27T14:00:11.7304500Z Downloading wheel-0.46.3-py3-none-any.whl (30 kB)
+2026-02-27T14:00:11.7447340Z Downloading bracex-2.6-py3-none-any.whl (11 kB)
+2026-02-27T14:00:11.7585150Z Downloading filelock-3.24.3-py3-none-any.whl (24 kB)
+2026-02-27T14:00:11.7700880Z Downloading humanize-4.15.0-py3-none-any.whl (132 kB)
+2026-02-27T14:00:11.7865620Z Downloading patchelf-0.17.2.4-py3-none-macosx_10_9_universal2.whl (184 kB)
+2026-02-27T14:00:11.8012680Z Downloading platformdirs-4.9.2-py3-none-any.whl (21 kB)
+2026-02-27T14:00:11.8138100Z Downloading pyproject_hooks-1.2.0-py3-none-any.whl (10 kB)
+2026-02-27T14:00:11.8658950Z Installing collected packages: pyelftools, pyproject_hooks, platformdirs, patchelf, packaging, humanize, filelock, bracex, bashlex, wheel, dependency-groups, build, cibuildwheel
+2026-02-27T14:00:12.5680070Z 
+2026-02-27T14:00:12.5709260Z Successfully installed bashlex-0.18 bracex-2.6 build-1.4.0 cibuildwheel-3.3.1 dependency-groups-1.3.1 filelock-3.24.3 humanize-4.15.0 packaging-26.0 patchelf-0.17.2.4 platformdirs-4.9.2 pyelftools-0.32 pyproject_hooks-1.2.0 wheel-0.46.3
