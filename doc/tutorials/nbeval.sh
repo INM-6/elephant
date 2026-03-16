@@ -13,23 +13,15 @@
 module load stable ias6
 
 # Get latest elephant
-echo "Log: Start cloning repo"
-git clone https://github.com/NeuralEnsemble/elephant.git $TMPDIR/ele-nbeval
+git clone -b notebook-eval-nbval --single-branch https://github.com/INM-6/elephant.git $TMPDIR/ele-nbeval
 cd $TMPDIR/ele-nbeval
 
 # Setup env
-echo "Log: Start env setup"
 python -m venv .venv
 source .venv/bin/activate
-echo "Log: Start pip install"
 printenv PATH
 pip install -e .[tests,docs,extras,tutorials]
-pip install --upgrade matplotlib==3.10.8
 pip install nbval
-
-# List packages
-pip list
-
 
 echo "Print matplot version"
 python -c "import matplotlib; print(matplotlib.__version__)"
