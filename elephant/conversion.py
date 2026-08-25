@@ -1005,16 +1005,22 @@ class BinnedSpikeTrain(object):
         time points of spikes. The rows correspond to spike trains and the
         columns correspond to bins in a `BinnedSpikeTrain`.
         Entries contain the count of spikes that occurred in the given bin of
-        the given spike train.
+        the given spike train, or the firing rate in that bin if `scaling` is
+        set to 'normalized'.
 
         Parameters
         ----------
         dtype : type, optional
-            The desired data-type for the array. Default is None.
-        scaling : {"counts", "normalized"}, optional
+            The desired data-type for the array.
+            Default: None.
+        scaling : {'counts', 'normalized'}, optional
             Determines the scaling of the returned array:
-            * "counts" : raw spike counts (default)
-            * "normalized" : spike counts divided by the bin size in seconds
+
+            * 'counts' : the number of spikes falling into each bin
+            * 'normalized' : the spike counts divided by the bin size in
+              seconds, that is, the mean firing rate in Hz within each bin
+
+            Default: 'counts'.
 
         Returns
         -------
@@ -1023,6 +1029,16 @@ class BinnedSpikeTrain(object):
             positions of the binned spikes and rows represent the spike
             trains.
 
+        Raises
+        ------
+        ValueError
+            If the scaling parameter is not one of {'counts', 'normalized'}.
+
+        See also
+        --------
+        scipy.sparse.csr_matrix
+        scipy.sparse.csr_matrix.toarray
+
         Examples
         --------
         >>> import elephant.conversion as conv
@@ -1030,22 +1046,19 @@ class BinnedSpikeTrain(object):
         >>> import quantities as pq
         >>> a = n.SpikeTrain([0.5, 0.7, 1.2, 3.1, 4.3, 5.5, 6.7] * pq.s,
         ...                  t_stop=10.0 * pq.s)
-        >>> x = conv.BinnedSpikeTrain(a, n_bins=10, bin_size=1 * pq.s,
+        >>> x = conv.BinnedSpikeTrain(a, n_bins=20, bin_size=0.5 * pq.s,
         ...                           t_start=0 * pq.s)
-        >>> print(x.to_array())  # counts
-        [[2 1 0 1 1 1 1 0 0 0]]
-        >>> print(x.to_array(scaling="normalized"))  # counts/second
-        [[2. 1. 0. 1. 1. 1. 1. 0. 0. 0.]]
 
-        See also
-        --------
-        scipy.sparse.csr_matrix
-        scipy.sparse.csr_matrix.toarray
+        By default the entries are plain spike counts.
 
-        Raises
-        ------
-        ValueError
-            If the scaling parameter is not one of {"counts", "normalized"}.
+        >>> print(x.to_array())
+        [[0 2 1 0 0 0 1 0 1 0 0 1 0 1 0 0 0 0 0 0]]
+
+        Normalizing divides these by the bin size of 0.5 s, turning them into
+        firing rates in Hz.
+
+        >>> print(x.to_array(scaling="normalized"))
+        [[0. 4. 2. 0. 0. 0. 2. 0. 2. 0. 0. 2. 0. 2. 0. 0. 0. 0. 0. 0.]]
         """
         if scaling not in ("counts", "normalized"):
             raise ValueError(
@@ -1073,22 +1086,43 @@ class BinnedSpikeTrain(object):
         Parameters
         ----------
         dtype : type, optional
-            The desired data-type for the signal values. Default is None.
-        scaling : {"counts", "normalized"}, optional
+            The desired data-type for the signal values.
+            Default: None.
+        scaling : {'counts', 'normalized'}, optional
             Determines the scaling of the returned signal:
-            * "counts" : raw spike counts (default)
-            * "normalized" : spike counts divided by the bin size in seconds,
-              resulting in firing rates in Hz
+
+            * 'counts' : the number of spikes falling into each bin
+            * 'normalized' : the spike counts divided by the bin size in
+              seconds, resulting in firing rates in Hz
+
+            Default: 'counts'.
 
         Returns
         -------
         neo.AnalogSignal
             Signal containing spike counts or rates. Rows represent time bins
             and columns represent different spike trains.
-            If scaling="counts", the signal has units of 1/b in Hz, where b is
+            If scaling='counts', the signal has units of 1/b in Hz, where b is
             the bin size.
-            If scaling="normalized", the signal has units of Hz
+            If scaling='normalized', the signal has units of Hz
             (spikes/second).
+
+        Raises
+        ------
+        ValueError
+            If the scaling parameter is not one of {'counts', 'normalized'}.
+
+        See also
+        --------
+        to_array : Returns the binned spike train as a plain NumPy array
+        neo.AnalogSignal : The neo analog signal object
+
+        Notes
+        -----
+        Both scalings describe the same signal and differ only in how the bin
+        size is accounted for: 'counts' keeps the raw counts and carries the
+        bin size in the unit, whereas 'normalized' divides it out. Rescaling a
+        'counts' signal to Hz therefore reproduces the 'normalized' one.
 
         Examples
         --------
@@ -1097,20 +1131,27 @@ class BinnedSpikeTrain(object):
         >>> import quantities as pq
         >>> a = n.SpikeTrain([0.5, 0.7, 1.2, 3.1, 4.3, 5.5, 6.7] * pq.s,
         ...                  t_stop=10.0 * pq.s)
-        >>> x = conv.BinnedSpikeTrain(a, n_bins=10, bin_size=1 * pq.s,
+        >>> x = conv.BinnedSpikeTrain(a, n_bins=20, bin_size=0.5 * pq.s,
         ...                           t_start=0 * pq.s)
-        >>> signal = x.to_analog_signal()  # counts (1/bin_size) Hz
-        >>> signal = x.to_analog_signal(scaling="normalized")  # rates (Hz)
 
-        See also
-        --------
-        to_array : Returns the binned spike train as a plain NumPy array
-        neo.AnalogSignal : The neo analog signal object
+        By default the values are spike counts, and the bin size is carried by
+        the unit, so that the signal still represents a rate.
 
-        Raises
-        ------
-        ValueError
-            If the scaling parameter is not one of {"counts", "normalized"}.
+        >>> signal = x.to_analog_signal()
+        >>> signal.units
+        array(1.) * (1.0 / 0.5 * Hz)
+
+        Normalizing divides by the bin size instead, giving firing rates
+        directly in Hz.
+
+        >>> rate = x.to_analog_signal(scaling="normalized")
+        >>> rate.units
+        array(1.) * Hz
+
+        Rescaling the first signal to Hz yields the second.
+
+        >>> print(signal.rescale(pq.Hz).magnitude.T)
+        [[0. 4. 2. 0. 0. 0. 2. 0. 2. 0. 0. 2. 0. 2. 0. 0. 0. 0. 0. 0.]]
         """
         # Get the array representation with the desired scaling
         array = self.to_array(dtype=dtype, scaling=scaling)
