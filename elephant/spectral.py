@@ -398,7 +398,18 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
 
     # Determine Fourier transform of tapered signal
     spectrum_estimates = np.abs(np.fft.rfft(tapered_signal, axis=-1))**2
-    spectrum_estimates[..., 1:] *= 2
+    # Convert the two-sided spectrum into a one-sided one by folding the
+    # negative frequencies onto their positive counterparts, i.e. doubling
+    # the power of every bin that has such a counterpart. Two bins do not:
+    # the first one at 0 Hz (the DC, or mean, component) and - only if the
+    # signal has an even number of samples - the last one at the Nyquist
+    # frequency. Both are their own mirror image, so doubling them would
+    # count their power twice. The DC bin is skipped by starting at index 1;
+    # the Nyquist bin needs to be excluded explicitly.
+    if length_signal % 2 == 0:
+        spectrum_estimates[..., 1:-1] *= 2
+    else:
+        spectrum_estimates[..., 1:] *= 2
 
     # Average Fourier transform windowed signal
     psd = np.mean(spectrum_estimates, axis=-2) / fs

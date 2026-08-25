@@ -266,6 +266,31 @@ class MultitaperPSDTestCase(unittest.TestCase):
                                                         num_tapers=9)
         self.assertTrue((freqs1 == freqs2).all() and (psd1 != psd2).all())
 
+    def test_multitaper_psd_nyquist_bin_not_doubled(self):
+        # The one-sided PSD is obtained by doubling the power of all bins
+        # that have a negative-frequency counterpart. The DC bin has none,
+        # and neither does the Nyquist bin of an even-length signal. If the
+        # latter is doubled erroneously, the total power of the signal is
+        # overestimated.
+        #
+        # By Parseval's theorem, integrating the one-sided PSD over all
+        # frequencies must return the mean power of a zero-mean signal. This
+        # is checked here for a sinusoid sitting exactly at the Nyquist
+        # frequency, i.e. where the effect is largest, and for a sinusoid in
+        # the middle of the band as a control. Both have unit mean power.
+        fs = 1000.0
+        for data_length in (2000, 2001):  # even and odd number of samples
+            n = np.arange(data_length)
+            signals = {
+                'nyquist': (-1.0) ** n,
+                'mid_band': np.sqrt(2) * np.cos(2 * np.pi * 100 * n / fs)}
+            for name, signal in signals.items():
+                freqs, psd = elephant.spectral.multitaper_psd(signal, fs=fs)
+                total_power = np.sum(psd[0]) * (freqs[1] - freqs[0])
+                self.assertAlmostEqual(
+                    total_power, 1.0, places=2,
+                    msg=f"{name} signal of length {data_length}")
+
     def test_multitaper_psd_against_nitime(self):
         """
         This test assesses the match between this implementation of
