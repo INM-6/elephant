@@ -23,7 +23,99 @@ import elephant.spectral
 from elephant.datasets import download_datasets
 
 
-class WelchPSDTestCase(unittest.TestCase):
+class BinnedSpikeTrainPSDMixin:
+    """
+    Checks on the normalization of a PSD estimated from a `BinnedSpikeTrain`.
+
+    These properties hold for every PSD function that accepts a
+    `BinnedSpikeTrain`, so they are asserted identically for each of them
+    rather than being written out once per function. A test case mixing this
+    in has to provide `psd_function`, and `extract_channel` if the spectrum of
+    a single spike train is not obtained by indexing the first dimension of
+    the returned array.
+    """
+
+    # The PSD function under test, wrapped so that it is not turned into a
+    # bound method of the test case.
+    psd_function = None
+
+    @staticmethod
+    def extract_channel(psd, channel):
+        return psd[channel]
+
+    def _mean_psd_in_band(self, binned_st, low, high, channel=0):
+        freqs, psd = self.psd_function(binned_st)
+        spectrum = self.extract_channel(psd, channel)
+        mask = (freqs >= low) & (freqs <= high)
+        return np.mean(spectrum[mask]).rescale('Hz').magnitude
+
+    @staticmethod
+    def _poisson_spiketrains(rate, t_stop, n_spiketrains=1):
+        return [elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=t_stop).generate_spiketrain()
+            for _ in range(n_spiketrains)]
+
+    def test_binned_spiketrain_bin_size_invariance(self):
+        """
+        The spike count of each bin is divided by the bin size, so that the
+        bin size cancels out and the asymptote of 2*rate does not depend on
+        how finely the spike train was binned. A regression in that
+        normalization would scale the estimate with the square of the bin
+        size, i.e. by factors of 4 and 25 between the bin sizes used here.
+        """
+        np.random.seed(123)
+        rate = 50 * pq.Hz
+        expected = 2 * rate.rescale('Hz').magnitude
+
+        # The same spike train is binned in different ways, so that the
+        # comparison is not obscured by differences between realizations.
+        spiketrain = self._poisson_spiketrains(rate, 20 * pq.s)[0]
+
+        # The band has to stay below the lowest Nyquist frequency of the bin
+        # sizes compared: a bin size of 5 ms samples at 200 Hz. The spectrum
+        # of a Poisson process is flat, so any band away from zero will do.
+        estimates = []
+        for bin_size in (1 * pq.ms, 2 * pq.ms, 5 * pq.ms):
+            binned_st = elephant.conversion.BinnedSpikeTrain(
+                spiketrain, bin_size=bin_size)
+            avg_psd = self._mean_psd_in_band(binned_st, 20 * pq.Hz, 80 * pq.Hz)
+            estimates.append(avg_psd)
+
+            self.assertAlmostEqual(
+                avg_psd, expected, delta=0.15 * expected,
+                msg=f"bin size {bin_size} deviates from 2*rate")
+
+        # The estimates must also agree with each other
+        self.assertLess(max(estimates) / min(estimates), 1.15)
+
+    def test_binned_spiketrain_multiple_spiketrains(self):
+        """
+        A `BinnedSpikeTrain` holding several spike trains must yield one
+        spectrum per spike train, each with the same scaling.
+        """
+        np.random.seed(123)
+        rate = 50 * pq.Hz
+        expected = 2 * rate.rescale('Hz').magnitude
+        n_spiketrains = 3
+
+        spiketrains = self._poisson_spiketrains(
+            rate, 20 * pq.s, n_spiketrains=n_spiketrains)
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrains, bin_size=2 * pq.ms)
+
+        freqs, psd = self.psd_function(binned_st)
+        self.assertEqual(psd.shape[0], n_spiketrains)
+
+        for channel in range(n_spiketrains):
+            avg_psd = self._mean_psd_in_band(
+                binned_st, 100 * pq.Hz, 250 * pq.Hz, channel=channel)
+            self.assertAlmostEqual(avg_psd, expected, delta=0.15 * expected,
+                                   msg=f"spike train {channel}")
+
+
+class WelchPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
+    psd_function = staticmethod(elephant.spectral.welch_psd)
+
     def test_welch_psd_errors(self):
         # generate a dummy data
         data = AnalogSignal(np.zeros(5000), sampling_period=0.001 * pq.s,
@@ -150,6 +242,7 @@ class WelchPSDTestCase(unittest.TestCase):
                     psd_neo == psd_np).all())
 
     def test_welch_psd_binned_spiketrain(self):
+        np.random.seed(123)
         rate = 50 * pq.Hz
         t_stop = 10 * pq.s
         spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
@@ -170,46 +263,6 @@ class WelchPSDTestCase(unittest.TestCase):
         self.assertAlmostEqual(avg_psd.rescale('Hz').magnitude,
                                2*rate.rescale('Hz').magnitude,
                                delta=0.2 * 2 * rate.rescale('Hz').magnitude)
-
-    def test_welch_psd_binned_spiketrain_bin_size_invariance(self):
-        """
-        The PSD of a binned spike train is expressed as a rate in Hz, by
-        dividing the spike count of each bin by the bin size. The bin size
-        therefore has to cancel out, and the asymptote of 2*rate must not
-        depend on how finely the spike train was binned. A regression in that
-        normalization would scale the estimate with the square of the bin
-        size, i.e. by factors of 4 and 25 between the bin sizes used here.
-        """
-        np.random.seed(123)
-        rate = 50 * pq.Hz
-        t_stop = 20 * pq.s
-        expected = 2 * rate.rescale('Hz').magnitude
-
-        # The same spike train is binned in different ways, so that the
-        # comparison is not obscured by differences between realizations.
-        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
-            rate, t_stop=t_stop).generate_spiketrain()
-
-        # The band has to stay below the lowest Nyquist frequency of the bin
-        # sizes compared: a bin size of 5 ms samples at 200 Hz. The spectrum
-        # of a Poisson process is flat, so any band away from zero will do.
-        band = (20 * pq.Hz, 80 * pq.Hz)
-
-        estimates = []
-        for bin_size in (1 * pq.ms, 2 * pq.ms, 5 * pq.ms):
-            binned_st = elephant.conversion.BinnedSpikeTrain(
-                spiketrain, bin_size=bin_size)
-            freqs, psd = elephant.spectral.welch_psd(binned_st)
-            mask = (freqs >= band[0]) & (freqs <= band[1])
-            avg_psd = np.mean(psd[0, mask]).rescale('Hz').magnitude
-            estimates.append(avg_psd)
-
-            self.assertAlmostEqual(
-                avg_psd, expected, delta=0.15 * expected,
-                msg=f"bin size {bin_size} deviates from 2*rate")
-
-        # The estimates must also agree with each other
-        self.assertLess(max(estimates) / min(estimates), 1.15)
 
     def test_welch_psd_binned_spiketrain_two_sided(self):
         """
@@ -233,30 +286,6 @@ class WelchPSDTestCase(unittest.TestCase):
         self.assertAlmostEqual(
             avg_psd, rate.rescale('Hz').magnitude,
             delta=0.15 * rate.rescale('Hz').magnitude)
-
-    def test_welch_psd_binned_spiketrain_multiple_spiketrains(self):
-        """
-        A BinnedSpikeTrain holding several spike trains must yield one
-        spectrum per spike train, each with the same scaling.
-        """
-        np.random.seed(123)
-        rate = 50 * pq.Hz
-        t_stop = 20 * pq.s
-        expected = 2 * rate.rescale('Hz').magnitude
-        spiketrains = [
-            elephant.spike_train_generation.StationaryPoissonProcess(
-                rate, t_stop=t_stop).generate_spiketrain() for _ in range(3)]
-        binned_st = elephant.conversion.BinnedSpikeTrain(
-            spiketrains, bin_size=2 * pq.ms)
-
-        freqs, psd = elephant.spectral.welch_psd(binned_st)
-
-        self.assertEqual(psd.shape[0], 3)
-        for channel in range(3):
-            avg_psd = np.mean(
-                psd[channel, freqs > 100 * pq.Hz]).rescale('Hz').magnitude
-            self.assertAlmostEqual(avg_psd, expected, delta=0.15 * expected,
-                                   msg=f"spike train {channel}")
 
     def test_welch_psd_binned_spiketrain_empty(self):
         """
@@ -298,7 +327,9 @@ class WelchPSDTestCase(unittest.TestCase):
         self.assertTrue(np.all(psd_neo_1dim == psd_neo[0]))
 
 
-class MultitaperPSDTestCase(unittest.TestCase):
+class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
+    psd_function = staticmethod(elephant.spectral.multitaper_psd)
+
     def test_multitaper_psd_errors(self):
         # generate dummy data
         data_length = 5000
@@ -463,6 +494,7 @@ class MultitaperPSDTestCase(unittest.TestCase):
                     psd_neo == psd_np).all())
 
     def test_multitaper_psd_binned_spiketrain(self):
+        np.random.seed(123)
         rate = 50 * pq.Hz
         t_stop = 10 * pq.s
         spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
@@ -494,7 +526,17 @@ class MultitaperPSDTestCase(unittest.TestCase):
         self.assertEqual(np.max(psd_empty), 0 * pq.Hz)
 
 
-class SegmentedMultitaperPSDTestCase(unittest.TestCase):
+class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
+                                     unittest.TestCase):
+    psd_function = staticmethod(elephant.spectral.segmented_multitaper_psd)
+
+    @staticmethod
+    def extract_channel(psd, channel):
+        # Unlike the other two functions, this one returns the full cross
+        # spectrum of shape (n, n, n_freqs); the auto spectra, which are real
+        # up to numerical error, are on its diagonal.
+        return psd[channel, channel].real
+
     # The following assertions test _segmented_apply_func in the context
     # of segmented_multitaper_psd. In other words, only the segmentation is
     # addressed. The inner workings of the multitaper function are tested
@@ -659,6 +701,7 @@ class SegmentedMultitaperPSDTestCase(unittest.TestCase):
                     psd_neo == psd_np).all())
 
     def test_segmented_multitaper_psd_binned_spiketrain(self):
+        np.random.seed(123)
         rate = 50 * pq.Hz
         t_stop = 10 * pq.s
         spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
@@ -689,7 +732,8 @@ class SegmentedMultitaperPSDTestCase(unittest.TestCase):
         empty_st = neo.SpikeTrain([] * pq.s, t_start=0 * pq.s, t_stop=10 * pq.s)
         binned_empty = elephant.conversion.BinnedSpikeTrain(
             empty_st, bin_size=bin_size)
-        freqs_empty, psd_empty = elephant.spectral.multitaper_psd(binned_empty)
+        freqs_empty, psd_empty = elephant.spectral.segmented_multitaper_psd(
+            binned_empty)
         self.assertEqual(np.max(psd_empty), 0 * pq.Hz)
 
 
