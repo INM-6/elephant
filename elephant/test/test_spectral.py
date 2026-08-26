@@ -171,6 +171,93 @@ class WelchPSDTestCase(unittest.TestCase):
                                2*rate.rescale('Hz').magnitude,
                                delta=0.2 * 2 * rate.rescale('Hz').magnitude)
 
+    def test_welch_psd_binned_spiketrain_bin_size_invariance(self):
+        """
+        The PSD of a binned spike train is expressed as a rate in Hz, by
+        dividing the spike count of each bin by the bin size. The bin size
+        therefore has to cancel out, and the asymptote of 2*rate must not
+        depend on how finely the spike train was binned. A regression in that
+        normalization would scale the estimate with the square of the bin
+        size, i.e. by factors of 4 and 25 between the bin sizes used here.
+        """
+        np.random.seed(123)
+        rate = 50 * pq.Hz
+        t_stop = 20 * pq.s
+        expected = 2 * rate.rescale('Hz').magnitude
+
+        # The same spike train is binned in different ways, so that the
+        # comparison is not obscured by differences between realizations.
+        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=t_stop).generate_spiketrain()
+
+        # The band has to stay below the lowest Nyquist frequency of the bin
+        # sizes compared: a bin size of 5 ms samples at 200 Hz. The spectrum
+        # of a Poisson process is flat, so any band away from zero will do.
+        band = (20 * pq.Hz, 80 * pq.Hz)
+
+        estimates = []
+        for bin_size in (1 * pq.ms, 2 * pq.ms, 5 * pq.ms):
+            binned_st = elephant.conversion.BinnedSpikeTrain(
+                spiketrain, bin_size=bin_size)
+            freqs, psd = elephant.spectral.welch_psd(binned_st)
+            mask = (freqs >= band[0]) & (freqs <= band[1])
+            avg_psd = np.mean(psd[0, mask]).rescale('Hz').magnitude
+            estimates.append(avg_psd)
+
+            self.assertAlmostEqual(
+                avg_psd, expected, delta=0.15 * expected,
+                msg=f"bin size {bin_size} deviates from 2*rate")
+
+        # The estimates must also agree with each other
+        self.assertLess(max(estimates) / min(estimates), 1.15)
+
+    def test_welch_psd_binned_spiketrain_two_sided(self):
+        """
+        The 2*rate asymptote is a consequence of the one-sided convention, in
+        which the negative frequencies are folded onto the positive ones. The
+        two-sided spectrum of a Poisson process levels off at rate instead.
+        """
+        np.random.seed(123)
+        rate = 50 * pq.Hz
+        t_stop = 20 * pq.s
+        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=t_stop).generate_spiketrain()
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrain, bin_size=2 * pq.ms)
+
+        freqs, psd = elephant.spectral.welch_psd(
+            binned_st, return_onesided=False)
+
+        mask = np.abs(freqs) > 100 * pq.Hz
+        avg_psd = np.mean(psd[0, mask]).rescale('Hz').magnitude
+        self.assertAlmostEqual(
+            avg_psd, rate.rescale('Hz').magnitude,
+            delta=0.15 * rate.rescale('Hz').magnitude)
+
+    def test_welch_psd_binned_spiketrain_multiple_spiketrains(self):
+        """
+        A BinnedSpikeTrain holding several spike trains must yield one
+        spectrum per spike train, each with the same scaling.
+        """
+        np.random.seed(123)
+        rate = 50 * pq.Hz
+        t_stop = 20 * pq.s
+        expected = 2 * rate.rescale('Hz').magnitude
+        spiketrains = [
+            elephant.spike_train_generation.StationaryPoissonProcess(
+                rate, t_stop=t_stop).generate_spiketrain() for _ in range(3)]
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrains, bin_size=2 * pq.ms)
+
+        freqs, psd = elephant.spectral.welch_psd(binned_st)
+
+        self.assertEqual(psd.shape[0], 3)
+        for channel in range(3):
+            avg_psd = np.mean(
+                psd[channel, freqs > 100 * pq.Hz]).rescale('Hz').magnitude
+            self.assertAlmostEqual(avg_psd, expected, delta=0.15 * expected,
+                                   msg=f"spike train {channel}")
+
     def test_welch_psd_binned_spiketrain_empty(self):
         """
         Test Welch's PSD estimation for an empty binned spiketrain.
