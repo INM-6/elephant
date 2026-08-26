@@ -320,8 +320,13 @@ class MultitaperPSDTestCase(unittest.TestCase):
         freqs, psd_multitaper = elephant.spectral.multitaper_psd(
             signal=time_series, fs=0.1, nw=4, num_tapers=8)
 
+        # No absolute tolerance is used here. The reference spectrum spans
+        # more than seven orders of magnitude, so an atol of 0.1 would only
+        # take effect for the handful of smallest bins - among them the one
+        # at the Nyquist frequency - and would exempt exactly those from
+        # being compared at all.
         np.testing.assert_allclose(np.squeeze(psd_multitaper), psd_nitime,
-                                   rtol=0.3, atol=0.1)
+                                   rtol=0.3)
 
     def test_multitaper_psd_input_types(self):
         # generate a test data
