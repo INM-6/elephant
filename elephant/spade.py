@@ -224,6 +224,9 @@ def spade(spiketrains, bin_size, winlen, min_spikes=2, min_occ=2,
             * extensional stability is greater than `stability_thresh[1]`
 
             are further analyzed.
+
+        If None, the stability is not computed.
+        Default: None
     n_surr : int, optional
         Number of surrogates to generate to compute the p-value spectrum.
         This number should be large (`n_surr >= 1000` is recommended for 100
@@ -270,6 +273,8 @@ def spade(spiketrains, bin_size, winlen, min_spikes=2, min_occ=2,
         `psr_param[2]`: correction parameter for covered-spikes criterion
             (see `l_covered_spikes` in :func:`pattern_set_reduction`).
 
+        If None, the pattern set reduction is not applied.
+        Default: None
     output_format : {'concepts', 'patterns'}, optional
         Distinguish the format of the output (see Returns).
         Default: 'patterns'
@@ -1627,6 +1632,7 @@ def test_signature_significance(pv_spec, concepts, alpha, winlen,
 
         'non_significant': list containing only the non-significant signatures
 
+        Default: 'spectrum'
     spectrum : {'#', '3d#'}, optional
         Defines the signature of the patterns.
 
@@ -2275,7 +2281,8 @@ def concept_output_to_patterns(concepts, winlen, bin_size, pv_spec=None,
         The time precision used to discretize the `spiketrains` (binning).
     pv_spec : None or tuple, optional
         Contains a tuple of signatures and the corresponding p-value. If equal
-        to None all p-values are set to -1.
+        to None, all p-values are set to -1.
+        Default: None
     spectrum : {'#', '3d#'}, optional
         '#': pattern spectrum using the as signature the pair:
             (number of spikes, number of occurrences)
@@ -2285,7 +2292,8 @@ def concept_output_to_patterns(concepts, winlen, bin_size, pv_spec=None,
 
         Default: '#'
     t_start : pq.Quantity, optional
-        Start time of the analyzed spike trains
+        Start time of the analyzed spike trains.
+        Default: 0 * pq.ms
 
     Returns
     -------

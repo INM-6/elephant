@@ -405,8 +405,9 @@ class GPFA(sklearn.base.BaseEstimator):
             `spiketrains[k][n]` refer to spike trains of the same neuron
             for any choices of `l`, `k`, and `n`.
         returned_data : list of str, optional
-            The dimensionality reduction transform generates the following
-            resultant data:
+            Specifies the keys by which the data dict is returned. The
+            dimensionality reduction transform generates the following
+            result data:
 
                'latent_variable_orth': orthonormalized posterior mean of latent
                variable
@@ -420,10 +421,7 @@ class GPFA(sklearn.base.BaseEstimator):
 
                'y': neural data used to estimate the GPFA model parameters
 
-            `returned_data` specifies the keys by which the data dict is
-            returned.
-
-            Default is ['latent_variable_orth'].
+            Default: ['latent_variable_orth']
 
         Returns
         -------
@@ -513,6 +511,7 @@ class GPFA(sklearn.base.BaseEstimator):
 
         returned_data : list of str, optional
             Refer to the :func:`GPFA.transform` docstring.
+            Default: ['latent_variable_orth']
 
         Returns
         -------

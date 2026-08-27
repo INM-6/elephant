@@ -118,7 +118,8 @@ def total_spiking_probability_edges(
         trains `spike_trains`.
         Default: 25
     normalize : bool, optional
-        Normalize the output [experimental]. Default: False.
+        Normalize the output [experimental].
+        Default: False
 
     Returns
     -------

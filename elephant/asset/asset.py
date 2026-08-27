@@ -1998,6 +1998,7 @@ class ASSET(object):
         Default: None
     bin_size : pq.Quantity, optional
         The width of the time bins used to compute the probability matrix.
+        Default: 3 * pq.ms
     t_start_i, t_start_j : pq.Quantity, optional
         The start time of the binning for the first and second axes,
         respectively.

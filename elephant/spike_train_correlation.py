@@ -856,7 +856,7 @@ def spike_time_tiling_coefficient(spiketrain_i: neo.core.SpikeTrain,
         proportion of total recording time that lies `[-dt, +dt]` of each spike
         in each train and the proportion of spikes in `spiketrain_i` that lies
         `[-dt, +dt]` of any spike in `spiketrain_j`.
-        Default : `0.005 * pq.s`
+        Default: `0.005 * pq.s`
 
     Returns
     -------

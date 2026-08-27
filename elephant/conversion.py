@@ -894,7 +894,7 @@ class BinnedSpikeTrain(object):
             If `None`, compute the total num. of spikes.
             Otherwise, compute num. of spikes along axis.
             If axis is `1`, compute num. of spikes per spike train (row).
-            Default is `None`.
+            Default: None
 
         Returns
         -------

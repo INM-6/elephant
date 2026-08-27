@@ -706,7 +706,7 @@ class StationaryPoissonProcess(RenewalProcess):
     refractory_period : pq.Quantity, optional
         The time period after one spike in which no other spike is emitted. This can be called an absolute refractory
         period or a dead time as used in :cite:`generation-Deger12_443`.
-        Default : None
+        Default: None
     equilibrium : bool, optional
         Generate an equilibrium or an ordinary renewal process.
         Default: True
@@ -1078,7 +1078,7 @@ class NonStationaryPoissonProcess(RateModulatedProcess):
     refractory_period : pq.Quantity, optional
         The time period after one spike in which no other spike is emitted. This can be called an absolute refractory
         period or a dead time.
-        Default : None
+        Default: None
 
     Raises
     ------

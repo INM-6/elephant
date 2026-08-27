@@ -727,8 +727,9 @@ def jointJ_window_analysis(spiketrains, bin_size=5 * pq.ms,
         Default: 'analytic_trialByTrial'
     t_start, t_stop : float or pq.Quantity, optional
         The start and stop times to use for the time points.
-        If not specified, retrieved from the `t_start` and `t_stop` attributes
-        of the input spiketrains.
+        If None, times are retrieved from the `t_start` and `t_stop`
+        attributes of the input spiketrains.
+        Default: None
     binary : bool, optional
         Binarize the binned spike train objects (True) or not. Only the binary
         matrices are supported at the moment.
