@@ -2209,14 +2209,21 @@ class ASSET(object):
             time was discretized in.
             If None, the output of :func:`ASSET.intersection_matrix` is used.
             Default: None
-        surrogate_method : {'dither_spike_train', 'dither_spikes',
-            'jitter_spikes', 'randomise_spikes', 'shuffle_isis',
-            'joint_isi_dithering'}, optional
+        surrogate_method : str, optional
+            The method to generate surrogate spike trains. The following are
+            supported:
 
-            The method to generate surrogate spike trains. Refer to the
-            :func:`spike_train_surrogates.surrogates` documentation for more
-            information about each surrogate method. Note that some of these
-            methods need `surrogate_dt` parameter, others ignore it.
+            * 'dither_spike_train'
+            * 'dither_spikes'
+            * 'jitter_spikes'
+            * 'randomise_spikes'
+            * 'shuffle_isis'
+            * 'joint_isi_dithering'
+
+            Refer to the :func:`spike_train_surrogates.surrogates`
+            documentation for more information about each surrogate method.
+            Note that some of these methods need the `surrogate_dt` parameter,
+            others ignore it.
             Default: 'dither_spike_train'
         surrogate_dt : pq.Quantity, optional
             For surrogate methods shifting spike times randomly around their
