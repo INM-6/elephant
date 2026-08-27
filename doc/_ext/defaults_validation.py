@@ -16,10 +16,11 @@ default. The code AST is scanned to detect this idiom.
 
 Rules
 -----
-1. Optional marker. The parameter type list must end with `, optional`. The
-   marker states that the caller may omit the argument, which is exactly
-   what a signature default means. Parameter entries documented without type
-   specifications are not checked.
+1. Optional marker. The parameter type list must end with `, optional`,
+   with no space between the type list and the comma. The marker states
+   that the caller may omit the argument, which is exactly what a signature
+   default means. Parameter entries documented without type specifications
+   are not checked.
    Subtype: `defaults.missing_optional`.
 
 2. Default line present. The description block must contain a line that
@@ -107,6 +108,10 @@ _HEADER_RE = re.compile(r'^(\w+(?:\s*,\s*\w+)*)\s*(?::\s*(.*))?$')
 # Matches a numpydoc section underline of three dashes or more.
 # This is used to detect the start of a new section, e.g., Parameters.
 _DASHES_RE = re.compile(r'^-{3,}')
+
+# Matches the optional marker at the end of a type field. The `\S` requires
+# the comma to follow the type list directly, with no space before it.
+_OPTIONAL_SUFFIX_RE = re.compile(r'\S, optional$')
 
 # Matches a parenthetical suffix: optional leading whitespace, then a
 # single balanced parenthesized group spanning the rest of the text, with
@@ -621,13 +626,15 @@ def _validate_defaults(app, what, name, obj, options, lines):
         default_str = defaults[param_name]
         param_type = entry['type']
 
-        # Rule 1: ", optional" must follow the type information.
-        if param_type and not param_type.endswith(', optional'):
+        # Rule 1: ", optional" must follow the type list directly. No spaces
+        # are allowed between the comma and the type list.
+        if param_type and not _OPTIONAL_SUFFIX_RE.search(param_type):
             logger.warning(
                 f'[{location}] {name}: parameter `{param_name}` has '
                 f'default `{default_str}` in the signature but its '
-                f'docstring type information `{param_type}` does not end with '
-                f'`, optional`.',
+                f'docstring type information `{param_type}` does not end '
+                f'with `, optional` without spaces between the type list '
+                f'and the comma.',
                 type='defaults',
                 subtype='missing_optional',
             )
