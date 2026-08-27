@@ -175,7 +175,7 @@ def spike_extraction(
     sign : {'above', 'below'}, optional
         Determines whether to count threshold crossings that cross above or below the threshold.
         Default: 'above'
-    time_stamps : :class:`neo.core.SpikeTrain` , optional
+    time_stamps : :class:`neo.core.SpikeTrain`, optional
         Provides the time stamps around which the waveform is extracted. If it is None, the function `peak_detection` is
         used to calculate the `time_stamps` from signal.
         Default: None
