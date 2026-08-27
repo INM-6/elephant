@@ -252,15 +252,15 @@ def spade(spiketrains, bin_size, winlen, min_spikes=2, min_occ=2,
         If `0.<alpha<1.`, the concepts are filtered according to their
         signature in the p-value spectrum.
         Default: None
-    stat_corr : str
+    stat_corr : str, optional
         Method used for multiple testing.
         See: :func:`test_signature_significance`
         Default: 'fdr_bh'
-    surr_method : str
+    surr_method : str, optional
         Method to generate surrogates. You can use every method defined in
         :func:`elephant.spike_train_surrogates.surrogates`.
         Default: 'dither_spikes'
-    psr_param : None or list of int or tuple of int
+    psr_param : None or list of int or tuple of int, optional
         This list contains parameters used in the pattern spectrum filtering:
 
         `psr_param[0]`: correction parameter for subset filtering
@@ -270,7 +270,7 @@ def spade(spiketrains, bin_size, winlen, min_spikes=2, min_occ=2,
         `psr_param[2]`: correction parameter for covered-spikes criterion
             (see `l_covered_spikes` in :func:`pattern_set_reduction`).
 
-    output_format : {'concepts', 'patterns'}
+    output_format : {'concepts', 'patterns'}, optional
         Distinguish the format of the output (see Returns).
         Default: 'patterns'
     **surr_kwargs
@@ -1258,7 +1258,7 @@ def pvalue_spectrum(
             and first spike of the pattern)
 
         Default: '#'
-    surr_method : str
+    surr_method : str, optional
         Method that is used to generate the surrogates. You can use every
         method defined in
         :func:`elephant.spike_train_surrogates.dither_spikes`.
@@ -1758,7 +1758,7 @@ def approximate_stability(concepts, rel_matrix, n_subsets=0,
         corresponds to the first bin of the first window position for the first
         neuron, the entry `[0, winlen]` to the first bin of the first window
         position for the second neuron.
-    n_subsets : int
+    n_subsets : int, optional
         Number of subsets of a concept used to approximate its stability.
         If `n_subsets` is 0, it is calculated according to to the formula
         given in Babin, Kuznetsov (2012), proposition 6:
@@ -2273,10 +2273,10 @@ def concept_output_to_patterns(concepts, winlen, bin_size, pv_spec=None,
         Length (in bins) of the sliding window used for the analysis.
     bin_size : pq.Quantity
         The time precision used to discretize the `spiketrains` (binning).
-    pv_spec : None or tuple
+    pv_spec : None or tuple, optional
         Contains a tuple of signatures and the corresponding p-value. If equal
         to None all p-values are set to -1.
-    spectrum : {'#', '3d#'}
+    spectrum : {'#', '3d#'}, optional
         '#': pattern spectrum using the as signature the pair:
             (number of spikes, number of occurrences)
         '3d#': pattern spectrum using the as signature the triplets:
@@ -2284,7 +2284,7 @@ def concept_output_to_patterns(concepts, winlen, bin_size, pv_spec=None,
             and first spike of the pattern)
 
         Default: '#'
-    t_start : pq.Quantity
+    t_start : pq.Quantity, optional
         Start time of the analyzed spike trains
 
     Returns

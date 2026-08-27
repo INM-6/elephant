@@ -593,7 +593,7 @@ def bin_shuffling(
         to create surrogates of.
     max_displacement : int
         Number of bins that a single spike can be displaced.
-    bin_size : pq.Quantity or None
+    bin_size : pq.Quantity or None, optional
         The bin size needs to be specified only if a not-binned spike train
         is passed to the method
     n_surrogates : int, optional
@@ -1036,7 +1036,7 @@ class JointISI(object):
 
         Parameters
         ----------
-        n_surrogates : int
+        n_surrogates : int, optional
             The number of dithered spiketrains to be returned.
             Default: 1
 

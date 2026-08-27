@@ -542,7 +542,7 @@ def lvr(time_intervals, R=5*pq.ms, with_nan=False):
     time_intervals : pq.Quantity or np.ndarray or list
         Vector of consecutive time intervals. Must have time units, if not unit
         is passed `ms` are assumed.
-    R : pq.Quantity or int or float
+    R : pq.Quantity or int or float, optional
         Refractoriness constant (R >= 0). If no quantity is passed `ms` are
         assumed.
         Default: 5 ms

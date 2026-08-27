@@ -850,12 +850,12 @@ def pairwise_spectral_granger(signal_i, signal_j, fs=1, nw=4, num_tapers=None,
         Overlap between segments represented as a float number between 0 (no
         overlap) and 1 (complete overlap).
         Default: 0.5 (half-overlapped)
-    num_iterations : int
+    num_iterations : int, optional
         Number of iterations for algorithm to estimate spectral factorization.
         Default: 300
-    term_crit : float
+    term_crit : float, optional
         Termination criterion for iteration step in spectral matrix
-        factorization
+        factorization.
         Default: 1e-12
 
     Returns

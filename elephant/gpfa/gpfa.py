@@ -405,7 +405,7 @@ class GPFA(sklearn.base.BaseEstimator):
             trial must be fixed such that `spiketrains[l][n]` and
             `spiketrains[k][n]` refer to spike trains of the same neuron
             for any choices of `l`, `k`, and `n`.
-        returned_data : list of str
+        returned_data : list of str, optional
             The dimensionality reduction transform generates the following
             resultant data:
 
@@ -512,7 +512,7 @@ class GPFA(sklearn.base.BaseEstimator):
         spiketrains : list of list of :class:`neo.core.SpikeTrain`, list of :class:`neo.core.spiketrainlist.SpikeTrainList` or :class:`elephant.trials.Trials`
             Refer to the :func:`GPFA.fit` docstring.
 
-        returned_data : list of str
+        returned_data : list of str, optional
             Refer to the :func:`GPFA.transform` docstring.
 
         Returns

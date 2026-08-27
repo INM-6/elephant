@@ -71,7 +71,7 @@ def estimate_csd(lfp, coordinates='coordinates', method=None,
     ----------
     lfp : :class:`neo.core.AnalogSignal`
         Positions of electrodes can be added as an array annotation
-    coordinates : array-like Quantity or str
+    coordinates : array-like Quantity or str, optional
         Specifies the corresponding spatial coordinates of the electrodes.
         Coordinates can be directly supplied by a NxM array-like Quantity
         with dimension of space, where M is the number of signals in 'lfp',
@@ -80,14 +80,14 @@ def estimate_csd(lfp, coordinates='coordinates', method=None,
         coordinates, supplied in the same format, as annotation of 'lfp' by
         that name.
         Default: 'coordinates'
-    method : str
+    method : str, optional
         Pick a method corresponding to the setup, in this implementation
         For Laminar probe style (1D), use 'KCSD1D' or 'StandardCSD',
         or 'DeltaiCSD' or 'StepiCSD' or 'SplineiCSD'
         For MEA probe style (2D),  use 'KCSD2D', or 'MoIKCSD'
         For array of laminar probes (3D), use 'KCSD3D'
         Defaults to None
-    process_estimate : bool
+    process_estimate : bool, optional
         In the py_iCSD_toolbox this corresponds to the filter_csd -
         the parameters are passed as kwargs here ie., f_type and f_order
         In the kcsd methods this corresponds to cross_validate -
