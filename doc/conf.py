@@ -258,6 +258,18 @@ numpydoc_validation_checks = {
 # see here https://github.com/phn/pytpm/issues/3#issuecomment-12133978
 numpydoc_show_class_members = False
 
+
+# --- Options for custom validations -----------------------------------
+
+# Objects excluded from the `defaults` validation. An entry is a fully
+# qualified name and also covers everything below it, so a module or a
+# class name excludes its members.
+defaults_ignore = [
+    'elephant.statistics.cv',  # re-export of scipy.stats.variation
+    'elephant.trials',         # TODO: addressed in another PR
+]
+
+
 # --- Options for bibtex -----------------------------------------------
 
 # path to bibtex-bibfiles.

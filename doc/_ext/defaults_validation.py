@@ -76,6 +76,9 @@ group whose members carry different defaults will be flagged as a mismatch
 against the single `Default:` line, which shows that the grouped parameters
 should be documented separately.
 
+Validation output
+-----------------
+
 Specific checks may be suppressed through `suppress_warnings` in `conf.py`::
 
     suppress_warnings = [
@@ -88,6 +91,19 @@ Specific checks may be suppressed through `suppress_warnings` in `conf.py`::
         'defaults.trailing_period',
         'defaults.none_default_not_optional',
     ]
+
+Objects can be excluded from every check through `defaults_ignore` in
+`conf.py`::
+
+    defaults_ignore = [
+        'elephant.statistics.cv',
+        'elephant.trials',
+    ]
+
+An entry is the fully-qualified name reported by autodoc, matched exactly
+or as a dotted prefix, so a module or a class name excludes everything
+below it. This differs from `suppress_warnings`, which disables one rule
+across all objects.
 
 This extension requires Python 3.9 or newer, which provides `ast.unparse`.
 """
@@ -562,9 +578,10 @@ def _validate_defaults(app, what, name, obj, options, lines):
 
     Parameters
     ----------
-    app : sphinx.application.Sphinx
+    app : sphinx.application.Sphinx or None
         The Sphinx application emitting the `autodoc-process-docstring`
-        event.
+        event, which supplies the `defaults_ignore` configuration. It is
+        None when the handler is called directly, outside a build.
     what : str
         The kind of object being documented. Only `'function'`, `'method'`,
         `'class'` and `'exception'` are processed. The latter two are
@@ -579,6 +596,15 @@ def _validate_defaults(app, what, name, obj, options, lines):
     lines : list[str]
         The raw docstring lines, left unmodified by this handler.
     """
+    # Skip objects listed in `defaults_ignore`. An entry matches the
+    # fully-qualified name reported by autodoc, either exactly or as a
+    # dotted prefix, so a module or a class name covers everything below
+    # it. `app` is None when the handler is called outside a build.
+    ignored_names = app.config.defaults_ignore if app is not None else ()
+    for ignored in ignored_names:
+        if name == ignored or name.startswith(f'{ignored}.'):
+            return
+
     # Only validate functions, methods and classes. A class documents the
     # parameters of its constructor in the class docstring, so the defaults
     # are read from `__init__`. A class that inherits its constructor is
@@ -768,6 +794,9 @@ def setup(app):
         The extension metadata, declaring the version and the parallel
         read and write safety.
     """
+    # Objects excluded from every check, as fully-qualified names.
+    app.add_config_value('defaults_ignore', [], 'env', types=[list])
+
     # Priority 200 runs the handler before numpydoc, whose default
     # priority is 500, so that it sees the raw numpy-format lines.
     app.connect('autodoc-process-docstring', _validate_defaults, priority=200)
