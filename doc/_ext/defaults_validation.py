@@ -656,7 +656,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
         # are allowed between the comma and the type list.
         if param_type and not _OPTIONAL_SUFFIX_RE.search(param_type):
             logger.warning(
-                f'[{location}] {name}: parameter `{param_name}` has '
+                f'[defaults] ({location}) '
+                f'{name}: parameter `{param_name}` has '
                 f'default `{default_str}` in the signature but its '
                 f'docstring type information `{param_type}` does not end '
                 f'with `, optional` without spaces between the type list '
@@ -668,7 +669,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
         # Rule 2: the description block must contain a `Default:` line.
         if not entry['has_default_line']:
             logger.warning(
-                f'[{location}] {name}: parameter `{param_name}` has '
+                f'[defaults] ({location}) '
+                f'{name}: parameter `{param_name}` has '
                 f'default `{default_str}` in the signature but its '
                 f'description has no valid `Default:` line. The marker '
                 f'must be followed by a space.',
@@ -682,7 +684,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
         # parameter description block.
         if not entry['default_is_last']:
             logger.warning(
-                f'[{location}] {name}: parameter `{param_name}` has a '
+                f'[defaults] ({location}) '
+                f'{name}: parameter `{param_name}` has a '
                 f'`Default:` line that is not the last non-empty line '
                 f'of its description block.',
                 type='defaults',
@@ -711,7 +714,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
                             or _LIST_ITEM_RE.match(previous.lstrip()))
             if not closes_block:
                 logger.warning(
-                    f'[{location}] {name}: parameter `{param_name}` has '
+                    f'[defaults] ({location}) '
+                    f'{name}: parameter `{param_name}` has '
                     f'a `Default:` line that is preceded by a blank line.',
                     type='defaults',
                     subtype='separate_paragraph',
@@ -730,7 +734,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
                         or doc_value.startswith(f'{default_str} '))
             if not value_ok:
                 logger.warning(
-                    f'[{location}] {name}: parameter `{param_name}` '
+                    f'[defaults] ({location}) '
+                    f'{name}: parameter `{param_name}` '
                     f'documents `Default: {doc_default}` but the '
                     f'signature default is `{default_str}`.',
                     type='defaults',
@@ -743,7 +748,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
                 suffix = doc_value[len(default_str):]
                 if suffix and not _PAREN_SUFFIX_RE.match(suffix):
                     logger.warning(
-                        f'[{location}] {name}: parameter `{param_name}` '
+                        f'[defaults] ({location}) '
+                        f'{name}: parameter `{param_name}` '
                         f'has extra text after the default value that is '
                         f'not enclosed in parentheses: '
                         f'`Default: {doc_default}`.',
@@ -754,7 +760,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
             # Rule 7: the `Default:` line should not end with a period.
             if doc_default.endswith('.'):
                 logger.warning(
-                    f'[{location}] {name}: parameter `{param_name}` has '
+                    f'[defaults] ({location}) '
+                    f'{name}: parameter `{param_name}` has '
                     f'a `Default:` line that ends with a period: '
                     f'`Default: {doc_default}`.',
                     type='defaults',
@@ -770,7 +777,8 @@ def _validate_defaults(app, what, name, obj, options, lines):
         if annotation is None or _annotation_admits_none(annotation):
             continue
         logger.warning(
-            f'[{location}] {name}: parameter `{param_name}` has the '
+            f'[defaults] ({location}) '
+            f'{name}: parameter `{param_name}` has the '
             f'signature default `None` but its annotation '
             f'`{ast.unparse(annotation)}` does not admit `None`. To fix this,'
             f' write `Optional[...]` or `... | None` as type hint.',
