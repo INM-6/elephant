@@ -1619,18 +1619,18 @@ def test_signature_significance(pv_spec, concepts, alpha, winlen,
         For further description see:
         https://www.statsmodels.org/stable/generated/statsmodels.stats.multitest.multipletests.html
         Default: 'fdr_bh'
-
     report : {'spectrum', 'significant', 'non_significant'}, optional
         Format to be returned for the significance spectrum:
 
-        'spectrum': list of triplets (z,c,b), where b is a boolean specifying
-                    whether signature (z,c) is significant (True) or not
-                    (False)
+        *  'spectrum': list of triplets (z,c,b), where b is a boolean
+           specifying whether signature (z,c) is significant (True) or not
+           (False)
 
-        'significant': list containing only the significant signatures (z,c) of
-                       pvalue_spectrum
+        *  'significant': list containing only the significant signatures
+           (z,c) of pvalue_spectrum
 
-        'non_significant': list containing only the non-significant signatures
+        *  'non_significant': list containing only the non-significant
+           signatures
 
         Default: 'spectrum'
     spectrum : {'#', '3d#'}, optional
