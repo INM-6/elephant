@@ -33,7 +33,12 @@ Rules
 
 4. No separate paragraph. A blank line must not precede the `Default:`
    line, unless it closes an indented block or a list, where
-   reStructuredText requires it. Such a blank line is not reported.
+   reStructuredText requires it. Such a blank line is not reported. A
+   list closes the block only when it is itself opened by a blank line
+   or by the start of the description block, as reStructuredText
+   requires. A list marker written directly below running text is part
+   of that paragraph and does not open a list, so the blank line above
+   the `Default:` line is reported.
    Subtype: `defaults.separate_paragraph`.
 
 5. Default value correct. The text following `Default:` must match the
@@ -708,10 +713,25 @@ def _validate_defaults(app, what, name, obj, options, lines):
             previous = lines[previous_idx]
             previous_indent = len(previous) - len(previous.lstrip())
 
-            # A deeper indented line belongs to a block and a list item
-            # opens one; both need the blank line that closes them.
-            closes_block = (previous_indent > indent
-                            or _LIST_ITEM_RE.match(previous.lstrip()))
+            # A deeper indented line belongs to a block, which needs the
+            # blank line that closes it.
+            closes_block = previous_indent > indent
+
+            # A list marker at the same indentation closes a list only when
+            # the list was opened. reStructuredText requires a blank line
+            # before the first item, so a marker written directly below
+            # running text is plain text within that paragraph. Walk up the
+            # run of non-empty lines and check that a list item starts it.
+            if not closes_block and _LIST_ITEM_RE.match(previous.lstrip()):
+                run_idx = previous_idx
+                while (run_idx > 0 and lines[run_idx - 1].strip()
+                       and lines[run_idx - 1][0] in (' ', '\t')):
+                    run_idx -= 1
+                run_start = lines[run_idx]
+                run_indent = len(run_start) - len(run_start.lstrip())
+                closes_block = (run_indent == indent
+                                and bool(_LIST_ITEM_RE.match(
+                                    run_start.lstrip())))
             if not closes_block:
                 logger.warning(
                     f'[defaults] ({location}) '
