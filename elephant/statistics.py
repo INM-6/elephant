@@ -1345,8 +1345,9 @@ class Complexity(object):
     bin_size : pq.Quantity or None, optional
         Width of the histogram's time bins with units of time.
         The user must specify the `bin_size` or the `sampling_rate`.
-        *  If None and the `sampling_rate` is available
-        1/`sampling_rate` is used.
+
+        *  If None and the `sampling_rate` is available, 1/`sampling_rate`
+           is used.
         *  If both are given then `bin_size` is used.
 
         Default: None
@@ -1361,12 +1362,13 @@ class Complexity(object):
         Number of bins in which to check for synchronous spikes.
         Spikes that occur separated by `spread - 1` or less empty bins are
         considered synchronous.
+
         *  ``spread = 0`` corresponds to a bincount accross spike trains.
         *  ``spread = 1`` corresponds to counting consecutive spikes.
         *  ``spread = 2`` corresponds to counting consecutive spikes and
-        spikes separated by exactly 1 empty bin.
+           spikes separated by exactly 1 empty bin.
         *  ``spread = n`` corresponds to counting spikes separated by exactly
-        or less than `n - 1` empty bins.
+           or less than `n - 1` empty bins.
 
         Default: 0
     tolerance : float or None, optional
