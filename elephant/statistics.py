@@ -647,25 +647,21 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
 
         Note: The kernel width is not adaptive, i.e., it is calculated as
         global optimum across the data.
-
         Default: 'auto'
     cutoff : float, optional
         This factor determines the cutoff of the probability distribution of
         the kernel, i.e., the considered width of the kernel in terms of
         multiples of the standard deviation sigma.
-
         Default: 5.0
     t_start : pq.Quantity, optional
         Start time of the interval used to compute the firing rate.
         If None, `t_start` is assumed equal to `t_start` attribute of
         `spiketrain`.
-
         Default: None
     t_stop : pq.Quantity, optional
         End time of the interval used to compute the firing rate.
         If None, `t_stop` is assumed equal to `t_stop` attribute of
         `spiketrain`.
-
         Default: None
     trim : bool, optional
         Accounts for the asymmetry of a kernel.
@@ -680,14 +676,12 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         Transformation by a total of two times the size of the kernel, and
         `t_start` and `t_stop` are adjusted. True (trimming) is equivalent to
         'valid' convolution mode for symmetrical kernels.
-
         Default: False
     center_kernel : bool, optional
         If set to True, the kernel will be translated such that its median is
         centered on the spike, thus putting equal weight before and after the
         spike. If False, no adjustment is performed such that the spike sits at
         the origin of the kernel.
-
         Default: True
     border_correction : bool, optional
         Apply a border correction to prevent underestimating the firing rates
@@ -695,13 +689,11 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         The correction is done by estimating the mass of the kernel outside
         these spike train borders under the assumption that the rate does not
         change strongly. Only possible in the case of a Gaussian kernel.
-
         Default: False
     pool_trials : bool, optional
         If True, calculate firing rates averaged over trials if `spiketrains` is
         of type :mod:`elephant.trials`. Has no effect for single spike train
         or lists of spike trains.
-
         Default: False
     pool_spike_trains : bool, optional
         If True, calculate firing rates averaged over spike trains. If the
@@ -709,7 +701,6 @@ def instantaneous_rate(spiketrains, sampling_period, kernel='auto',
         across spike trains within each trial, and pool_trials determines
         whether spike trains are additionally pooled across trials.
         Has no effect for a single spike train.
-
         Default: False
 
     Returns
