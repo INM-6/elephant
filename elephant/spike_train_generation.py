@@ -157,7 +157,7 @@ def spike_extraction(
         signal: neo.core.AnalogSignal,
         threshold: pq.Quantity = 0.0 * pq.mV,
         sign: Literal['above', 'below'] = 'above',
-        time_stamps: neo.core.SpikeTrain = None,
+        time_stamps: Optional[neo.core.SpikeTrain] = None,
         interval: tuple = (-2 * pq.ms, 4 * pq.ms),
         always_as_list: bool = False
         ) -> Union[neo.core.SpikeTrain, SpikeTrainList]:
