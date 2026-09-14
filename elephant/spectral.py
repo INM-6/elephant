@@ -380,9 +380,9 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
         High peak resolution --> high numerical value --> high number of tapers
         When given as a `float`, it is taken as frequency in Hz.
         Default: None.
-    attach_units: bool, optional
-        If True and signals is an instance of pq.Quantity, units are attached
-        to the estimated cross spectrum.
+    attach_units : bool, optional
+        If True and signal is an instance of pq.Quantity, units are attached
+        to the estimated PSD.
         Default: True
 
     Notes
@@ -523,9 +523,6 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
         Time series data of which PSD is estimated. When `signal` is np.ndarray
         sampling frequency should be given through keyword argument `fs`.
         Signal should be passed as (n_channels, n_samples)
-    fs : float, optional
-        Specifies the sampling frequency of the input time series
-        Default: 1.0.
     n_segments : int, optional
         Number of segments. The length of segments is adjusted so that
         overlapping segments cover the entire stretch of the given data. This
@@ -546,6 +543,9 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
         Overlap between segments represented as a float number between 0 (no
         overlap) and 1 (complete overlap).
         Default: 0.5 (half-overlapped).
+    fs : float, optional
+        Specifies the sampling frequency of the input time series
+        Default: 1.0.
     nw : float, optional
         Time bandwidth product
         Default: 4.0.
