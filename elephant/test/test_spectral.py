@@ -530,13 +530,6 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
                                      unittest.TestCase):
     psd_function = staticmethod(elephant.spectral.segmented_multitaper_psd)
 
-    @staticmethod
-    def extract_channel(psd, channel):
-        # Unlike the other two functions, this one returns the full cross
-        # spectrum of shape (n, n, n_freqs); the auto spectra, which are real
-        # up to numerical error, are on its diagonal.
-        return psd[channel, channel].real
-
     # The following assertions test _segmented_apply_func in the context
     # of segmented_multitaper_psd. In other words, only the segmentation is
     # addressed. The inner workings of the multitaper function are tested
@@ -717,11 +710,61 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         self.assertEqual(psd.units, pq.Hz)
 
         # Check scaling: for large frequencies, PSD should approach 2*rate
-        # Flattening because segmented_multitaper_psd might have extra dimension
         avg_psd = np.mean(psd.flatten()[freqs > 100 * pq.Hz])
         self.assertAlmostEqual(avg_psd.rescale('Hz').magnitude,
                                2 * rate.rescale('Hz').magnitude,
                                delta=0.2 * 2 * rate.rescale('Hz').magnitude)
+
+    def test_segmented_multitaper_psd_multichannel_shape_and_values(self):
+        """
+        Regression test for a bug where `segmented_multitaper_psd` returned
+        a (n_channels, n_channels, n_freqs) array whose off-diagonal entries
+        were `channel[:, np.newaxis, :]` broadcast across the row (i.e. a
+        duplicate of the channel's own spectrum), rather than the genuine
+        per-channel spectrum this function computes. `_segmented_apply_func`
+        allocated that shape unconditionally, assuming every wrapped
+        function computes a real cross-spectrum like
+        `multitaper_cross_spectrum` does; `multitaper_psd` does not.
+
+        The fixed return shape must be (n_channels, n_freqs), matching
+        `multitaper_psd` and `welch_psd`, and its values must equal the
+        (correctly computed) diagonal of `segmented_multitaper_cross_spectrum`,
+        up to the one-sided-vs-two-sided factor of 2.
+        """
+        data_length = 5000
+        sampling_period = 0.001
+        signal_freq = 100.0
+        noise = np.random.normal(size=(3, data_length))
+        time_points = np.arange(0, data_length * sampling_period,
+                                sampling_period)
+        signal_x = np.sin(2 * np.pi * signal_freq * time_points) + noise[0]
+        signal_y = np.cos(2 * np.pi * signal_freq * time_points) + noise[1]
+        signal_z = 2 * noise[2]
+        data = AnalogSignal(np.vstack([signal_x, signal_y, signal_z]).T,
+                            sampling_period=sampling_period * pq.s,
+                            units='mV')
+
+        freqs_psd, psd = elephant.spectral.segmented_multitaper_psd(
+            data, n_segments=4, nw=4, num_tapers=8)
+
+        self.assertEqual(psd.shape, (3, len(freqs_psd)))
+
+        freqs_csd, cross_spec = \
+            elephant.spectral.segmented_multitaper_cross_spectrum(
+                data, n_segments=4, nw=4, num_tapers=8,
+                return_onesided=True)
+
+        self.assertTrue((freqs_psd == freqs_csd).all())
+
+        auto_spectra = 2 * np.diagonal(cross_spec).T.real.magnitude
+        np.testing.assert_allclose(psd.magnitude, auto_spectra,
+                                   rtol=0.01, atol=0.01)
+
+        # The three channels have different power, so a broadcast bug
+        # (every row equal to the channel's own value repeated) would show
+        # up as the per-channel spectra all being equal to one another.
+        self.assertFalse(np.allclose(psd[0].magnitude, psd[2].magnitude,
+                                     rtol=0.1))
 
     def test_segmented_multitaper_psd_binned_spiketrain_empty(self):
         """

@@ -961,14 +961,15 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
     data = np.pad(data, [(0, 0), (0, remainder)],
                   mode='constant', constant_values=0)
 
-    # Generate array for storing cross spectra estimates of segments
-    seg_estimates = np.zeros((n_segments,
-                              data.shape[0],
-                              data.shape[0],
-                              len(freqs)),
-                             dtype=np.complex64)
-
     n_overlap_step = n_per_seg - n_overlap
+
+    # Buffer for storing the per-segment estimates, allocated from the
+    # shape and dtype of the first segment's own estimate rather than
+    # assumed in advance: `func` may return a per-channel spectral
+    # measure of shape (n_channels, n_freqs), as multitaper_psd does, or
+    # a genuine cross-spectral measure of shape (n_channels, n_channels,
+    # n_freqs), as multitaper_cross_spectrum does.
+    seg_estimates = None
 
     for i in range(n_segments):
 
@@ -976,11 +977,11 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
             data[:, i * n_overlap_step:i * n_overlap_step + n_per_seg],
             **func_params_dict)
 
-        # Workaround for mismatched dimensions
-        if estimate.ndim != seg_estimates.ndim - 1:  # Multitaper PSD
-            seg_estimates[i] = estimate[:, np.newaxis, :]
-        else:
-            seg_estimates[i] = estimate
+        if seg_estimates is None:
+            seg_estimates = np.zeros((n_segments,) + estimate.shape,
+                                     dtype=estimate.dtype)
+
+        seg_estimates[i] = estimate
 
     avg_estimate = np.mean(seg_estimates, axis=0)
 
