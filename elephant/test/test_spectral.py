@@ -88,6 +88,50 @@ class BinnedSpikeTrainPSDMixin:
         # The estimates must also agree with each other
         self.assertLess(max(estimates) / min(estimates), 1.15)
 
+    def test_binned_spiketrain_rate_and_bin_size_invariance(self):
+        """
+        `test_binned_spiketrain_bin_size_invariance` only checks bin-size
+        invariance at a single rate (50 Hz). The cancellation it relies on
+        (the sinc^2 attenuation that binning imposes is exactly undone by
+        the power aliasing folds back into the baseband) holds independently
+        of the rate, since it is a property of the bin/hold filter alone,
+        not of the process being binned. But a regression could still break
+        that independence in a way a single rate does not exercise, e.g. a
+        normalization that is correct at one rate by coincidence (canceling
+        against another bug) but not at others. This grid, at each of
+        several rates, checks both that the 2*rate asymptote holds and that
+        it agrees across bin sizes.
+        """
+        np.random.seed(123)
+        bin_sizes = (1 * pq.ms, 2 * pq.ms, 5 * pq.ms)
+
+        for rate in (10 * pq.Hz, 50 * pq.Hz, 200 * pq.Hz):
+            expected = 2 * rate.rescale('Hz').magnitude
+
+            # As in test_binned_spiketrain_bin_size_invariance, the same
+            # spike train is binned in different ways so that the
+            # comparison across bin sizes is not obscured by differences
+            # between realizations.
+            spiketrain = self._poisson_spiketrains(rate, 20 * pq.s)[0]
+
+            estimates = []
+            for bin_size in bin_sizes:
+                binned_st = elephant.conversion.BinnedSpikeTrain(
+                    spiketrain, bin_size=bin_size)
+                avg_psd = self._mean_psd_in_band(
+                    binned_st, 20 * pq.Hz, 80 * pq.Hz)
+                estimates.append(avg_psd)
+
+                self.assertAlmostEqual(
+                    avg_psd, expected, delta=0.15 * expected,
+                    msg=f"rate {rate}, bin size {bin_size} deviates from "
+                        f"2*rate")
+
+            # The estimates must also agree with each other
+            self.assertLess(
+                max(estimates) / min(estimates), 1.15,
+                msg=f"bin sizes disagree with each other at rate {rate}")
+
     def test_binned_spiketrain_multiple_spiketrains(self):
         """
         A `BinnedSpikeTrain` holding several spike trains must yield one
