@@ -15,6 +15,7 @@ spectrum).
     multitaper_coherence
 
 
+:copyright: Copyright 2014-2026 by the Elephant team, see `doc/authors.rst`.
 References
 ----------
 
@@ -166,6 +167,11 @@ def welch_psd(signal, n_segments=8, len_segment=None,
         If both `frequency_resolution` and `len_segment` are None and
         `n_segments` is greater than the length of data at `axis`.
 
+    See Also
+    --------
+    scipy.signal.welch
+    welch_cohere
+
     Notes
     -----
     1. The computation steps used in this function are implemented in
@@ -229,11 +235,6 @@ def welch_psd(signal, n_segments=8, len_segment=None,
        `BinnedSpikeTrain`, in which bins containing more than one spike are
        clipped to one.
 
-    See Also
-    --------
-    scipy.signal.welch
-    welch_cohere
-
     Examples
     --------
     >>> import neo
@@ -255,8 +256,6 @@ def welch_psd(signal, n_segments=8, len_segment=None,
     array([[1.09566410e-03, 2.33607943e-02, 1.35436832e-03, 6.74408723e-05,
             1.00810196e-05, 2.40079315e-06, 7.35821437e-07, 2.58361700e-07,
             9.44183422e-08, 3.14573483e-08, 6.82050475e-09, 1.18183354e-10]]) * mV**2/Hz
-
-
     """
     if isinstance(signal, elephant.conversion.BinnedSpikeTrain):
         # Convert spike train to an analog signal with units of Hz
@@ -408,9 +407,9 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
     Returns
     -------
     freqs : np.ndarray
-        Frequencies associated with power estimate in `psd`
+        Frequencies associated with power estimate in `psd`.
     psd : np.ndarray
-        PSD estimate of the time series in `signal`
+        PSD estimate of the time series in `signal`.
 
     Raises
     ------
@@ -421,6 +420,13 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
 
     TypeError
         If `peak_resolution` is None and `num_tapers` is not an int.
+
+    Notes
+    -----
+    1. There is a parameter hierarchy regarding nw, num_tapers and
+       peak_resolution. If peak_resolution is provided, it determines both nw
+       and the num_tapers. Specifying num_tapers has an effect only if
+       peak_resolution is not provided.
     """
 
     # When the input is AnalogSignal, the data is added after rolling the axis
@@ -712,13 +718,6 @@ def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
         the estimated cross spectrum.
         Default: True
 
-    Notes
-    -----
-    1. There is a parameter hierarchy regarding `nw`, `num_tapers` and
-       `peak_resolution`. If peak_resolution is provided, it determines both
-       `nw` and the `num_tapers`. Specifying `num_tapers` has an effect only if
-       `peak_resolution` is not provided.
-
     Returns
     -------
     freqs : np.ndarray
@@ -739,6 +738,13 @@ def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
 
     TypeError
         If `peak_resolution` is None and `num_tapers` is not an int.
+
+    Notes
+    -----
+    1. There is a parameter hierarchy regarding `nw`, `num_tapers` and
+       `peak_resolution`. If peak_resolution is provided, it determines both
+       `nw` and the `num_tapers`. Specifying `num_tapers` has an effect only if
+       `peak_resolution` is not provided.
     """
     # When the input is AnalogSignal, fetch the underlying numpy array and swap
     # axes from (n_samples, n_channels) to (n_channels, n_samples)
@@ -1092,8 +1098,6 @@ def segmented_multitaper_cross_spectrum(signals, n_segments=1,
     See Also
     --------
     :func:`multitaper_cross_spectrum`
-
-
     """
     # When the input is AnalogSignal, fetch the underlying numpy array and swap
     # axes from (n_samples, n_channels) to (n_channels, n_samples)
@@ -1151,22 +1155,6 @@ def multitaper_coherence(signal_i, signal_j, n_segments=1, len_segment=None,
         `neo.AnalogSignal`, sampling frequency should be specified through the
         keyword argument `fs`. Otherwise, the default value is used
         (`fs` = 1.0).
-    fs : float, optional
-        Specifies the sampling frequency of the input time series
-        Default: 1.0
-    nw : float, optional
-        Time bandwidth product
-        Default: 4.0
-    num_tapers : int, optional
-        Number of tapers used in 1. to obtain estimate of PSD. By default,
-        [2*nw] - 1 is chosen.
-        Default: None
-    peak_resolution : pq.Quantity float, optional
-        Quantity in Hz determining the number of tapers used for analysis.
-        Fine peak resolution --> low numerical value --> low number of tapers
-        High peak resolution --> high numerical value --> high number of tapers
-        When given as a `float`, it is taken as frequency in Hz.
-        Default: None.
     n_segments : int, optional
         Number of segments. The length of segments is adjusted so that
         overlapping segments cover the entire stretch of the given data. This
@@ -1187,16 +1175,31 @@ def multitaper_coherence(signal_i, signal_j, n_segments=1, len_segment=None,
         Overlap between segments represented as a float number between 0 (no
         overlap) and 1 (complete overlap).
         Default: 0.5 (half-overlapped)
+    fs : float, optional
+        Specifies the sampling frequency of the input time series
+        Default: 1.0
+    nw : float, optional
+        Time bandwidth product
+        Default: 4.0
+    num_tapers : int, optional
+        Number of tapers used in 1. to obtain estimate of PSD. By default,
+        [2*nw] - 1 is chosen.
+        Default: None
+    peak_resolution : pq.Quantity float, optional
+        Quantity in Hz determining the number of tapers used for analysis.
+        Fine peak resolution --> low numerical value --> low number of tapers
+        High peak resolution --> high numerical value --> high number of tapers
+        When given as a `float`, it is taken as frequency in Hz.
+        Default: None.
 
     Returns
     -------
     freqs : np.ndarray
-        Frequencies associated with the magnitude-squared coherence estimate
+        Frequencies associated with the magnitude-squared coherence estimate.
     coherence : np.ndarray
-        Magnitude-squared coherence estimate
+        Magnitude-squared coherence estimate.
     phase_lag : np.ndarray
-        Phase lags associated with the magnitude-square coherence estimate
-
+        Phase lags associated with the magnitude-square coherence estimate.
     """
     if isinstance(signal_i, neo.core.AnalogSignal) and \
             isinstance(signal_j, neo.core.AnalogSignal):
@@ -1326,6 +1329,10 @@ def welch_coherence(signal_i, signal_j, n_segments=8, len_segment=None,
     ValueError
         Same as in :func:`welch_psd`.
 
+    See Also
+    --------
+    welch_psd
+
     Notes
     -----
     1. The computation steps used in this function are implemented in
@@ -1341,10 +1348,6 @@ def welch_coherence(signal_i, signal_j, n_segments=8, len_segment=None,
        `signal.shape[axis] / (n_segments - overlap * (n_segments - 1))`
 
        converted to integer.
-
-    See Also
-    --------
-    welch_psd
 
     Examples
     --------
@@ -1363,12 +1366,10 @@ def welch_coherence(signal_i, signal_j, n_segments=8, len_segment=None,
             4.54545455,  5.45454545,  6.36363636,  7.27272727,  8.18181818,
             9.09090909, 10.        ]) * Hz
 
-
     >>> coherency.flatten()
     array([1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
     >>> phase_lag.flatten() # doctest: +SKIP
     array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]) * rad
-
     """
 
     # TODO: code duplication with welch_psd()

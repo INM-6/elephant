@@ -2,7 +2,7 @@
 """
 Unit tests for the ASSET analysis.
 
-:copyright: Copyright 2014-2024 by the Elephant team, see `doc/authors.rst`.
+:copyright: Copyright 2014-2026 by the Elephant team, see `doc/authors.rst`.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
@@ -38,6 +38,7 @@ HAVE_PYOPENCL = get_opencl_capability()
 HAVE_CUDA = get_cuda_capability_major() != 0
 
 
+@unittest.skipUnless(HAVE_SKLEARN, 'requires sklearn')
 class AssetBinningTestCase(unittest.TestCase):
 
     def setUp(self):

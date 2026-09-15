@@ -2,7 +2,7 @@
 """
 GPFA core functionality.
 
-:copyright: Copyright 2014-2024 by the Elephant team, see AUTHORS.txt.
+:copyright: Copyright 2014-2026 by the Elephant team, see AUTHORS.txt.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
@@ -473,7 +473,6 @@ def learn_gp_params(seqs_latent, params, verbose=False):
     ValueError
         If `params['covType'] != 'rbf'`.
         If `params['notes']['learnGPNoise']` set to True.
-
     """
     if params['covType'] != 'rbf':
         raise ValueError("Only 'rbf' GP covariance type is supported.")
