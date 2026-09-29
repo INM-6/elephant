@@ -615,7 +615,7 @@ def cross_correlation_histogram(
         fastest realization. In contrast, the option "memory" uses an own
         implementation to calculate the correlation based on sparse matrices,
         which is more memory efficient but slower than the "speed" option.
-        Default: "speed"
+        Default: 'speed'
     cross_correlation_coefficient : bool, optional
         If True, a normalization is applied to the CCH to obtain the
         cross-correlation  coefficient function ranging from -1 to 1 according
@@ -856,7 +856,7 @@ def spike_time_tiling_coefficient(spiketrain_i: neo.core.SpikeTrain,
         proportion of total recording time that lies `[-dt, +dt]` of each spike
         in each train and the proportion of spikes in `spiketrain_i` that lies
         `[-dt, +dt]` of any spike in `spiketrain_j`.
-        Default: `0.005 * pq.s`
+        Default: 0.005 * pq.s
 
     Returns
     -------

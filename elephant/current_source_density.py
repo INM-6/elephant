@@ -236,17 +236,17 @@ def generate_lfp(csd_profile, x_positions, y_positions=None, z_positions=None,
     x_limits : list, optional
         A list of [start, end].
         The starting spatial coordinate and the ending for integration
-        Default: [0., 1.]
+        Default: [0.0, 1.0]
     y_limits : list, optional
         A list of [start, end].
         The starting spatial coordinate and the ending for integration.
         This is used only in 2D and 3D cases.
-        Default: [0., 1.]
+        Default: [0.0, 1.0]
     z_limits : list, optional
         A list of [start, end].
         The starting spatial coordinate and the ending for integration.
         This is used only in 3D cases.
-        Default: [0., 1.]
+        Default: [0.0, 1.0]
     resolution : int, optional
         The resolution of the integration
         Default: 50

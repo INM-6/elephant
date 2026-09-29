@@ -119,7 +119,7 @@ def welch_psd(signal, n_segments=8, len_segment=None,
     axis : int, optional
         Axis along which the periodogram is computed.
         See Notes [2].
-        Default: last axis (-1)
+        Default: -1 (last axis)
 
     Returns
     -------
@@ -303,10 +303,10 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
         Signal should be passed as (n_channels, n_samples)
     fs : float, optional
         Specifies the sampling frequency of the input time series
-        Default: 1.0
+        Default: 1
     nw : float, optional
         Time bandwidth product
-        Default: 4.0
+        Default: 4
     num_tapers : int, optional
         Number of tapers used in 1. to obtain estimate of PSD. By default,
         [2*nw] - 1 is chosen.
@@ -1072,10 +1072,10 @@ def multitaper_coherence(signal_i, signal_j, n_segments=1, len_segment=None,
         Default: 0.5 (half-overlapped)
     fs : float, optional
         Specifies the sampling frequency of the input time series
-        Default: 1.0
+        Default: 1
     nw : float, optional
         Time bandwidth product
-        Default: 4.0
+        Default: 4
     num_tapers : int, optional
         Number of tapers used in 1. to obtain estimate of PSD. By default,
         [2*nw] - 1 is chosen.
@@ -1190,7 +1190,7 @@ def welch_coherence(signal_i, signal_j, n_segments=8, len_segment=None,
     axis : int, optional
         Axis along which the periodogram is computed.
         See Notes [1].
-        Default: last axis (-1)
+        Default: -1 (last axis)
 
     Returns
     -------

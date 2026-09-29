@@ -123,7 +123,7 @@ def isi(spiketrain, axis=-1):
         The spike times.
     axis : int, optional
         The axis along which the difference is taken.
-        Default: the last axis
+        Default: -1 (the last axis)
 
     Returns
     -------
@@ -296,7 +296,7 @@ def fanofactor(spiketrains: Union[List[neo.SpikeTrain], List[pq.Quantity], List[
         In case of a list of input :class:`neo.core.SpikeTrain`, if their durations
         vary by more than `warn_tolerance` in their absolute values, throw a warning
         (see Notes).
-        Default: 0.1 ms
+        Default: 0.1 * pq.ms
 
     Returns
     -------
@@ -412,7 +412,7 @@ def cv2(time_intervals, with_nan=False):
         np.NaN value and a warning is raised.
         If False, `ValueError` exception is raised with a spike train with
         less than two spikes.
-        Default: True
+        Default: False
 
     Returns
     -------
@@ -479,7 +479,7 @@ def lv(time_intervals, with_nan=False):
         `np.NaN` value and a warning is raised.
         If False, a `ValueError` exception is raised with a spike train with
         less than two spikes.
-        Default: True
+        Default: False
 
     Returns
     -------
@@ -545,13 +545,13 @@ def lvr(time_intervals, R=5*pq.ms, with_nan=False):
     R : pq.Quantity or int or float, optional
         Refractoriness constant (R >= 0). If no quantity is passed `ms` are
         assumed.
-        Default: 5 ms
+        Default: 5 * pq.ms
     with_nan : bool, optional
         If True, LvR of a spike train with less than two spikes results in a
         np.NaN value and a warning is raised.
         If False, a `ValueError` exception is raised with a spike train with
         less than two spikes.
-        Default: True
+        Default: False
 
     Returns
     -------

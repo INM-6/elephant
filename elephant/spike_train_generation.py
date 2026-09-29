@@ -407,7 +407,7 @@ def peak_detection(signal: neo.core.AnalogSignal,
         An analog input signal or a list of analog input signals.
     threshold : :class:`pq.Quantity`, optional
         Contains a value that must be reached for an event to be detected.
-        Default: 0.*pq.mV
+        Default: 0.0 * pq.mV
     sign : {'above', 'below'}, optional
         Determines whether to count threshold crossings that cross above or below the threshold.
         Default: 'above'
@@ -699,10 +699,10 @@ class StationaryPoissonProcess(RenewalProcess):
         The constant firing rate.
     t_start : pq.Quantity, optional
         The start of the spike train.
-        Default: 0.*pq.s
+        Default: 0.0 * pq.ms
     t_stop : pq.Quantity, optional
         The end of the spike train.
-        Default: 1.*pq.s
+        Default: 1000.0 * pq.ms
     refractory_period : pq.Quantity, optional
         The time period after one spike in which no other spike is emitted. This can be called an absolute refractory
         period or a dead time as used in :cite:`generation-Deger12_443`.
@@ -801,10 +801,10 @@ class StationaryGammaProcess(RenewalProcess):
         The shape parameter of the gamma distribution.
     t_start : pq.Quantity, optional
         The start of the spike train.
-        Default: 0.*pq.s
+        Default: 0.0 * pq.s
     t_stop : pq.Quantity, optional
         The end of the spike train.
-        Default: 1.*pq.s
+        Default: 1.0 * pq.s
     equilibrium : bool, optional
         Generate an equilibrium or an ordinary renewal process.
         Default: True
@@ -872,10 +872,10 @@ class StationaryLogNormalProcess(RenewalProcess):
         The sigma/ s parameter of the Log-Normal distribution.
     t_start : pq.Quantity, optional
         The start of the spike train.
-        Default: 0.*pq.s
+        Default: 0.0 * pq.s
     t_stop : pq.Quantity, optional
         The end of the spike train.
-        Default: 1.*pq.s
+        Default: 1.0 * pq.s
     equilibrium : bool, optional
         Generate an equilibrium or an ordinary renewal process.
         Default: True
@@ -938,10 +938,10 @@ class StationaryInverseGaussianProcess(RenewalProcess):
         The expected coefficient of variation.
     t_start : pq.Quantity, optional
         The start of the spike train.
-        Default: 0.*pq.s
+        Default: 0.0 * pq.s
     t_stop : pq.Quantity, optional
         The end of the spike train.
-        Default: 1.*pq.s
+        Default: 1.0 * pq.s
     equilibrium : bool, optional
         Generate an equilibrium or an ordinary renewal process.
         Default: True
@@ -1833,7 +1833,7 @@ def compound_poisson_process(
         Default: None
     t_start : pq.Quantity, optional
         The `t_start` time of the output spike trains.
-        Default: 0 pq.ms
+        Default: 0 * pq.ms
 
     Returns
     -------

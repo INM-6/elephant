@@ -813,13 +813,13 @@ def pairwise_spectral_granger(signal_i, signal_j, fs=1, nw=4, num_tapers=None,
         must be identical. When `signal_i` and `signal_j` are not
         `neo.AnalogSignal`, sampling frequency should be specified through the
         keyword argument `fs`. Otherwise, the default value is used
-        (`fs` = 1.0).
+        (`fs` = 1).
     fs : float, optional
         Specifies the sampling frequency of the input time series
-        Default: 1.0
+        Default: 1
     nw : float, optional
         Time bandwidth product
-        Default: 4.0
+        Default: 4
     num_tapers : int, optional
         Number of tapers used in 1. to obtain estimate of PSD. By default,
         [2*nw] - 1 is chosen.

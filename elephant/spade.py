@@ -238,7 +238,7 @@ def spade(spiketrains, bin_size, winlen, min_spikes=2, min_occ=2,
         filtering the pattern spectrum. A spike at time `t` is placed randomly
         within `[t-dither, t+dither]` (see also
         :func:`elephant.spike_train_surrogates.dither_spikes`).
-        Default: 15*pq.ms
+        Default: 15 * pq.ms
     spectrum : {'#', '3d#'}, optional
         Define the signature of the patterns.
 

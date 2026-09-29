@@ -2225,7 +2225,7 @@ class ASSET(object):
             documentation for more information about each surrogate method.
             Note that some of these methods need the `surrogate_dt` parameter,
             others ignore it.
-            Default: 'dither_spike_train'
+            Default: 'dither_spikes'
         surrogate_dt : pq.Quantity, optional
             For surrogate methods shifting spike times randomly around their
             original time ('dither_spike_train', 'dither_spikes') or replacing

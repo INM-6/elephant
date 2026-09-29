@@ -832,7 +832,7 @@ class BinnedSpikeTrain(object):
               * "random": generate spikes from a homogenous Poisson process;
                 it's the fastest mode.
 
-            Default: "random"
+            Default: 'random'
         as_array : bool, optional
             If True, numpy arrays are returned; otherwise, wrap the arrays in
             `neo.SpikeTrain`.

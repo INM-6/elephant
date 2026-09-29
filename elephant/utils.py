@@ -199,7 +199,7 @@ def check_neo_consistency(
     tolerance : float, optional
         The absolute affordable tolerance for the discrepancies between
         t_start/stop magnitude values across trials.
-        Default: 1e-6
+        Default: 1e-8
 
     Raises
     ------
