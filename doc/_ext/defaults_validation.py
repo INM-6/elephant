@@ -44,10 +44,26 @@ Rules
 5. Default value correct. The text following `Default:` must match the
    default expression from the signature, or start with it followed by
    parenthetical extra text. The comparison is exact and is made against
-   the `ast.unparse` normalization of the expression, not against its
-   source text. A signature written `1e-5` is documented as
-   `Default: 1e-05`, `15*pq.ms` as `Default: 15 * pq.ms`, and
-   `spikes="random"` as `Default: 'random'`.
+   a canonical rendering of the expression, not against its source text,
+   so `15*pq.ms` is documented as `Default: 15 * pq.ms` and
+   `spikes="random"` as `Default: 'random'`. An integer literal is
+   rendered as it is written. A float literal keeps the notation of the
+   signature, canonicalized by these forms:
+
+   - A missing fractional or integer digit is filled with a zero, so
+     `1.` is documented as `Default: 1.0` and `.5` as `Default: 0.5`.
+   - Scientific notation is preserved instead of expanded, and the
+     exponent marker is lowercase, so `1E-5` is documented as
+     `Default: 1e-5` and `1e3` as `Default: 1e3`.
+   - The exponent carries no `+` sign and no leading zero, so `1e+05`
+     is documented as `Default: 1e5`.
+   - The mantissa of an exponent literal carries no trailing `.` and no
+     trailing `.0`, so `1.e-3` and `1.0e-3` are both documented as
+     `Default: 1e-3`, while `1.5e-3` keeps its fractional digit.
+
+   The notation mirrors the signature in both directions: a signature
+   written `0.001` rejects `Default: 1e-3`, and a signature written
+   `1e-3` rejects `Default: 0.001`.
    Subtype: `defaults.default_mismatch`.
 
 6. Extra text in parentheses. Any text after the default value must be
@@ -114,6 +130,7 @@ This extension requires Python 3.9 or newer, which provides `ast.unparse`.
 """
 
 import ast
+import copy
 import inspect
 import re
 import textwrap
@@ -147,10 +164,112 @@ _PAREN_SUFFIX_RE = re.compile(r'^\s*\((?:[^()]|\([^()]*\))*\)\s*$')
 # list before the text that follows it.
 _LIST_ITEM_RE = re.compile(r'^([*+-]|\(?(?:[0-9]{1,3}|[a-zA-Z])[.)])\s')
 
+# Matches the source spelling of a float literal: a mantissa of digits
+# around an optional decimal point, followed by an optional exponent.
+# The named groups carry the two parts to the canonical rendering. Digit
+# separators are removed before the match, so they never reach a group.
+_FLOAT_LITERAL_RE = re.compile(
+    r'(?P<mantissa>[0-9_]*\.?[0-9_]*)(?:[eE](?P<exponent>[+-]?[0-9_]+))?')
+
 _PARAM_SECTIONS = frozenset({'Parameters', 'Other Parameters'})
 
 
-def _find_mutable_defaults(func_node, none_params):
+def _canonical_float(text):
+    """
+    Returns the canonical rendering of the source spelling of one float
+    literal.
+
+    The canonical forms are those of rule 5. A literal without an
+    exponent gains the zero its integer or fractional part is missing,
+    so `1.` becomes `1.0` and `.5` becomes `0.5`. A literal with an
+    exponent keeps its scientific notation, written with a lowercase
+    `e`, an exponent stripped of a `+` sign and of leading zeros, and a
+    mantissa stripped of a trailing `.` or `.0`, so `1.0E+05` becomes
+    `1e5`.
+
+    Parameters
+    ----------
+    text : str
+        The source spelling of a float literal, such as `1.0e-3`.
+
+    Returns
+    -------
+    str or None
+        The canonical rendering, or `None` when `text` is not the
+        spelling of a float literal.
+    """
+    match = _FLOAT_LITERAL_RE.fullmatch(text.replace('_', ''))
+    if match is None or not match.group('mantissa').strip('.'):
+        return None
+    mantissa = match.group('mantissa')
+    exponent = match.group('exponent')
+
+    if exponent is not None:
+        # An integral mantissa carries no decimal separator.
+        if mantissa.endswith('.'):
+            mantissa = mantissa[:-1]
+        elif '.' in mantissa and mantissa.partition('.')[2].rstrip('0') == '':
+            mantissa = mantissa.partition('.')[0]
+        if mantissa.startswith('.'):
+            mantissa = f'0{mantissa}'
+        sign = '-' if exponent.startswith('-') else ''
+        digits = exponent.lstrip('+-').lstrip('0') or '0'
+        return f'{mantissa}e{sign}{digits}'
+
+    if mantissa.startswith('.'):
+        mantissa = f'0{mantissa}'
+    if mantissa.endswith('.'):
+        mantissa = f'{mantissa}0'
+    return mantissa
+
+
+def _unparse_default(node, source):
+    """
+    Renders a default expression, keeping the notation of its float
+    literals.
+
+    `ast.unparse` renders a float constant through `repr`, which drops
+    the notation the author wrote: `1e-5` becomes `1e-05` and `1.0e-3`
+    becomes `0.001`. Every float constant is therefore replaced by an
+    `ast.Name` holding the canonical rendering of its source spelling,
+    which `ast.unparse` emits verbatim and never parenthesizes, so the
+    surrounding expression keeps the normalization `ast.unparse`
+    provides. A constant whose source segment is unavailable, or whose
+    spelling `_canonical_float` does not recognize, is left in place and
+    keeps the `ast.unparse` rendering.
+
+    Parameters
+    ----------
+    node : ast.expr
+        The default value expression. It is deep-copied, so the tree of
+        the caller is not modified.
+    source : str
+        The source text `node` was parsed from, from which
+        `ast.get_source_segment` recovers the spelling of each literal.
+
+    Returns
+    -------
+    str
+        The rendered default expression.
+    """
+    class _FloatRewriter(ast.NodeTransformer):
+        # Swaps every float constant for its canonical source spelling.
+        def visit_Constant(self, constant):
+            if not isinstance(constant.value, float):
+                return constant
+            segment = ast.get_source_segment(source, constant)
+            canonical = (_canonical_float(segment)
+                         if segment is not None else None)
+            if canonical is None:
+                return constant
+            return ast.copy_location(
+                ast.Name(id=canonical, ctx=ast.Load()), constant)
+
+    rewritten = _FloatRewriter().visit(copy.deepcopy(node))
+    return ast.unparse(ast.fix_missing_locations(rewritten))
+
+
+def _find_mutable_defaults(func_node, none_params, source):
     """
     Find the parameters of `func_node` that carry a mutable default.
 
@@ -179,12 +298,15 @@ def _find_mutable_defaults(func_node, none_params):
         The function node whose top-level body is scanned.
     none_params : set[str]
         The names of the parameters whose signature default is `None`.
+    source : str
+        The source text `func_node` was parsed from, passed on to
+        `_unparse_default` to recover the spelling of float literals.
 
     Returns
     -------
     dict[str, str]
-        The effective default expression, in `ast.unparse` notation, per
-        parameter name.
+        The effective default expression, as rendered by
+        `_unparse_default`, per parameter name.
     """
     def _is_literal(node):
         # Returns True when the node is a literal expression.
@@ -268,7 +390,7 @@ def _find_mutable_defaults(func_node, none_params):
         value = assign.value
         if (isinstance(value, (ast.List, ast.Dict, ast.Set))
                 and _is_literal(value)):
-            overrides[param_name] = ast.unparse(value)
+            overrides[param_name] = _unparse_default(value, source)
 
     return overrides
 
@@ -356,10 +478,11 @@ def _read_signature(obj):
     Returns
     -------
     defaults : dict[str, str]
-        The effective default expression per parameter name. A signature
-        default of `None` is replaced by the value obtained from the code
-        in the function body if the parameter value is reassigned (i.e., the
-        mutable-default argument idiom).
+        The effective default expression per parameter name, as rendered
+        by `_unparse_default`. A signature default of `None` is replaced
+        by the value obtained from the code in the function body if the
+        parameter value is reassigned (i.e., the mutable-default
+        argument idiom).
     none_defaulted : set[str]
         The names of the parameters whose default is literally `None` in
         the signature, before that replacement. A parameter that uses the
@@ -378,7 +501,8 @@ def _read_signature(obj):
     # parsing fails (builtins, C extensions, or dynamic objects), return
     # the empty result.
     try:
-        tree = ast.parse(textwrap.dedent(inspect.getsource(obj)))
+        source = textwrap.dedent(inspect.getsource(obj))
+        tree = ast.parse(source)
     except (OSError, TypeError, SyntaxError) as error:
         logger.debug(f'defaults: no source for '
                      f'{getattr(obj, "__qualname__", obj)} ({error})')
@@ -416,7 +540,7 @@ def _read_signature(obj):
         # This renders the actual expression as a string (e.g.,
         # `None` -> 'None', `0.5 * pq.ms` -> '0.5 * pq.ms') for comparison
         # against the docstring text.
-        defaults = {arg.arg: ast.unparse(default_value)
+        defaults = {arg.arg: _unparse_default(default_value, source)
                     for arg, default_value in defaulted}
 
         # Collect type hint annotations as AST nodes for later checks.
@@ -434,7 +558,8 @@ def _read_signature(obj):
         none_defaulted = {name for name, value in defaults.items()
                           if value == 'None'}
         if none_defaulted:
-            defaults.update(_find_mutable_defaults(node, none_defaulted))
+            defaults.update(
+                _find_mutable_defaults(node, none_defaulted, source))
 
         return defaults, none_defaulted, annotations
 
@@ -829,7 +954,7 @@ def setup(app):
     # priority is 500, so that it sees the raw numpy-format lines.
     app.connect('autodoc-process-docstring', _validate_defaults, priority=200)
     return {
-        'version': '0.2',
+        'version': '0.3',
         'parallel_read_safe': True,
         'parallel_write_safe': True,
     }
