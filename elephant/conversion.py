@@ -1003,7 +1003,8 @@ class BinnedSpikeTrain(object):
         Parameters
         ----------
         dtype : type, optional
-            The desired data-type for the array.
+            The desired data-type for the array. If set to None, the
+            dtype will be determined automatically.
             Default: None.
         scaling : {'counts', 'normalized'}, optional
             Determines the scaling of the returned array:
@@ -1017,9 +1018,9 @@ class BinnedSpikeTrain(object):
         Returns
         -------
         matrix : np.ndarray
-            Matrix with spike counts or rates. Columns represent the index
-            positions of the binned spikes and rows represent the spike
-            trains.
+            Matrix with spike counts or rates. Columns represent the time bins
+            of the binned spikes and rows represent the spike trains,
+            i.e., `matrix[m,n]` indicates the `n`-th time bin of neuron `m`.
 
         Raises
         ------
@@ -1078,7 +1079,8 @@ class BinnedSpikeTrain(object):
         Parameters
         ----------
         dtype : type, optional
-            The desired data-type for the signal values.
+            The desired data-type for the signal values. If set to None, the
+            dtype will be determined automatically.
             Default: None.
         scaling : {'counts', 'normalized'}, optional
             Determines the scaling of the returned signal:
@@ -1091,9 +1093,10 @@ class BinnedSpikeTrain(object):
 
         Returns
         -------
-        neo.AnalogSignal
+        signal : neo.AnalogSignal
             Signal containing spike counts or rates. Rows represent time bins
-            and columns represent different spike trains.
+            and columns represent different spike trains, i.e., `signal[n,m]`
+            indicates the `n`-th time bin of neuron `m`.
             If scaling='counts', the signal has units of 1/b in Hz, where b is
             the bin size.
             If scaling='normalized', the signal has units of Hz
@@ -1107,7 +1110,6 @@ class BinnedSpikeTrain(object):
         See also
         --------
         to_array : Returns the binned spike train as a plain NumPy array
-        neo.AnalogSignal : The neo analog signal object
 
         Notes
         -----
@@ -1115,6 +1117,11 @@ class BinnedSpikeTrain(object):
         size is accounted for: 'counts' keeps the raw counts and carries the
         bin size in the unit, whereas 'normalized' divides it out. Rescaling a
         'counts' signal to Hz therefore reproduces the 'normalized' one.
+
+        Given the conventions of the AnalogSignal, the output of this function
+        has time running along the first dimension, neuron ID along the second
+        dimension. This is the transpose of the `to_array()` method of
+        BinnedSpikeTrain.
 
         Examples
         --------
