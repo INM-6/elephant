@@ -51,7 +51,7 @@ def welch_psd(signal, n_segments=8, len_segment=None,
               scaling='density', axis=-1):
     r"""
     Estimates power spectrum density (PSD) of a given `neo.AnalogSignal`
-    using Welch's method.
+    or `BinnedSpikeTrain` using Welch's method.
 
     The PSD is obtained through the following steps:
 
@@ -188,21 +188,31 @@ def welch_psd(signal, n_segments=8, len_segment=None,
        converted to integer.
     4. If `signal` is a `BinnedSpikeTrain`, it is first converted into a
        signal of instantaneous firing rates using
-       `BinnedSpikeTrain.to_analog_signal` with `scaling` = 'normalized'.
-       This divides the spike count :math:`n_k` of each bin by the bin size
-       :math:`b` (in seconds), so that the analyzed signal is
-       :math:`r_k = n_k / b` in Hz, sampled at :math:`f_s = 1/b`. The
-       returned PSD consequently has units of Hz, that is, Hz^2/Hz.
-    5. Dividing by the bin size is what makes the estimate independent of the
+       `BinnedSpikeTrain.to_analog_signal()`. This divides the spike count
+       :math:`n_k` of each bin by the bin size :math:`b` (in seconds), so that
+       the analyzed signal is :math:`r_k = n_k / b` in Hz, sampled at
+       :math:`f_s = 1/b`. The returned PSD consequently has units of Hz, that
+       is, Hz^2/Hz.
+    5. The normalization procedure makes the estimate independent of the
        choice of `b`. For a homogeneous Poisson process of rate
        :math:`\lambda`, the two-sided spectral density is flat at
        :math:`\lambda` for all frequencies away from zero
-       :cite:`spectral-Gerstner2002`. The same result follows directly from
-       the binned signal: the spike counts of disjoint bins are independent
-       with :math:`\mathrm{Var}[n_k] = \lambda b`, and therefore
-       :math:`\mathrm{Var}[r_k] = \lambda / b`. A white discrete-time signal
-       has a two-sided spectral density of :math:`\mathrm{Var}[r] / f_s`, in
-       which the two factors of :math:`b` cancel:
+       :cite:`spectral-Gerstner2002`. The result can be understood from
+       the following argument: the spike counts of disjoint bins of a Poisson
+       process are independent and Poisson distributed, so that their mean
+       and variance are equal,
+       :math:`\mathrm{E}[n_k] = \mathrm{Var}[n_k] = \lambda b`. The variance
+       of the rates :math:`r_k = n_k / b` becomes
+       :math:`\mathrm{Var}[r_k] = \mathrm{Var}[n_k] / b^2 = \lambda / b`.
+       A white discrete-time series with variance :math:`\sigma^2` has the
+       covariance :math:`C[m] = \sigma^2` for :math:`m = 0`, and
+       :math:`C[m] = 0` otherwise. By the Wiener-Khinchin theorem, the
+       spectrum relates to the covariance as
+       :math:`S(f) = \frac{1}{f_s} \sum_m C[m] e^{-i 2 \pi f m / f_s}`,
+       which yields the white two-sided spectral density
+       :math:`S(f) = \sigma^2 / f_s`. Inserting
+       :math:`\sigma^2 = \mathrm{Var}[r_k] = \lambda / b` and
+       :math:`f_s = 1 / b` gives
 
        .. math::
            S(f) = \frac{\lambda / b}{1 / b} = \lambda .
@@ -210,29 +220,68 @@ def welch_psd(signal, n_segments=8, len_segment=None,
        The estimate remains flat up to the Nyquist frequency, because the
        attenuation :math:`\mathrm{sinc}^2(f b)` that binning imposes is
        exactly compensated by the power which aliasing folds back into the
-       baseband, :math:`\sum_m \mathrm{sinc}^2(f b + m) = 1`.
-    6. The values quoted above refer to the two-sided spectrum used in the
-       literature. This function instead follows the convention of
-       `scipy.signal.welch`: with the default `return_onesided` = True the
-       negative frequencies are folded onto the positive ones, doubling the
-       power of every bin that has a negative counterpart. A Poisson process
-       therefore levels off at :math:`2 \lambda` for large :math:`f`, and at
-       :math:`\lambda` only if `return_onesided` = False is used. Any renewal
-       process approaches the same asymptote, as it reflects the discreteness
-       of the spikes rather than the shape of the interval distribution.
-    7. The opposite limit :math:`f \to 0` yields the Fano factor :math:`F` of
-       the spike count, as :math:`F = S(0) / \lambda` for the two-sided and
-       :math:`F = G(f) / (2 \lambda)` for the one-sided spectrum. This holds
-       for renewal processes, for which :math:`S(0) = \lambda \, CV^2` with
-       :math:`CV` the coefficient of variation of the intervals
-       :cite:`spectral-Dummer2014_104`. The value at exactly :math:`f = 0`
-       cannot be used for this, since the default
-       `detrend` = 'constant' subtracts the mean of each segment and thereby
-       removes the DC component; evaluate the limit at small positive
-       frequencies instead. Note also that the scaling described here
-       presupposes actual spike counts, and does not hold for a binarized
-       `BinnedSpikeTrain`, in which bins containing more than one spike are
-       clipped to one.
+       baseband, :math:`\sum_m \mathrm{sinc}^2(f b + m) = 1`. For any renewal
+       process, :math:`S(f)` approaches :math:`\lambda` for large :math:`f`,
+       as this limit reflects the discreteness of the spikes rather than the
+       shape of the interval distribution.
+    6. The values quoted above refer to the two-sided spectrum, as commonly
+       used in the theoretical literature. This function instead follows
+       the convention of `scipy.signal.welch`, which returns a one-sided
+       power spectrum by default. With the default `return_onesided` = True,
+       negative frequencies are mapped onto the positive axis, doubling the
+       power of every bin that has a negative counterpart. In particular,
+       the frequency bin at 0 is not doubled. Likewise, the frequency bin at
+       the Nyquist frequency is not doubled if `nfft` (by default equal to
+       the segment length) is even. Neither of these bins is doubled, since
+       they have no distinct negative-frequency counterpart. Consequently,
+       the one-sided spectrum of a Poisson process levels off at
+       :math:`2 \lambda` for large :math:`f`, and at :math:`\lambda` only if
+       `return_onesided` = False is used. For even `nfft`, the last
+       (Nyquist) bin of the one-sided estimate is an exception: it remains
+       at :math:`\lambda` rather than :math:`2 \lambda`, which is expected
+       and does not indicate an error.
+    7. While the high-frequency end of the spectrum reflects the
+       discreteness of the spikes, the low-frequency end reflects the
+       variability of the spike count. The Fano factor :math:`F` is the
+       variance of the number of spikes in a counting window divided by its
+       mean. For long counting windows, it is given by the spectrum near
+       zero frequency divided by the rate:
+
+       .. math::
+           F = \frac{S(0)}{\lambda}
+           \quad \text{(two-sided)}, \qquad
+           F = \frac{G(0^+)}{2 \lambda}
+           \quad \text{(one-sided)},
+
+       where :math:`G` denotes the one-sided spectrum returned by default,
+       and :math:`G(0^+)` its limit as :math:`f` approaches zero from
+       positive frequencies (the bin at exactly :math:`f = 0` is not doubled,
+       see note 6).
+       For a Poisson process, :math:`S(0) = \lambda` and hence :math:`F = 1`.
+       For a renewal process, :math:`S(0) = \lambda \, CV^2`, where
+       :math:`CV` is the coefficient of variation of the inter-spike
+       intervals, and hence :math:`F = CV^2`
+       :cite:`spectral-Dummer2014_104`.
+
+       To estimate :math:`F` from the bin at :math:`f = 0`, convert the
+       `BinnedSpikeTrain` with
+       `to_analog_signal(scaling="normalized")`, subtract the mean of the
+       entire signal, and call this function with `detrend` = False. Since
+       the bin at :math:`f = 0` is not doubled, :math:`F = G(0) / \lambda`
+       there. With the default `detrend` = 'constant', the mean of each
+       segment is subtracted instead. This sets the bin at :math:`f = 0` to
+       approximately zero and, because the window spreads each frequency
+       over neighboring bins, also reduces the first positive bin. In that
+       case, only the bins above these two can be used, with
+       :math:`F = G(f) / (2 \lambda)` at low frequencies where the spectrum
+       is approximately constant. Setting `detrend` = False without first
+       subtracting the global mean is not suitable, since the squared mean
+       of the signal then dominates the bin at :math:`f = 0` and, through
+       the window, the first positive bin.
+    8. All values given in these notes presuppose actual spike counts. They
+       do not hold for a binarized `BinnedSpikeTrain`, in which bins
+       containing more than one spike are clipped to one (i.e., all bins are
+       zero or one).
 
     Examples
     --------
