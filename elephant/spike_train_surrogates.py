@@ -671,11 +671,14 @@ def _continuous_time_bin_shuffling(spiketrain, max_displacement, bin_size,
     Parameters
     ----------
     spiketrain : neo.SpikeTrain
+        Input spiketrain to create surrogates of.
     max_displacement : int
-        number of bins that a single spike can be displaced
+        Number of bins that a single spike can be displaced.
     bin_size : pq.Quantity
+        The bin size used to create the binned spike train.
     n_surrogates : int, optional
-        Default : 1
+        Number of surrogates to create.
+        Default: 1
 
     Returns
     -------

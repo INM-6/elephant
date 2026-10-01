@@ -266,7 +266,7 @@ def _victor_purpura_dist_for_st_pair_intuitive(spiketrain_a, spiketrain_b,
     ----------
     spiketrain_a, spiketrain_b : :class:`neo.core.SpikeTrain` objects of
         which the Victor-Purpura distance will be calculated pairwise.
-    cost_factor : Quantity scalar of rate dimension
+    cost_factor : Quantity scalar of rate dimension, optional
         The cost parameter.
         Default: 1.0 * pq.Hz
 

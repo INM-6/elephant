@@ -587,6 +587,7 @@ class _GPUBackend:
         to simulate scenarios when the input matrix is so large that it cannot
         fit into GPU memory. Setting this parameter manually can resolve GPU
         memory errors in case automatic parameters adjustment fails.
+        Default: None
 
     Notes
     -----

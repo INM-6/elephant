@@ -803,42 +803,43 @@ def _fpgrowth(transactions, min_c=2, min_z=2, max_z=None,
     Parameters
     ----------
     transactions: tuple
-                Transactions database to mine.
-                The database must be an iterable of transactions;
-                each transaction must be an iterable of items;
-                each item must be a hashable object.
-                If the database is a dictionary, the transactions are
-                the keys, the values their (integer) multiplicities.
-    target: str
-            type of frequent item sets to find
-            s/a   sets/all   all     frequent item sets
-            c     closed     closed  frequent item sets
-            m     maximal    maximal frequent item sets
-            g     gens       generators
-            Default:'c'
-    min_c: int
-        minimum support of an item set
+        Transactions database to mine. The database must be an iterable of
+        transactions, each transaction must be an iterable of items, and
+        each item must be a hashable object. If the database is a dictionary,
+        the transactions are the keys, the values their (integer)
+        multiplicities.
+    target: str, optional
+        Type of frequent item sets to find:
+        * 's/a': sets/all; all frequent item sets
+        * 'c': closed; closed frequent item sets
+        * 'm': maximal; maximal frequent item sets
+        * 'g': gens; generators
+
+        Default: 'c'
+    min_c: int, optional
+        Minimum support of an item set.
         Default: 2
-    min_z: int
-         minimum number of items per item set
+    min_z: int, optional
+        Minimum number of items per item set.
         Default: 2
-    max_z: None/int
-         maximum number of items per item set. If max_c==None no maximal
-         size required
+    max_z: int | None, optional
+        Maximum number of items per item set. If None, no maximal number is
+        required.
         Default: None
-    max_c: None/int
-         maximum support per item set. If max_c==None no maximal
-         support required
+    max_c: int | None, optional
+        Maximum support per item set. If None, no maximal support is required.
         Default: None
-    report: str
-        'a': all the mined patterns
-        '#': pattern spectrum using as signature the pair:
-            (number of spikes, number of occurrence)
-        '3d#': pattern spectrum using as signature the triplets:
-            (number of spikes, number of occurrence, difference between the
-            times of the last and the first spike of the pattern)
+    report: str, optional
+        The type of output to return. It can be:
+        * 'a': all the mined patterns
+        * '#': pattern spectrum using as signature the pair:
+          (number of spikes, number of occurrence)
+        * '3d#': pattern spectrum using as signature the triplets:
+          (number of spikes, number of occurrence, difference between the
+          times of the last and the first spike of the pattern)
+
         Default: 'a'
-    rel_matrix : None or sparse.coo_matrix
+    rel_matrix : scipy.sparse.coo_matrix | None, optional
         A binary matrix with shape (number of windows,
         winlen*len(spiketrains)). Each row corresponds to a window (order
         according to their position in time).
@@ -851,13 +852,13 @@ def _fpgrowth(transactions, min_c=2, min_z=2, max_z=None,
         If == None only the closed frequent itemsets (intent) are returned and
         not which the index of their occurrences (extent)
         Default: None
-    The following parameters are specific to Massive parallel SpikeTrains
-    winlen: int
+    The following parameters are specific to Massive parallel SpikeTrains:
+    winlen: int, optional
         The size (number of bins) of the sliding window used for the
         analysis. The maximal length of a pattern (delay between first and
         last spike) is then given by winlen*bin_size
         Default: 1
-    min_neu: int
+    min_neu: int, optional
          Minimum number of neurons in a sequence to be considered a
          potential pattern.
          Default: 1
@@ -873,12 +874,12 @@ def _fpgrowth(transactions, min_c=2, min_z=2, max_z=None,
         spike_id=neuron_id*bin_id; with neuron_id in [0, len(spiketrains)] and
         bin_id in [0, winlen].
     If report == '#':
-         The pattern spectrum is represented as a numpy array of triplets each
-         formed by:
+        The pattern spectrum is represented as a numpy array of triplets each
+        formed by:
             (pattern size, number of occurrences, number of patterns)
     If report == '3d#':
-         The pattern spectrum is represented as a numpy array of quadruplets
-         each formed by:
+        The pattern spectrum is represented as a numpy array of quadruplets
+        each formed by:
             (pattern size, number of occurrences, difference between last
             and first spike of the pattern, number of patterns)
     """
@@ -1068,39 +1069,40 @@ def _fast_fca(context, min_c=2, min_z=2, max_z=None,
     ----------
     context : list
         List of tuples containing one object and one the correspondent
-        attribute
-    min_c: int
-        minimum support of an item set
+        attribute.
+    min_c: int, optional
+        Minimum support of an item set.
         Default: 2
-    min_z: int
-         minimum number of items per item set
+    min_z: int, optional
+        Minimum number of items per item set.
         Default: 2
-    max_z: None/int
-         maximum number of items per item set. If max_c==None no maximal
-         size required
+    max_z: int | None, optional
+        Maximum number of items per item set. If None, no maximal number is
+        required.
         Default: None
-    max_c: None/int
-         maximum support per item set. If max_c==None no maximal
-         support required
+    max_c: int | None, optional
+        Maximum support per item set. If None, no maximal support is required.
         Default: None
-    report: str
-        'a': all the mined patterns
-        '#': pattern spectrum using as signature the pair:
-            (number of spikes, number of occurrence)
-        '3d#': pattern spectrum using as signature the triplets:
-            (number of spikes, number of occurrence, difference between the
-            times of the last and the first spike of the pattern)
+    report: str, optional
+        The type of output to return. It can be:
+        * 'a': all the mined patterns
+        * '#': pattern spectrum using as signature the pair:
+          (number of spikes, number of occurrence)
+        * '3d#': pattern spectrum using as signature the triplets:
+          (number of spikes, number of occurrence, difference between the
+          times of the last and the first spike of the pattern)
+
         Default: 'a'
     The following parameters are specific to Massive parallel SpikeTrains
-    winlen: int
+    winlen: int, optional
         The size (number of bins) of the sliding window used for the
         analysis. The maximal length of a pattern (delay between first and
-        last spike) is then given by winlen*bin_size
+        last spike) is then given by winlen*bin_size.
         Default: 1
-    min_neu: int
-         Minimum number of neurons in a sequence to be considered a
-         potential pattern.
-         Default: 1
+    min_neu: int, optional
+        Minimum number of neurons in a sequence to be considered a
+        potential pattern.
+        Default: 1
 
     Returns
     -------
@@ -1112,12 +1114,12 @@ def _fast_fca(context, min_c=2, min_z=2, max_z=None,
         spike_id=neuron_id*bin_id; with neuron_id in [0, len(spiketrains)] and
         bin_id in [0, winlen].
     If report == '#':
-         The pattern spectrum is represented as a list of triplets each
-         formed by:
+        The pattern spectrum is represented as a list of triplets each
+        formed by:
             (pattern size, number of occurrences, number of patterns)
     If report == '3d#':
-         The pattern spectrum is represented as a list of quadruplets each
-         formed by:
+        The pattern spectrum is represented as a list of quadruplets each
+        formed by:
             (pattern size, number of occurrences, difference between last
             and first spike of the pattern, number of patterns)
     """
@@ -1870,7 +1872,7 @@ def _calculate_single_stability_parameter(intent, extent,
         See approximate_stabilty
     rel_matrix : sparse.coo_matrix
         See approximate_stabilty
-    look_at : {'extent', 'intent'}
+    look_at : {'extent', 'intent'}, optional
         whether to determine stability for extent or intent.
         Default: 'intent'
 

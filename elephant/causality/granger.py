@@ -336,11 +336,11 @@ def _optimal_vector_arm(signals, dimension, max_order,
         dimensionality of the data
     max_order : int
         maximal order to consider
-    information_criterion : str
+    information_criterion : str, optional
         A function to compute the information criterion:
             `bic` for Bayesian information_criterion,
             `aic` for Akaike information criterion
-        Default: aic
+        Default: 'aic'
 
     Returns
     -------
@@ -465,7 +465,7 @@ def _spectral_factorization(cross_spectrum, num_iterations, term_crit=1e-12):
         function
     num_iterations : int
         Maximal number of iterations of iterative algorithm
-    term_crit : float
+    term_crit : float, optional
         Termination criterion for iteration step in spectral matrix
         factorization
         Default: 1e-12

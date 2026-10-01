@@ -767,7 +767,9 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
         overlap) and 1 (complete overlap).
         Default: 0.5 (half-overlapped)
     func_params_dict : dict, optional
-        Arguments for function `func` returning spectral measure.
+        Arguments for function `func` returning spectral measure. If None, an
+        empty dictionary is used.
+        Default: None
 
     Notes
     -----
