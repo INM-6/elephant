@@ -240,45 +240,7 @@ def welch_psd(signal, n_segments=8, len_segment=None,
        (Nyquist) bin of the one-sided estimate is an exception: it remains
        at :math:`\lambda` rather than :math:`2 \lambda`, which is expected
        and does not indicate an error.
-    7. While the high-frequency end of the spectrum reflects the
-       discreteness of the spikes, the low-frequency end reflects the
-       variability of the spike count. The Fano factor :math:`F` is the
-       variance of the number of spikes in a counting window divided by its
-       mean. For long counting windows, it is given by the spectrum near
-       zero frequency divided by the rate:
-
-       .. math::
-           F = \frac{S(0)}{\lambda}
-           \quad \text{(two-sided)}, \qquad
-           F = \frac{G(0^+)}{2 \lambda}
-           \quad \text{(one-sided)},
-
-       where :math:`G` denotes the one-sided spectrum returned by default,
-       and :math:`G(0^+)` its limit as :math:`f` approaches zero from
-       positive frequencies (the bin at exactly :math:`f = 0` is not doubled,
-       see note 6).
-       For a Poisson process, :math:`S(0) = \lambda` and hence :math:`F = 1`.
-       For a renewal process, :math:`S(0) = \lambda \, CV^2`, where
-       :math:`CV` is the coefficient of variation of the inter-spike
-       intervals, and hence :math:`F = CV^2`
-       :cite:`spectral-Dummer2014_104`.
-
-       To estimate :math:`F` from the bin at :math:`f = 0`, convert the
-       `BinnedSpikeTrain` with
-       `to_analog_signal(scaling="normalized")`, subtract the mean of the
-       entire signal, and call this function with `detrend` = False. Since
-       the bin at :math:`f = 0` is not doubled, :math:`F = G(0) / \lambda`
-       there. With the default `detrend` = 'constant', the mean of each
-       segment is subtracted instead. This sets the bin at :math:`f = 0` to
-       approximately zero and, because the window spreads each frequency
-       over neighboring bins, also reduces the first positive bin. In that
-       case, only the bins above these two can be used, with
-       :math:`F = G(f) / (2 \lambda)` at low frequencies where the spectrum
-       is approximately constant. Setting `detrend` = False without first
-       subtracting the global mean is not suitable, since the squared mean
-       of the signal then dominates the bin at :math:`f = 0` and, through
-       the window, the first positive bin.
-    8. All values given in these notes presuppose actual spike counts. They
+    7. All values given in these notes presuppose actual spike counts. They
        do not hold for a binarized `BinnedSpikeTrain`, in which bins
        containing more than one spike are clipped to one (i.e., all bins are
        zero or one).
@@ -391,9 +353,9 @@ def welch_psd(signal, n_segments=8, len_segment=None,
 
 def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
                    attach_units=True):
-    """
-    Estimates power spectrum density (PSD) of a given 'neo.AnalogSignal'
-    using the Multitaper method.
+    r"""
+    Estimates power spectrum density (PSD) of a given `neo.AnalogSignal`
+    or `BinnedSpikeTrain` using the Multitaper method.
 
     The PSD is obtained through the following steps:
 
@@ -432,26 +394,6 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
         to the estimated PSD.
         Default: True
 
-    Notes
-    -----
-    1. There is a parameter hierarchy regarding nw, num_tapers and
-       peak_resolution. If peak_resolution is provided, it determines both nw
-       and the num_tapers. Specifying num_tapers has an effect only if
-       peak_resolution is not provided.
-    2. If `signal` is a `BinnedSpikeTrain`, it is converted into a signal of
-       instantaneous firing rates in Hz before the spectrum is estimated, and
-       the returned PSD has units of Hz. The one-sided spectrum of a Poisson
-       process of rate lambda then levels off at 2*lambda for large
-       frequencies, independently of the bin size. See the Notes of
-       :func:`welch_psd` for the derivation of this normalization.
-    3. In contrast to :func:`welch_psd`, this function does not detrend the
-       data. The mean of the signal is therefore retained and appears as a
-       large DC component, which leaks into the lowest few frequency bins.
-       For a `BinnedSpikeTrain` this component is the mean firing rate, and
-       it is large compared to the spectrum itself. Subtract the mean before
-       calling this function if the low-frequency part of the spectrum is of
-       interest, for instance when estimating the Fano factor.
-
     Returns
     -------
     freqs : np.ndarray
@@ -475,6 +417,63 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
        peak_resolution. If peak_resolution is provided, it determines both nw
        and the num_tapers. Specifying num_tapers has an effect only if
        peak_resolution is not provided.
+    2. If `signal` is a `BinnedSpikeTrain`, it is first converted into a
+       signal of instantaneous firing rates using
+       `BinnedSpikeTrain.to_analog_signal()`. This divides the spike count
+       :math:`n_k` of each bin by the bin size :math:`b` (in seconds), so that
+       the analyzed signal is :math:`r_k = n_k / b` in Hz, sampled at
+       :math:`f_s = 1/b`. The returned PSD consequently has units of Hz, that
+       is, Hz^2/Hz.
+    3. The normalization procedure makes the estimate independent of the
+       choice of `b`. For a homogeneous Poisson process of rate
+       :math:`\lambda`, the two-sided spectral density is flat at
+       :math:`\lambda` for all frequencies away from zero
+       :cite:`spectral-Gerstner2002`. The result can be understood from
+       the following argument: the spike counts of disjoint bins of a Poisson
+       process are independent and Poisson distributed, so that their mean
+       and variance are equal,
+       :math:`\mathrm{E}[n_k] = \mathrm{Var}[n_k] = \lambda b`. The variance
+       of the rates :math:`r_k = n_k / b` becomes
+       :math:`\mathrm{Var}[r_k] = \mathrm{Var}[n_k] / b^2 = \lambda / b`.
+       A white discrete-time series with variance :math:`\sigma^2` has the
+       covariance :math:`C[m] = \sigma^2` for :math:`m = 0`, and
+       :math:`C[m] = 0` otherwise. By the Wiener-Khinchin theorem, the
+       spectrum relates to the covariance as
+       :math:`S(f) = \frac{1}{f_s} \sum_m C[m] e^{-i 2 \pi f m / f_s}`,
+       which yields the white two-sided spectral density
+       :math:`S(f) = \sigma^2 / f_s`. Inserting
+       :math:`\sigma^2 = \mathrm{Var}[r_k] = \lambda / b` and
+       :math:`f_s = 1 / b` gives
+
+       .. math::
+           S(f) = \frac{\lambda / b}{1 / b} = \lambda .
+
+       The estimate remains flat up to the Nyquist frequency, because the
+       attenuation :math:`\mathrm{sinc}^2(f b)` that binning imposes is
+       exactly compensated by the power which aliasing folds back into the
+       baseband, :math:`\sum_m \mathrm{sinc}^2(f b + m) = 1`. For any renewal
+       process, :math:`S(f)` approaches :math:`\lambda` for large :math:`f`,
+       as this limit reflects the discreteness of the spikes rather than the
+       shape of the interval distribution.
+    4. This function always returns a one-sided spectrum. The values
+       quoted above refer to the two-sided spectrum, as commonly used in the
+       theoretical literature. In the one-sided spectrum, negative
+       frequencies are mapped onto the positive axis, doubling the power of
+       every bin except the one at zero frequency, which has no distinct
+       negative-frequency counterpart. Consequently, the one-sided spectrum
+       of a Poisson process levels off at :math:`2 \lambda` for large
+       :math:`f`.
+    5. In contrast to :func:`welch_psd`, this function does not detrend the
+       data. The mean of the signal is therefore retained and appears as a
+       large DC component, which leaks into the lowest few frequency bins.
+       For a `BinnedSpikeTrain` this component is the mean firing rate, and
+       it is large compared to the spectrum itself. Subtract the mean before
+       calling this function if the low-frequency part of the spectrum is of
+       interest.
+    6. All values given in these notes presuppose actual spike counts. They
+       do not hold for a binarized `BinnedSpikeTrain`, in which bins
+       containing more than one spike are clipped to one (i.e., all bins are
+       zero or one).
     """
 
     # When the input is AnalogSignal, the data is added after rolling the axis
@@ -548,9 +547,9 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
 def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
                              frequency_resolution=None, overlap=0.5, fs=1,
                              nw=4, num_tapers=None, peak_resolution=None):
-    """
-    Estimates power spectrum density (PSD) of a given 'neo.AnalogSignal'
-    using Multitaper method
+    r"""
+    Estimates power spectrum density (PSD) of a given `neo.AnalogSignal`
+    or `BinnedSpikeTrain` using the Multitaper method.
 
     The PSD is obtained through the following steps:
 
@@ -614,37 +613,12 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
         When given as a `float`, it is taken as frequency in Hz.
         Default: None.
 
-    Notes
-    -----
-    1. There is a parameter hierarchy regarding n_segments and len_segment. The
-       former parameter is ignored if the latter one is passed.
-
-    2. There is a parameter hierarchy regarding nw, num_tapers and
-       peak_resolution. If peak_resolution is provided, it determines both nw
-       and the num_tapers. Specifying num_tapers has an effect only if
-       peak_resolution is not provided.
-
-    3. If `signal` is a `BinnedSpikeTrain`, it is converted into a signal of
-       instantaneous firing rates in Hz before the spectrum is estimated, and
-       the returned PSD has units of Hz. The one-sided spectrum of a Poisson
-       process of rate lambda then levels off at 2*lambda for large
-       frequencies, independently of the bin size. See the Notes of
-       :func:`welch_psd` for the derivation of this normalization.
-
-    4. In contrast to :func:`welch_psd`, this function does not detrend the
-       data. The mean of the signal is therefore retained and appears as a
-       large DC component, which leaks into the lowest few frequency bins.
-       For a `BinnedSpikeTrain` this component is the mean firing rate, and
-       it is large compared to the spectrum itself. Subtract the mean before
-       calling this function if the low-frequency part of the spectrum is of
-       interest, for instance when estimating the Fano factor.
-
     Returns
     -------
     freqs : np.ndarray
-        Frequencies associated with power estimate in `psd`
+        Frequencies associated with power estimate in `psd`.
     psd : np.ndarray
-        PSD estimate of the time series in `signal`
+        PSD estimate of the time series in `signal`.
 
     Raises
     ------
@@ -667,6 +641,78 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
 
     TypeError
         If `peak_resolution` is None and `num_tapers` is not an int.
+
+    Notes
+    -----
+    1. There is a parameter hierarchy regarding n_segments and len_segment. The
+       former parameter is ignored if the latter one is passed.
+
+    2. There is a parameter hierarchy regarding nw, num_tapers and
+       peak_resolution. If peak_resolution is provided, it determines both nw
+       and the num_tapers. Specifying num_tapers has an effect only if
+       peak_resolution is not provided.
+
+    3. If `signal` is a `BinnedSpikeTrain`, it is first converted into a
+       signal of instantaneous firing rates using
+       `BinnedSpikeTrain.to_analog_signal()`. This divides the spike count
+       :math:`n_k` of each bin by the bin size :math:`b` (in seconds), so that
+       the analyzed signal is :math:`r_k = n_k / b` in Hz, sampled at
+       :math:`f_s = 1/b`. The returned PSD consequently has units of Hz, that
+       is, Hz^2/Hz.
+
+    4. The normalization procedure makes the estimate independent of the
+       choice of `b`. For a homogeneous Poisson process of rate
+       :math:`\lambda`, the two-sided spectral density is flat at
+       :math:`\lambda` for all frequencies away from zero
+       :cite:`spectral-Gerstner2002`. The result can be understood from
+       the following argument: the spike counts of disjoint bins of a Poisson
+       process are independent and Poisson distributed, so that their mean
+       and variance are equal,
+       :math:`\mathrm{E}[n_k] = \mathrm{Var}[n_k] = \lambda b`. The variance
+       of the rates :math:`r_k = n_k / b` becomes
+       :math:`\mathrm{Var}[r_k] = \mathrm{Var}[n_k] / b^2 = \lambda / b`.
+       A white discrete-time series with variance :math:`\sigma^2` has the
+       covariance :math:`C[m] = \sigma^2` for :math:`m = 0`, and
+       :math:`C[m] = 0` otherwise. By the Wiener-Khinchin theorem, the
+       spectrum relates to the covariance as
+       :math:`S(f) = \frac{1}{f_s} \sum_m C[m] e^{-i 2 \pi f m / f_s}`,
+       which yields the white two-sided spectral density
+       :math:`S(f) = \sigma^2 / f_s`. Inserting
+       :math:`\sigma^2 = \mathrm{Var}[r_k] = \lambda / b` and
+       :math:`f_s = 1 / b` gives
+
+       .. math::
+           S(f) = \frac{\lambda / b}{1 / b} = \lambda .
+
+       The estimate remains flat up to the Nyquist frequency, because the
+       attenuation :math:`\mathrm{sinc}^2(f b)` that binning imposes is
+       exactly compensated by the power which aliasing folds back into the
+       baseband, :math:`\sum_m \mathrm{sinc}^2(f b + m) = 1`. For any renewal
+       process, :math:`S(f)` approaches :math:`\lambda` for large :math:`f`,
+       as this limit reflects the discreteness of the spikes rather than the
+       shape of the interval distribution.
+
+    5. This function always returns a one-sided spectrum. The values
+       quoted above refer to the two-sided spectrum, as commonly used in the
+       theoretical literature. In the one-sided spectrum, negative
+       frequencies are mapped onto the positive axis, doubling the power of
+       every bin except the one at zero frequency, which has no distinct
+       negative-frequency counterpart. Consequently, the one-sided spectrum
+       of a Poisson process levels off at :math:`2 \lambda` for large
+       :math:`f`.
+
+    6. In contrast to :func:`welch_psd`, this function does not detrend the
+       data. The mean of the signal is therefore retained and appears as a
+       large DC component, which leaks into the lowest few frequency bins.
+       For a `BinnedSpikeTrain` this component is the mean firing rate, and
+       it is large compared to the spectrum itself. Subtract the mean before
+       calling this function if the low-frequency part of the spectrum is of
+       interest.
+
+    7. All values given in these notes presuppose actual spike counts. They
+       do not hold for a binarized `BinnedSpikeTrain`, in which bins
+       containing more than one spike are clipped to one (i.e., all bins are
+       zero or one).
     """
     if isinstance(signal, elephant.conversion.BinnedSpikeTrain):
         # Convert spike train to an analog signal with units of Hz
@@ -932,7 +978,7 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
     freqs : np.ndarray
         Frequencies associated with the estimated spectral measure
     avg_estimate : np.ndarray
-        Estimated spectral measure for segmented data
+        Estimated spectral measure for segmented data.
 
     Raises
     ------
@@ -1018,9 +1064,9 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
     n_overlap_step = n_per_seg - n_overlap
 
     # Buffer for storing the per-segment estimates, allocated from the
-    # shape and dtype of the first segment's own estimate rather than
-    # assumed in advance: `func` may return a per-channel spectral
-    # measure of shape (n_channels, n_freqs), as multitaper_psd does, or
+    # shape and dtype of the estimate of the first segment.
+    # `func` may return a per-channel spectral measure of shape
+    # (n_channels, n_freqs), as multitaper_psd does, or
     # a genuine cross-spectral measure of shape (n_channels, n_channels,
     # n_freqs), as multitaper_cross_spectrum does.
     seg_estimates = None
@@ -1032,6 +1078,7 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
             **func_params_dict)
 
         if seg_estimates is None:
+            # First loop allocates the buffer based on the return
             seg_estimates = np.zeros((n_segments,) + estimate.shape,
                                      dtype=estimate.dtype)
 
