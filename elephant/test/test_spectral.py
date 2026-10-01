@@ -570,6 +570,62 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         self.assertEqual(np.max(psd_empty), 0 * pq.Hz)
 
 
+    def test_multitaper_psd_detrend(self):
+        rng = np.random.default_rng(123)
+        fs = 1000.
+        noise = rng.normal(size=(2, 5000))
+        data = noise + np.array([[50.], [-20.]])
+
+        _, psd_default = elephant.spectral.multitaper_psd(data, fs=fs)
+        _, psd_false = elephant.spectral.multitaper_psd(
+            data, fs=fs, detrend=False)
+        assert_array_equal(psd_default, psd_false)
+
+        # 'constant' subtracts the mean of each channel before tapering
+        _, psd_constant = elephant.spectral.multitaper_psd(
+            data, fs=fs, detrend='constant')
+        _, psd_manual = elephant.spectral.multitaper_psd(
+            data - data.mean(axis=-1, keepdims=True), fs=fs)
+        np.testing.assert_allclose(psd_constant, psd_manual, rtol=1e-10)
+
+        # without detrending, the power of a constant leaks beyond the
+        # bandwidth of the tapers (here nw = 4 bins); detrending removes it
+        constant = np.full(5000, 10.)
+        _, psd_raw = elephant.spectral.multitaper_psd(constant, fs=fs, nw=4)
+        _, psd_detrended = elephant.spectral.multitaper_psd(
+            constant, fs=fs, nw=4, detrend='constant')
+        self.assertTrue(np.all(psd_raw[0, 5:20] > 1e-3))
+        np.testing.assert_allclose(psd_detrended, 0, atol=1e-20)
+
+        self.assertRaises(ValueError, elephant.spectral.multitaper_psd,
+                          data, fs=fs, detrend='linear')
+
+    def test_multitaper_psd_detrend_binned_spiketrain(self):
+        """
+        Detrending removes the mean firing rate, but leaves the level of
+        2 * rate at high frequencies unchanged.
+        """
+        np.random.seed(123)
+        rate = 20 * pq.Hz
+        spiketrain = elephant.spike_train_generation.StationaryPoissonProcess(
+            rate, t_stop=100 * pq.s).generate_spiketrain()
+        binned_st = elephant.conversion.BinnedSpikeTrain(
+            spiketrain, bin_size=5 * pq.ms)
+        freqs, psd_raw = elephant.spectral.multitaper_psd(binned_st)
+        _, psd_detrended = elephant.spectral.multitaper_psd(
+            binned_st, detrend='constant')
+        # the DC component is of the order of rate**2 * T and is removed
+        self.assertGreater(psd_raw[0, 0].magnitude,
+                           100 * 2 * rate.magnitude)
+        self.assertLess(psd_detrended[0, 0].magnitude, 2 * rate.magnitude)
+        # the leakage of the DC component interferes with the signal in each
+        # bin, which changes individual bins by about 3% at 1 Hz, but by
+        # less than 0.5% above 10 Hz
+        high = freqs > 10 * pq.Hz
+        np.testing.assert_allclose(psd_detrended[0, high].magnitude,
+                                   psd_raw[0, high].magnitude, rtol=0.01)
+
+
 class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
                                      unittest.TestCase):
     psd_function = staticmethod(elephant.spectral.segmented_multitaper_psd)
@@ -824,6 +880,35 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         self.assertEqual(np.max(psd_empty), 0 * pq.Hz)
 
 
+    def test_segmented_multitaper_psd_detrend(self):
+        rng = np.random.default_rng(123)
+        fs = 1000.
+        noise = rng.normal(size=(2, 4000))
+        # offsets that are constant within each of 4 non-overlapping segments
+        offsets = np.repeat([10., -5., 30., 0.], 1000)
+        data = noise + offsets
+
+        kwargs = dict(fs=fs, n_segments=4, overlap=0)
+        _, psd_default = elephant.spectral.segmented_multitaper_psd(
+            data, **kwargs)
+        _, psd_false = elephant.spectral.segmented_multitaper_psd(
+            data, detrend=False, **kwargs)
+        assert_array_equal(psd_default, psd_false)
+
+        # 'constant' subtracts the mean of each segment, which removes the
+        # offsets entirely
+        _, psd_constant = elephant.spectral.segmented_multitaper_psd(
+            data, detrend='constant', **kwargs)
+        _, psd_noise = elephant.spectral.segmented_multitaper_psd(
+            noise, detrend='constant', **kwargs)
+        np.testing.assert_allclose(psd_constant, psd_noise, rtol=1e-8)
+        self.assertGreater(psd_default[0, 0], 100 * psd_constant[0, 0])
+
+        self.assertRaises(ValueError,
+                          elephant.spectral.segmented_multitaper_psd,
+                          data, detrend='linear', **kwargs)
+
+
 class MultitaperCrossSpectrumTestCase(unittest.TestCase):
     def test_multitaper_cross_spectrum_errors(self):
         # generate dummy data
@@ -993,6 +1078,42 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
         self.assertTrue(
             (freqs_neo == freqs_np).all() and
             (cross_spec_neo == cross_spec_np).all())
+
+
+    def test_multitaper_cross_spectrum_detrend(self):
+        rng = np.random.default_rng(123)
+        fs = 1000.
+        noise = rng.normal(size=(2, 5000))
+        data = noise + np.array([[50.], [-20.]])
+
+        for onesided in (True, False):
+            _, cs_default = elephant.spectral.multitaper_cross_spectrum(
+                data, fs=fs, return_onesided=onesided)
+            _, cs_false = elephant.spectral.multitaper_cross_spectrum(
+                data, fs=fs, return_onesided=onesided, detrend=False)
+            assert_array_equal(cs_default, cs_false)
+
+            # 'constant' subtracts the mean of each channel before tapering
+            _, cs_constant = elephant.spectral.multitaper_cross_spectrum(
+                data, fs=fs, return_onesided=onesided, detrend='constant')
+            _, cs_manual = elephant.spectral.multitaper_cross_spectrum(
+                data - data.mean(axis=-1, keepdims=True), fs=fs,
+                return_onesided=onesided)
+            np.testing.assert_allclose(cs_constant, cs_manual, rtol=1e-5)
+
+        # without detrending, the cross spectrum of two constants leaks
+        # beyond the bandwidth of the tapers; detrending removes it
+        constants = np.full((2, 5000), [[10.], [3.]])
+        _, cs_raw = elephant.spectral.multitaper_cross_spectrum(
+            constants, fs=fs, nw=4)
+        _, cs_detrended = elephant.spectral.multitaper_cross_spectrum(
+            constants, fs=fs, nw=4, detrend='constant')
+        self.assertTrue(np.all(np.abs(cs_raw[0, 1, 5:20]) > 1e-4))
+        np.testing.assert_allclose(np.abs(cs_detrended), 0, atol=1e-20)
+
+        self.assertRaises(ValueError,
+                          elephant.spectral.multitaper_cross_spectrum,
+                          data, fs=fs, detrend='linear')
 
 
 class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
@@ -1221,6 +1342,38 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
         np.testing.assert_array_equal(cross_spec_int, cross_spec_hz)
 
 
+    def test_segmented_multitaper_cross_spectrum_detrend(self):
+        rng = np.random.default_rng(123)
+        fs = 1000.
+        noise = rng.normal(size=(2, 4000))
+        # offsets that are constant within each of 4 non-overlapping segments
+        offsets = np.repeat([10., -5., 30., 0.], 1000)
+        data = noise + offsets
+
+        kwargs = dict(fs=fs, n_segments=4, overlap=0)
+        _, cs_default = elephant.spectral.segmented_multitaper_cross_spectrum(
+            data, **kwargs)
+        _, cs_false = elephant.spectral.segmented_multitaper_cross_spectrum(
+            data, detrend=False, **kwargs)
+        assert_array_equal(cs_default, cs_false)
+
+        # 'constant' subtracts the mean of each segment, which removes the
+        # offsets entirely
+        _, cs_constant = \
+            elephant.spectral.segmented_multitaper_cross_spectrum(
+                data, detrend='constant', **kwargs)
+        _, cs_noise = elephant.spectral.segmented_multitaper_cross_spectrum(
+            noise, detrend='constant', **kwargs)
+        np.testing.assert_allclose(cs_constant, cs_noise, rtol=1e-4,
+                                   atol=1e-9)
+        self.assertGreater(np.abs(cs_default[0, 1, 0]),
+                           100 * np.abs(cs_constant[0, 1, 0]))
+
+        self.assertRaises(
+            ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
+            data, detrend='linear', **kwargs)
+
+
 class MultitaperCoherenceTestCase(unittest.TestCase):
     def test_multitaper_coherence_input_types(self):
         # Generate dummy data
@@ -1357,6 +1510,38 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
         np.testing.assert_allclose(peak_heights,
                                    np.pi / 4 * np.ones(len(peak_heights)),
                                    rtol=0.05)
+
+
+    def test_multitaper_coherence_detrend(self):
+        """
+        A common offset of two independent signals produces spurious
+        coherence at low frequencies, unless the signals are detrended.
+        """
+        rng = np.random.default_rng(123)
+        fs = 1000.
+        signal_i, signal_j = rng.normal(size=(2, 8000))
+        offset = 20.
+
+        kwargs = dict(fs=fs, n_segments=4)
+        _, coh_raw, _ = elephant.spectral.multitaper_coherence(
+            signal_i + offset, signal_j + offset, **kwargs)
+        _, coh_false, _ = elephant.spectral.multitaper_coherence(
+            signal_i + offset, signal_j + offset, detrend=False, **kwargs)
+        assert_array_equal(coh_raw, coh_false)
+        _, coh_detrended, _ = elephant.spectral.multitaper_coherence(
+            signal_i + offset, signal_j + offset, detrend='constant',
+            **kwargs)
+        _, coh_reference, _ = elephant.spectral.multitaper_coherence(
+            signal_i, signal_j, detrend='constant', **kwargs)
+
+        # the offset makes the lowest bins almost perfectly coherent
+        self.assertTrue(np.all(coh_raw[:3] > 0.99))
+        np.testing.assert_allclose(coh_detrended, coh_reference, rtol=1e-3,
+                                   atol=1e-6)
+        self.assertTrue(np.all(coh_detrended[:3] < 0.9))
+
+        self.assertRaises(ValueError, elephant.spectral.multitaper_coherence,
+                          signal_i, signal_j, detrend='linear', **kwargs)
 
 
 class WelchCohereTestCase(unittest.TestCase):
