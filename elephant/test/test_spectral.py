@@ -266,24 +266,32 @@ class MultitaperPSDTestCase(unittest.TestCase):
                                                         num_tapers=9)
         self.assertTrue((freqs1 == freqs2).all() and (psd1 != psd2).all())
 
-    def test_multitaper_psd_nyquist_bin_not_doubled(self):
+    def test_multitaper_psd_onesided_total_power(self):
+        # Regression test for #715, #716
         # The one-sided PSD is obtained by doubling the power of all bins
-        # that have a negative-frequency counterpart. The DC bin has none,
-        # and neither does the Nyquist bin of an even-length signal. If the
-        # latter is doubled erroneously, the total power of the signal is
-        # overestimated.
+        # that have a counterpart on the negative frequency axis. The DC bin
+        # has no counterpart. Also, the Nyquist bin of an even-length signal
+        # only has an entry for positive frequencies. The convention for
+        # doubling the frequency bins with counterparts follows from scipy.
         #
         # By Parseval's theorem, integrating the one-sided PSD over all
-        # frequencies must return the mean power of a zero-mean signal. This
-        # is checked here for a sinusoid sitting exactly at the Nyquist
-        # frequency, i.e. where the effect is largest, and for a sinusoid in
-        # the middle of the band as a control. Both have unit mean power.
+        # frequencies must return the mean power (mean square) of the signal,
+        # as multitaper_psd does not remove the mean. This is checked here
+        # for a sinusoid sitting exactly at the Nyquist frequency to test correct
+        # doubling of the Nyquist bin. A constant signal, whose power lies in
+        # the DC bin, checks that this bin is not doubled either. A sinusoid in
+        # the middle of the band is a control. All three signals have
+        # unit mean power.
         fs = 1000.0
         for data_length in (2000, 2001):  # even and odd number of samples
             n = np.arange(data_length)
             signals = {
+                # sinusoid on the Nyquist frequency (500 Hz)
                 'nyquist': (-1.0) ** n,
-                'mid_band': np.sqrt(2) * np.cos(2 * np.pi * 100 * n / fs)}
+                # sinusoid in the middle of the band (100 Hz)
+                'mid_band': np.sqrt(2) * np.cos(2 * np.pi * 100 * n / fs),
+                # constant signal, i.e., power at 0 Hz only
+                'constant': np.ones(data_length)}
             for name, signal in signals.items():
                 freqs, psd = elephant.spectral.multitaper_psd(signal, fs=fs)
                 total_power = np.sum(psd[0]) * (freqs[1] - freqs[0])
@@ -320,11 +328,8 @@ class MultitaperPSDTestCase(unittest.TestCase):
         freqs, psd_multitaper = elephant.spectral.multitaper_psd(
             signal=time_series, fs=0.1, nw=4, num_tapers=8)
 
-        # No absolute tolerance is used here. The reference spectrum spans
-        # more than seven orders of magnitude, so an atol of 0.1 would only
-        # take effect for the handful of smallest bins - among them the one
-        # at the Nyquist frequency - and would exempt exactly those from
-        # being compared at all.
+        # The reference spectrum spans several orders of magnitude, so we use
+        # a relative tolerance only.
         np.testing.assert_allclose(np.squeeze(psd_multitaper), psd_nitime,
                                    rtol=0.3)
 
