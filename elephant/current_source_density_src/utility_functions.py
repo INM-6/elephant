@@ -238,15 +238,15 @@ def generate_electrodes(dim, xlims=[0.1, 0.9], ylims=[0.1, 0.9],
     ----------
     dim : int
         Dimensionality of the electrodes: 1, 2 or 3.
-    xlims : list[float]
+    xlims : list[float], optional
         Spatial limits of the electrodes in the first dimension. The
         electrodes will be placed in the range [start, end].
         Default: [0.1, 0.9]
-    ylims : list[float]
+    ylims : list[float], optional
         Spatial limits of the electrodes in the second dimension. The
         electrodes will be placed in the range [start, end].
         Default: [0.1, 0.9]
-    zlims : list[float]
+    zlims : list[float], optional
         Spatial limits of the electrodes in the third dimension. The
         electrodes will be placed in the range [start, end].
         Default: [0.1, 0.9]

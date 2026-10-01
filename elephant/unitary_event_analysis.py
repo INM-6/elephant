@@ -444,6 +444,7 @@ def n_exp_mat_sum_trial(mat, pattern_hash, method='analytic_TrialByTrial',
         List of hash values, length: number of patterns
     method : str, optional
         Method with which the unitary events should be computed:
+
         *  'analytic_TrialByTrial' -- > calculate the expectancy
            (analytically) on each trial, then sum over all trials.
         *  'analytic_TrialAverage' -- > calculate the expectancy by averaging
@@ -528,6 +529,7 @@ def gen_pval_anal(mat, pattern_hash, method='analytic_TrialByTrial',
          List of hash values, length: number of patterns
     method: str, optional
         Method with which the unitary events should be computed:
+
         *  'analytic_TrialByTrial' -- > calculate the expectancy
            (analytically) on each trial, then sum over all trials.
         *  'analytic_TrialAverage' -- > calculate the expectancy by averaging

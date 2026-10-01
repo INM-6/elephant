@@ -1750,7 +1750,7 @@ def _cpp_het_stat(amplitude_distribution, t_stop, rates, t_start=0.*pq.ms):
         Array of firing rates of each spike train generated with
     t_start : pq.Quantity, optional
         The start time of the output spike trains
-        Default: 0 * pq.ms
+        Default: 0.0 * pq.ms
 
     Returns
     -------

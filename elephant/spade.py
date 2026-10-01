@@ -810,6 +810,7 @@ def _fpgrowth(transactions, min_c=2, min_z=2, max_z=None,
         multiplicities.
     target: str, optional
         Type of frequent item sets to find:
+
         * 's/a': sets/all; all frequent item sets
         * 'c': closed; closed frequent item sets
         * 'm': maximal; maximal frequent item sets
@@ -831,6 +832,7 @@ def _fpgrowth(transactions, min_c=2, min_z=2, max_z=None,
         Default: None
     report: str, optional
         The type of output to return. It can be:
+
         * 'a': all the mined patterns
         * '#': pattern spectrum using as signature the pair:
           (number of spikes, number of occurrence)
@@ -859,9 +861,9 @@ def _fpgrowth(transactions, min_c=2, min_z=2, max_z=None,
         last spike) is then given by winlen*bin_size
         Default: 1
     min_neu: int, optional
-         Minimum number of neurons in a sequence to be considered a
-         potential pattern.
-         Default: 1
+        Minimum number of neurons in a sequence to be considered a
+        potential pattern.
+        Default: 1
 
     Returns
     -------
@@ -1085,6 +1087,7 @@ def _fast_fca(context, min_c=2, min_z=2, max_z=None,
         Default: None
     report: str, optional
         The type of output to return. It can be:
+
         * 'a': all the mined patterns
         * '#': pattern spectrum using as signature the pair:
           (number of spikes, number of occurrence)
