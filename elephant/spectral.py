@@ -976,7 +976,7 @@ def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
     Returns
     -------
     freqs : np.ndarray
-        Frequencies associated with the estimated spectral measure
+        Frequencies associated with the estimated spectral measure.
     avg_estimate : np.ndarray
         Estimated spectral measure for segmented data.
 
