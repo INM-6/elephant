@@ -6,7 +6,9 @@ Unit tests for the spectral module.
 :license: Modified BSD, see LICENSE.txt for details.
 """
 
+import functools
 import unittest
+import warnings
 
 import neo.core
 import numpy as np
@@ -410,7 +412,8 @@ class WelchPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
 
 
 class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
-    psd_function = staticmethod(elephant.spectral.multitaper_psd)
+    psd_function = staticmethod(functools.partial(
+        elephant.spectral.multitaper_psd, detrend=False))
     removes_mean = False
 
     def test_multitaper_psd_errors(self):
@@ -425,12 +428,12 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         # check for invalid parameter values
         # - number of tapers
         self.assertRaises(ValueError, elephant.spectral.multitaper_psd, signal,
-                          num_tapers=-5)
+                          num_tapers=-5, detrend=False)
         self.assertRaises(TypeError, elephant.spectral.multitaper_psd, signal,
-                          num_tapers=-5.0)
+                          num_tapers=-5.0, detrend=False)
         # - peak resolution
         self.assertRaises(ValueError, elephant.spectral.multitaper_psd, signal,
-                          peak_resolution=-1)
+                          peak_resolution=-1, detrend=False)
 
     def test_multitaper_psd_behavior(self):
         # generate data (frequency domain to time domain)
@@ -449,21 +452,22 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         # consistency between different ways of specifying number of tapers
         freqs1, psd1 = elephant.spectral.multitaper_psd(data,
                                                         fs=data.sampling_rate,
-                                                        nw=3.5)
+                                                        nw=3.5, detrend=False)
         freqs2, psd2 = elephant.spectral.multitaper_psd(data,
                                                         fs=data.sampling_rate,
                                                         nw=3.5,
-                                                        num_tapers=6)
+                                                        num_tapers=6,
+                                                        detrend=False)
         self.assertTrue((psd1 == psd2).all() and (freqs1 == freqs2).all())
 
         # peak resolution and consistency with data
         peak_res = 1.0 * pq.Hz
         freqs, psd = elephant.spectral.multitaper_psd(
-            data, peak_resolution=peak_res)
+            data, peak_resolution=peak_res, detrend=False)
         self.assertEqual(freqs[psd.argmax()], signal_freq)
         freqs_np, psd_np = elephant.spectral.multitaper_psd(
             data.magnitude.flatten(), fs=1 / sampling_period,
-            peak_resolution=peak_res)
+            peak_resolution=peak_res, detrend=False)
         self.assertTrue((freqs == freqs_np).all() and (psd == psd_np).all())
 
     def test_multitaper_psd_parameter_hierarchy(self):
@@ -483,10 +487,11 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         freqs1, psd1 = elephant.spectral.multitaper_psd(data,
                                                         fs=data.sampling_rate,
                                                         nw=3,
-                                                        num_tapers=9)
+                                                        num_tapers=9,
+                                                        detrend=False)
         freqs2, psd2 = elephant.spectral.multitaper_psd(data,
                                                         fs=data.sampling_rate,
-                                                        nw=3)
+                                                        nw=3, detrend=False)
         self.assertTrue((freqs1 == freqs2).all() and (psd1 != psd2).all())
 
         # Test peak_resolution vs nw
@@ -494,11 +499,13 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
                                                         fs=data.sampling_rate,
                                                         nw=3,
                                                         num_tapers=9,
-                                                        peak_resolution=1)
+                                                        peak_resolution=1,
+                                                        detrend=False)
         freqs2, psd2 = elephant.spectral.multitaper_psd(data,
                                                         fs=data.sampling_rate,
                                                         nw=3,
-                                                        num_tapers=9)
+                                                        num_tapers=9,
+                                                        detrend=False)
         self.assertTrue((freqs1 == freqs2).all() and (psd1 != psd2).all())
 
     def test_multitaper_psd_against_nitime(self):
@@ -528,7 +535,7 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         psd_nitime = np.load(downloaded_files['psd_nitime.npy']['path'])
 
         freqs, psd_multitaper = elephant.spectral.multitaper_psd(
-            signal=time_series, fs=0.1, nw=4, num_tapers=8)
+            signal=time_series, fs=0.1, nw=4, num_tapers=8, detrend=False)
 
         np.testing.assert_allclose(np.squeeze(psd_multitaper), psd_nitime,
                                    rtol=0.3, atol=0.1)
@@ -541,19 +548,21 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
                             units='mV')
 
         # outputs from AnalogSignal input are of Quantity type (standard usage)
-        freqs_neo, psd_neo = elephant.spectral.multitaper_psd(data)
+        freqs_neo, psd_neo = elephant.spectral.multitaper_psd(
+            data, detrend=False)
         self.assertTrue(isinstance(freqs_neo, pq.quantity.Quantity))
         self.assertTrue(isinstance(psd_neo, pq.quantity.Quantity))
 
         # outputs from Quantity array input are of Quantity type
         freqs_pq, psd_pq = elephant.spectral.multitaper_psd(
-            data.magnitude.flatten() * data.units, fs=1 / sampling_period)
+            data.magnitude.flatten() * data.units, fs=1 / sampling_period,
+            detrend=False)
         self.assertTrue(isinstance(freqs_pq, pq.quantity.Quantity))
         self.assertTrue(isinstance(psd_pq, pq.quantity.Quantity))
 
         # outputs from Numpy ndarray input are NOT of Quantity type
         freqs_np, psd_np = elephant.spectral.multitaper_psd(
-            data.magnitude.flatten(), fs=1 / sampling_period)
+            data.magnitude.flatten(), fs=1 / sampling_period, detrend=False)
         self.assertFalse(isinstance(freqs_np, pq.quantity.Quantity))
         self.assertFalse(isinstance(psd_np, pq.quantity.Quantity))
 
@@ -561,9 +570,9 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         fs_hz = 1 * pq.Hz
         fs_int = 1
         freqs_fs_hz, psd_fs_hz = elephant.spectral.multitaper_psd(
-            data.magnitude.T, fs=fs_hz)
+            data.magnitude.T, fs=fs_hz, detrend=False)
         freqs_fs_int, psd_fs_int = elephant.spectral.multitaper_psd(
-            data.magnitude.T, fs=fs_int)
+            data.magnitude.T, fs=fs_int, detrend=False)
 
         np.testing.assert_array_equal(freqs_fs_hz, freqs_fs_int)
         np.testing.assert_array_equal(psd_fs_hz, psd_fs_int)
@@ -583,7 +592,10 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         noise = rng.normal(size=(2, 5000))
         data = noise + np.array([[50.], [-20.]])
 
-        _, psd_default = elephant.spectral.multitaper_psd(data, fs=fs)
+        # the default None behaves like False, but announces the change of
+        # the default to 'constant'
+        with self.assertWarns(FutureWarning):
+            _, psd_default = elephant.spectral.multitaper_psd(data, fs=fs)
         _, psd_false = elephant.spectral.multitaper_psd(
             data, fs=fs, detrend=False)
         assert_array_equal(psd_default, psd_false)
@@ -592,20 +604,71 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
         _, psd_constant = elephant.spectral.multitaper_psd(
             data, fs=fs, detrend='constant')
         _, psd_manual = elephant.spectral.multitaper_psd(
-            data - data.mean(axis=-1, keepdims=True), fs=fs)
+            data - data.mean(axis=-1, keepdims=True), fs=fs, detrend=False)
         np.testing.assert_allclose(psd_constant, psd_manual, rtol=1e-10)
+
+        # 'linear' subtracts the least-squares linear fit of each channel
+        ramp = data + np.linspace(0., 30., data.shape[-1])
+        _, psd_linear = elephant.spectral.multitaper_psd(
+            ramp, fs=fs, detrend='linear')
+        _, psd_manual = elephant.spectral.multitaper_psd(
+            spsig.detrend(ramp, axis=-1, type='linear'), fs=fs,
+            detrend=False)
+        np.testing.assert_allclose(psd_linear, psd_manual, rtol=1e-10)
+
+        # a function is applied to the data of shape (n_channels, n_samples)
+        _, psd_function = elephant.spectral.multitaper_psd(
+            data, fs=fs,
+            detrend=lambda x: x - x.mean(axis=-1, keepdims=True))
+        np.testing.assert_allclose(psd_function, psd_constant, rtol=1e-10)
 
         # without detrending, the power of a constant leaks beyond the
         # bandwidth of the tapers (here nw = 4 bins); detrending removes it
         constant = np.full(5000, 10.)
-        _, psd_raw = elephant.spectral.multitaper_psd(constant, fs=fs, nw=4)
+        _, psd_raw = elephant.spectral.multitaper_psd(
+            constant, fs=fs, nw=4, detrend=False)
         _, psd_detrended = elephant.spectral.multitaper_psd(
             constant, fs=fs, nw=4, detrend='constant')
         self.assertTrue(np.all(psd_raw[0, 5:20] > 1e-3))
         np.testing.assert_allclose(psd_detrended, 0, atol=1e-20)
 
-        self.assertRaises(ValueError, elephant.spectral.multitaper_psd,
-                          data, fs=fs, detrend='linear')
+        for invalid in ('quadratic', True, lambda x: x[:, 1:]):
+            self.assertRaises(ValueError, elephant.spectral.multitaper_psd,
+                              data, fs=fs, detrend=invalid)
+
+    def test_multitaper_detrend_explicit_no_warning(self):
+        data = np.random.default_rng(1).normal(size=(2, 1000))
+        for detrend in (False, 'constant', 'linear'):
+            with warnings.catch_warnings():
+                warnings.simplefilter('error', FutureWarning)
+                elephant.spectral.multitaper_psd(data, detrend=detrend)
+                elephant.spectral.segmented_multitaper_psd(
+                    data, n_segments=4, detrend=detrend)
+                elephant.spectral.multitaper_cross_spectrum(
+                    data, detrend=detrend)
+                elephant.spectral.segmented_multitaper_cross_spectrum(
+                    data, n_segments=4, detrend=detrend)
+                elephant.spectral.multitaper_coherence(
+                    data[0], data[1], n_segments=4, detrend=detrend)
+
+    def test_multitaper_detrend_default_warns_once(self):
+        # the segmented functions issue the warning once per call, and not
+        # once per segment
+        data = np.random.default_rng(1).normal(size=(2, 1000))
+        for func, args in (
+                (elephant.spectral.segmented_multitaper_psd, (data,)),
+                (elephant.spectral.segmented_multitaper_cross_spectrum,
+                 (data,)),
+                (elephant.spectral.multitaper_coherence,
+                 (data[0], data[1]))):
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter('always')
+                func(*args, n_segments=4)
+            future = [w for w in caught
+                      if issubclass(w.category, FutureWarning)]
+            self.assertEqual(len(future), 1)
+            # the warning points to the caller of the public function
+            self.assertEqual(future[0].filename, __file__)
 
     def test_multitaper_psd_detrend_binned_spiketrain(self):
         """
@@ -618,7 +681,8 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
             rate, t_stop=100 * pq.s).generate_spiketrain()
         binned_st = elephant.conversion.BinnedSpikeTrain(
             spiketrain, bin_size=5 * pq.ms)
-        freqs, psd_raw = elephant.spectral.multitaper_psd(binned_st)
+        freqs, psd_raw = elephant.spectral.multitaper_psd(
+            binned_st, detrend=False)
         _, psd_detrended = elephant.spectral.multitaper_psd(
             binned_st, detrend='constant')
         # the DC component is of the order of rate**2 * T and is removed
@@ -635,7 +699,8 @@ class MultitaperPSDTestCase(BinnedSpikeTrainPSDMixin, unittest.TestCase):
 
 class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
                                      unittest.TestCase):
-    psd_function = staticmethod(elephant.spectral.segmented_multitaper_psd)
+    psd_function = staticmethod(functools.partial(
+        elephant.spectral.segmented_multitaper_psd, detrend=False))
     removes_mean = False
 
     # The following assertions test _segmented_apply_func in the context
@@ -654,34 +719,35 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         # - frequency resolution
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd, signal,
-                          frequency_resolution=-10)
+                          frequency_resolution=-10, detrend=False)
 
         # - n per segment
         # n_per_seg = int(fs / dF), where dF is the frequency_resolution
         broken_freq_resolution = fs / (data_length+1)
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd, signal,
-                          frequency_resolution=broken_freq_resolution)
+                          frequency_resolution=broken_freq_resolution,
+                          detrend=False)
 
         # - length of segment (negative)
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd, signal,
-                          len_segment=-10)
+                          len_segment=-10, detrend=False)
 
         # - length of segment (larger than data length)
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd, signal,
-                          len_segment=data_length+1)
+                          len_segment=data_length+1, detrend=False)
 
         # - number of segments (negative)
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd, signal,
-                          n_segments=-10)
+                          n_segments=-10, detrend=False)
 
         # - number of segments (larger than data length)
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd, signal,
-                          n_segments=data_length+1)
+                          n_segments=data_length+1, detrend=False)
 
     def test_segmented_multitaper_psd_behavior(self):
         # generate data (frequency domain to time domain)
@@ -703,10 +769,10 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         len_segment = int(data.sampling_rate / frequency_resolution)
 
         freqs_fr, psd_fr = elephant.spectral.segmented_multitaper_psd(
-            data, frequency_resolution=frequency_resolution)
+            data, frequency_resolution=frequency_resolution, detrend=False)
 
         freqs_ls, psd_ls = elephant.spectral.segmented_multitaper_psd(
-            data, len_segment=len_segment)
+            data, len_segment=len_segment, detrend=False)
 
         np.testing.assert_array_equal(freqs_fr, freqs_ls)
         np.testing.assert_array_equal(psd_fr, psd_ls)
@@ -731,16 +797,17 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
 
         freqs_ns, psd_ns = \
             elephant.spectral.segmented_multitaper_psd(
-                data, n_segments=n_segments)
+                data, n_segments=n_segments, detrend=False)
 
         freqs_ls, psd_ls = \
             elephant.spectral.segmented_multitaper_psd(
-                data, n_segments=n_segments, len_segment=len_segment)
+                data, n_segments=n_segments, len_segment=len_segment,
+                detrend=False)
 
         freqs_fr, psd_fr = \
             elephant.spectral.segmented_multitaper_psd(
                 data, n_segments=n_segments, len_segment=len_segment,
-                frequency_resolution=frequency_resolution)
+                frequency_resolution=frequency_resolution, detrend=False)
 
         self.assertTrue(freqs_ns.shape < freqs_ls.shape < freqs_fr.shape)
         self.assertTrue(psd_ns.shape < psd_ls.shape < psd_fr.shape)
@@ -753,19 +820,21 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
                             units='mV')
 
         # outputs from AnalogSignal input are of Quantity type (standard usage)
-        freqs_neo, psd_neo = elephant.spectral.segmented_multitaper_psd(data)
+        freqs_neo, psd_neo = elephant.spectral.segmented_multitaper_psd(
+            data, detrend=False)
         self.assertTrue(isinstance(freqs_neo, pq.quantity.Quantity))
         self.assertTrue(isinstance(psd_neo, pq.quantity.Quantity))
 
         # outputs from Quantity array input are of Quantity type
         freqs_pq, psd_pq = elephant.spectral.segmented_multitaper_psd(
-            data.magnitude.flatten() * data.units, fs=1 / sampling_period)
+            data.magnitude.flatten() * data.units, fs=1 / sampling_period,
+            detrend=False)
         self.assertTrue(isinstance(freqs_pq, pq.quantity.Quantity))
         self.assertTrue(isinstance(psd_pq, pq.quantity.Quantity))
 
         # outputs from Numpy ndarray input are NOT of Quantity type
         freqs_np, psd_np = elephant.spectral.segmented_multitaper_psd(
-            data.magnitude.flatten(), fs=1 / sampling_period)
+            data.magnitude.flatten(), fs=1 / sampling_period, detrend=False)
         self.assertFalse(isinstance(freqs_np, pq.quantity.Quantity))
         self.assertFalse(isinstance(psd_np, pq.quantity.Quantity))
 
@@ -774,10 +843,10 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         freq_res_int = 1
 
         freqs_int, psd_int = elephant.spectral.segmented_multitaper_psd(
-            data, frequency_resolution=freq_res_int)
+            data, frequency_resolution=freq_res_int, detrend=False)
 
         freqs_hz, psd_hz = elephant.spectral.segmented_multitaper_psd(
-            data, frequency_resolution=freq_res_hz)
+            data, frequency_resolution=freq_res_hz, detrend=False)
 
         np.testing.assert_array_equal(freqs_int, freqs_hz)
         np.testing.assert_array_equal(psd_int, psd_hz)
@@ -786,9 +855,9 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         fs_hz = 1 * pq.Hz
         fs_int = 1
         freqs_fs_hz, psd_fs_hz = elephant.spectral.multitaper_psd(
-            data.magnitude.T, fs=fs_hz)
+            data.magnitude.T, fs=fs_hz, detrend=False)
         freqs_fs_int, psd_fs_int = elephant.spectral.multitaper_psd(
-            data.magnitude.T, fs=fs_int)
+            data.magnitude.T, fs=fs_int, detrend=False)
 
         np.testing.assert_array_equal(freqs_fs_hz, freqs_fs_int)
         np.testing.assert_array_equal(psd_fs_hz, psd_fs_int)
@@ -831,14 +900,14 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
                             units='mV')
 
         freqs_psd, psd = elephant.spectral.segmented_multitaper_psd(
-            data, n_segments=4, nw=4, num_tapers=8)
+            data, n_segments=4, nw=4, num_tapers=8, detrend=False)
 
         self.assertEqual(psd.shape, (3, len(freqs_psd)))
 
         freqs_csd, cross_spec = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
                 data, n_segments=4, nw=4, num_tapers=8,
-                return_onesided=True)
+                return_onesided=True, detrend=False)
 
         self.assertTrue((freqs_psd == freqs_csd).all())
 
@@ -862,8 +931,9 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         data = noise + offsets
 
         kwargs = dict(fs=fs, n_segments=4, overlap=0)
-        _, psd_default = elephant.spectral.segmented_multitaper_psd(
-            data, **kwargs)
+        with self.assertWarns(FutureWarning):
+            _, psd_default = elephant.spectral.segmented_multitaper_psd(
+                data, **kwargs)
         _, psd_false = elephant.spectral.segmented_multitaper_psd(
             data, detrend=False, **kwargs)
         assert_array_equal(psd_default, psd_false)
@@ -877,9 +947,19 @@ class SegmentedMultitaperPSDTestCase(BinnedSpikeTrainPSDMixin,
         np.testing.assert_allclose(psd_constant, psd_noise, rtol=1e-8)
         self.assertGreater(psd_default[0, 0], 100 * psd_constant[0, 0])
 
+        # 'linear' subtracts the linear fit of each segment, which removes
+        # ramps that differ between the segments entirely
+        ramps = np.concatenate([np.linspace(0., slope, 1000)
+                                for slope in (10., -5., 30., 0.)])
+        _, psd_linear = elephant.spectral.segmented_multitaper_psd(
+            noise + offsets + ramps, detrend='linear', **kwargs)
+        _, psd_noise_linear = elephant.spectral.segmented_multitaper_psd(
+            noise, detrend='linear', **kwargs)
+        np.testing.assert_allclose(psd_linear, psd_noise_linear, rtol=1e-8)
+
         self.assertRaises(ValueError,
                           elephant.spectral.segmented_multitaper_psd,
-                          data, detrend='linear', **kwargs)
+                          data, detrend='quadratic', **kwargs)
 
 
 class MultitaperCrossSpectrumTestCase(unittest.TestCase):
@@ -895,15 +975,15 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
         # - number of tapers
         self.assertRaises(ValueError,
                           elephant.spectral.multitaper_cross_spectrum, signal,
-                          fs=fs, num_tapers=-5)
+                          fs=fs, num_tapers=-5, detrend=False)
         self.assertRaises(TypeError,
                           elephant.spectral.multitaper_cross_spectrum, signal,
-                          fs=fs, num_tapers=-5.0)
+                          fs=fs, num_tapers=-5.0, detrend=False)
 
         # - peak resolution
         self.assertRaises(ValueError,
                           elephant.spectral.multitaper_cross_spectrum, signal,
-                          fs=fs, peak_resolution=-1)
+                          fs=fs, peak_resolution=-1, detrend=False)
 
     def test_multitaper_cross_spectrum_behavior(self):
         # generate data (frequency domain to time domain)
@@ -927,13 +1007,13 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
             elephant.spectral.multitaper_cross_spectrum(
                     data,
                     fs=data.sampling_rate,
-                    nw=3.5)
+                    nw=3.5, detrend=False)
         freqs2, cross_spec2 = \
             elephant.spectral.multitaper_cross_spectrum(
                     data,
                     fs=data.sampling_rate,
                     nw=3.5,
-                    num_tapers=6)
+                    num_tapers=6, detrend=False)
         self.assertTrue((cross_spec1 == cross_spec2).all()
                         and (freqs1 == freqs2).all())
 
@@ -941,24 +1021,24 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
         peak_res = 1.0 * pq.Hz
         freqs, cross_spec = \
             elephant.spectral.multitaper_cross_spectrum(
-                    data, peak_resolution=peak_res)
+                    data, peak_resolution=peak_res, detrend=False)
 
         self.assertEqual(freqs[cross_spec[0, 0].argmax()], signal_freq)
         freqs_np, cross_spec_np = \
             elephant.spectral.multitaper_cross_spectrum(
                     data.magnitude.T, fs=1 / sampling_period,
-                    peak_resolution=peak_res)
+                    peak_resolution=peak_res, detrend=False)
         assert_array_equal(freqs.magnitude, freqs_np)
         assert_array_almost_equal(cross_spec.magnitude, cross_spec_np)
 
         # one-sided vs two-sided spectrum
         freqs_os, cross_spec_os = \
             elephant.spectral.multitaper_cross_spectrum(
-                data, return_onesided=True)
+                data, return_onesided=True, detrend=False)
 
         freqs_ts, cross_spec_ts = \
             elephant.spectral.multitaper_cross_spectrum(
-                data, return_onesided=False)
+                data, return_onesided=False, detrend=False)
 
         # Nyquist frequency is negative when using onesided=False (fftfreq)
         # See: https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.rfftfreq.html#scipy.fft.rfftfreq  # noqa
@@ -992,18 +1072,19 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         # Test num_tapers vs nw
         freqs1, cross_spec1 = elephant.spectral.multitaper_cross_spectrum(
-            data, fs=data.sampling_rate, nw=3, num_tapers=9)
+            data, fs=data.sampling_rate, nw=3, num_tapers=9, detrend=False)
         freqs2, cross_spec2 = elephant.spectral.multitaper_cross_spectrum(
-            data, fs=data.sampling_rate, nw=3)
+            data, fs=data.sampling_rate, nw=3, detrend=False)
 
         self.assertTrue((freqs1 == freqs2).all()
                         and (cross_spec1 != cross_spec2).all())
 
         # Test peak_resolution vs nw
         freqs1, cross_spec1 = elephant.spectral.multitaper_cross_spectrum(
-            data, fs=data.sampling_rate, nw=3, num_tapers=9, peak_resolution=1)
+            data, fs=data.sampling_rate, nw=3, num_tapers=9, peak_resolution=1,
+            detrend=False)
         freqs2, cross_spec2 = elephant.spectral.multitaper_cross_spectrum(
-            data, fs=data.sampling_rate, nw=3, num_tapers=9)
+            data, fs=data.sampling_rate, nw=3, num_tapers=9, detrend=False)
 
         self.assertTrue((freqs1 == freqs2).all()
                         and (cross_spec1 != cross_spec2).all())
@@ -1024,7 +1105,7 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         # outputs from AnalogSignal input are of Quantity type (standard usage)
         freqs_neo, cross_spec_neo \
-            = elephant.spectral.multitaper_cross_spectrum(data)
+            = elephant.spectral.multitaper_cross_spectrum(data, detrend=False)
         self.assertTrue(isinstance(freqs_neo, pq.quantity.Quantity))
         self.assertTrue(isinstance(cross_spec_neo, pq.quantity.Quantity))
 
@@ -1032,7 +1113,7 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
         freqs_pq, cross_spec_pq \
             = elephant.spectral.multitaper_cross_spectrum(
                     data.magnitude.T * data.units,
-                    fs=1 / (sampling_period * pq.s))
+                    fs=1 / (sampling_period * pq.s), detrend=False)
         self.assertTrue(isinstance(freqs_pq, pq.quantity.Quantity))
         self.assertTrue(isinstance(cross_spec_pq, pq.quantity.Quantity))
 
@@ -1040,7 +1121,7 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
         freqs_np, cross_spec_np \
             = elephant.spectral.multitaper_cross_spectrum(
                     data.magnitude.T,
-                    fs=1 / (sampling_period * pq.s))
+                    fs=1 / (sampling_period * pq.s), detrend=False)
         self.assertFalse(isinstance(freqs_np, pq.quantity.Quantity))
         self.assertFalse(isinstance(cross_spec_np, pq.quantity.Quantity))
 
@@ -1060,8 +1141,9 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
         data = noise + np.array([[50.], [-20.]])
 
         for onesided in (True, False):
-            _, cs_default = elephant.spectral.multitaper_cross_spectrum(
-                data, fs=fs, return_onesided=onesided)
+            with self.assertWarns(FutureWarning):
+                _, cs_default = elephant.spectral.multitaper_cross_spectrum(
+                    data, fs=fs, return_onesided=onesided)
             _, cs_false = elephant.spectral.multitaper_cross_spectrum(
                 data, fs=fs, return_onesided=onesided, detrend=False)
             assert_array_equal(cs_default, cs_false)
@@ -1071,22 +1153,31 @@ class MultitaperCrossSpectrumTestCase(unittest.TestCase):
                 data, fs=fs, return_onesided=onesided, detrend='constant')
             _, cs_manual = elephant.spectral.multitaper_cross_spectrum(
                 data - data.mean(axis=-1, keepdims=True), fs=fs,
-                return_onesided=onesided)
+                return_onesided=onesided, detrend=False)
             np.testing.assert_allclose(cs_constant, cs_manual, rtol=1e-5)
 
         # without detrending, the cross spectrum of two constants leaks
         # beyond the bandwidth of the tapers; detrending removes it
         constants = np.full((2, 5000), [[10.], [3.]])
         _, cs_raw = elephant.spectral.multitaper_cross_spectrum(
-            constants, fs=fs, nw=4)
+            constants, fs=fs, nw=4, detrend=False)
         _, cs_detrended = elephant.spectral.multitaper_cross_spectrum(
             constants, fs=fs, nw=4, detrend='constant')
         self.assertTrue(np.all(np.abs(cs_raw[0, 1, 5:20]) > 1e-4))
         np.testing.assert_allclose(np.abs(cs_detrended), 0, atol=1e-20)
 
+        # 'linear' subtracts the least-squares linear fit of each channel
+        ramp = data + np.linspace(0., 30., data.shape[-1])
+        _, cs_linear = elephant.spectral.multitaper_cross_spectrum(
+            ramp, fs=fs, detrend='linear')
+        _, cs_manual = elephant.spectral.multitaper_cross_spectrum(
+            spsig.detrend(ramp, axis=-1, type='linear'), fs=fs,
+            detrend=False)
+        np.testing.assert_allclose(cs_linear, cs_manual, rtol=1e-5)
+
         self.assertRaises(ValueError,
                           elephant.spectral.multitaper_cross_spectrum,
-                          data, fs=fs, detrend='linear')
+                          data, fs=fs, detrend='quadratic')
 
 
 class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
@@ -1101,34 +1192,35 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
         # - frequency resolution
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            signal, fs=fs, frequency_resolution=-10)
+            signal, fs=fs, frequency_resolution=-10, detrend=False)
 
         # - n per segment
         # n_per_seg = int(fs / dF), where dF is the frequency_resolution
         broken_freq_resolution = fs / (data_length+1)
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            signal, fs=fs, frequency_resolution=broken_freq_resolution)
+            signal, fs=fs, frequency_resolution=broken_freq_resolution,
+            detrend=False)
 
         # - length of segment (negative)
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            signal, fs=fs, len_segment=-10)
+            signal, fs=fs, len_segment=-10, detrend=False)
 
         # - length of segment (larger than data length)
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            signal, fs=fs, len_segment=data_length+1)
+            signal, fs=fs, len_segment=data_length+1, detrend=False)
 
         # - number of segments (negative)
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            signal, fs=fs, n_segments=-10)
+            signal, fs=fs, n_segments=-10, detrend=False)
 
         # - number of segments (larger than data length)
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            signal, fs=fs, n_segments=data_length+1)
+            signal, fs=fs, n_segments=data_length+1, detrend=False)
 
     def test_segmented_multitaper_cross_spectrum_behavior(self):
         # generate data (frequency domain to time domain)
@@ -1154,11 +1246,11 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         freqs_fr, cross_spec_fr = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, frequency_resolution=frequency_resolution)
+                data, frequency_resolution=frequency_resolution, detrend=False)
 
         freqs_ls, cross_spec_ls = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, len_segment=len_segment)
+                data, len_segment=len_segment, detrend=False)
 
         np.testing.assert_array_equal(freqs_fr, freqs_ls)
         np.testing.assert_array_equal(cross_spec_fr, cross_spec_ls)
@@ -1166,11 +1258,11 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
         # one-sided vs two-sided spectrum
         freqs_os, cross_spec_os = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, return_onesided=True)
+                data, return_onesided=True, detrend=False)
 
         freqs_ts, cross_spec_ts = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, return_onesided=False)
+                data, return_onesided=False, detrend=False)
 
         # test overlap parameter
         no_overlap = 0
@@ -1180,15 +1272,17 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         freqs_no, cross_spec_no = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, n_segments=n_segments, overlap=no_overlap)
+                data, n_segments=n_segments, overlap=no_overlap, detrend=False)
 
         freqs_ho, cross_spec_ho = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, n_segments=n_segments, overlap=half_overlap)
+                data, n_segments=n_segments, overlap=half_overlap,
+                detrend=False)
 
         freqs_lo, cross_spec_lo = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, n_segments=n_segments, overlap=large_overlap)
+                data, n_segments=n_segments, overlap=large_overlap,
+                detrend=False)
 
         self.assertTrue(freqs_no.shape < freqs_ho.shape < freqs_lo.shape)
         self.assertTrue(
@@ -1234,16 +1328,17 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         freqs_ns, cross_spec_ns = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, n_segments=n_segments)
+                data, n_segments=n_segments, detrend=False)
 
         freqs_ls, cross_spec_ls = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, n_segments=n_segments, len_segment=len_segment)
+                data, n_segments=n_segments, len_segment=len_segment,
+                detrend=False)
 
         freqs_fr, cross_spec_fr = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
                 data, n_segments=n_segments, len_segment=len_segment,
-                frequency_resolution=frequency_resolution)
+                frequency_resolution=frequency_resolution, detrend=False)
 
         self.assertNotEqual(freqs_ns.shape, freqs_ls.shape)
         self.assertNotEqual(freqs_ls.shape, freqs_fr.shape)
@@ -1266,7 +1361,8 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
                             units='mV')
 
         freqs1, psd_multitaper = elephant.spectral.multitaper_psd(
-            signal=data, fs=data.sampling_rate, nw=4, num_tapers=8)
+            signal=data, fs=data.sampling_rate, nw=4, num_tapers=8,
+            detrend=False)
 
         psd_multitaper[:, 1:] /= 2  # since comparing rfft and fft results
 
@@ -1276,7 +1372,7 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
                 fs=data.sampling_rate,
                 nw=4,
                 num_tapers=8,
-                return_onesided=True)
+                return_onesided=True, detrend=False)
 
         self.assertTrue((freqs1 == freqs2).all())
 
@@ -1305,11 +1401,11 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         freqs_int, cross_spec_int = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, frequency_resolution=freq_res_int)
+                data, frequency_resolution=freq_res_int, detrend=False)
 
         freqs_hz, cross_spec_hz = \
             elephant.spectral.segmented_multitaper_cross_spectrum(
-                data, frequency_resolution=freq_res_hz)
+                data, frequency_resolution=freq_res_hz, detrend=False)
 
         np.testing.assert_array_equal(freqs_int, freqs_hz)
         np.testing.assert_array_equal(cross_spec_int, cross_spec_hz)
@@ -1324,8 +1420,10 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
         data = noise + offsets
 
         kwargs = dict(fs=fs, n_segments=4, overlap=0)
-        _, cs_default = elephant.spectral.segmented_multitaper_cross_spectrum(
-            data, **kwargs)
+        with self.assertWarns(FutureWarning):
+            _, cs_default = \
+                elephant.spectral.segmented_multitaper_cross_spectrum(
+                    data, **kwargs)
         _, cs_false = elephant.spectral.segmented_multitaper_cross_spectrum(
             data, detrend=False, **kwargs)
         assert_array_equal(cs_default, cs_false)
@@ -1344,7 +1442,7 @@ class SegmentedMultitaperCrossSpectrumTestCase(unittest.TestCase):
 
         self.assertRaises(
             ValueError, elephant.spectral.segmented_multitaper_cross_spectrum,
-            data, detrend='linear', **kwargs)
+            data, detrend='quadratic', **kwargs)
 
 
 class MultitaperCoherenceTestCase(unittest.TestCase):
@@ -1370,10 +1468,11 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
                                                 units=pq.mV)
 
         arr_f, arr_coh, arr_phi = elephant.spectral.multitaper_coherence(
-            arr_signal_i, arr_signal_j, fs=fs)
+            arr_signal_i, arr_signal_j, fs=fs, detrend=False)
         anasig_f, anasig_coh, anasig_phi = \
             elephant.spectral.multitaper_coherence(anasig_signal_i,
-                                                   anasig_signal_j)
+                                                   anasig_signal_j,
+                                                   detrend=False)
 
         np.testing.assert_array_equal(arr_f, anasig_f)
         np.testing.assert_allclose(arr_coh, anasig_coh.magnitude, atol=1e-6)
@@ -1396,7 +1495,7 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
             signal_i,
             signal_j,
             fs=1/sampling_period,
-            n_segments=16)
+            n_segments=16, detrend=False)
 
         indices, vals = scipy.signal.find_peaks(coh1, height=0.8, distance=10)
 
@@ -1425,7 +1524,7 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
             signal,
             signal,
             fs=1/sampling_period,
-            n_segments=16)
+            n_segments=16, detrend=False)
 
         np.testing.assert_array_equal(phase_lag, np.zeros(phase_lag.size))
         np.testing.assert_array_equal(coh, np.ones(coh.size))
@@ -1445,7 +1544,7 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
             signal_i,
             signal_j,
             fs=1/sampling_period,
-            n_segments=16)
+            n_segments=16, detrend=False)
 
         np.testing.assert_allclose(coh, np.zeros(coh.size), atol=0.002)
 
@@ -1467,7 +1566,7 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
             signal_j,
             fs=1/sampling_period,
             n_segments=16,
-            num_tapers=8)
+            num_tapers=8, detrend=False)
 
         indices, vals = scipy.signal.find_peaks(phase_lag,
                                                 height=0.8 * np.pi / 4,
@@ -1496,8 +1595,9 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
         offset = 20.
 
         kwargs = dict(fs=fs, n_segments=4)
-        _, coh_raw, _ = elephant.spectral.multitaper_coherence(
-            signal_i + offset, signal_j + offset, **kwargs)
+        with self.assertWarns(FutureWarning):
+            _, coh_raw, _ = elephant.spectral.multitaper_coherence(
+                signal_i + offset, signal_j + offset, **kwargs)
         _, coh_false, _ = elephant.spectral.multitaper_coherence(
             signal_i + offset, signal_j + offset, detrend=False, **kwargs)
         assert_array_equal(coh_raw, coh_false)
@@ -1514,7 +1614,7 @@ class MultitaperCoherenceTestCase(unittest.TestCase):
         self.assertTrue(np.all(coh_detrended[:3] < 0.9))
 
         self.assertRaises(ValueError, elephant.spectral.multitaper_coherence,
-                          signal_i, signal_j, detrend='linear', **kwargs)
+                          signal_i, signal_j, detrend='quadratic', **kwargs)
 
 
 class WelchCohereTestCase(unittest.TestCase):

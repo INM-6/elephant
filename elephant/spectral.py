@@ -352,7 +352,7 @@ def welch_psd(signal, n_segments=8, len_segment=None,
 
 
 def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
-                   attach_units=True, detrend=False):
+                   attach_units=True, detrend=None):
     r"""
     Estimates power spectrum density (PSD) of a given `neo.AnalogSignal`
     or `BinnedSpikeTrain` using the Multitaper method.
@@ -393,11 +393,17 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
         If True and signal is an instance of pq.Quantity, units are attached
         to the estimated PSD.
         Default: True
-    detrend : {'constant', False}, optional
+    detrend : {'constant', 'linear'} or function or False or None, optional
         Specifies how to detrend each channel of the signal before it is
         multiplied by the tapers. If 'constant', the mean is subtracted. If
-        False, the data are not detrended. See Notes [3].
-        Default: False
+        'linear', the least-squares linear fit is subtracted (see
+        :func:`scipy.signal.detrend`). If a function, it is called with the
+        data of shape (n_channels, n_samples) and must return the detrended
+        data of the same shape. If False, the data are not detrended. If None,
+        the data are not detrended either, but a FutureWarning is issued, as
+        the default will change to 'constant' in a future version.
+        See Notes [5].
+        Default: None
 
     Returns
     -------
@@ -413,7 +419,8 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
 
         If `peak_resolution` is None and `num_tapers` is not a positive number.
 
-        If `detrend` is neither 'constant' nor False.
+        If `detrend` is not 'constant', 'linear', a function, False or None,
+        or if a function passed as `detrend` changes the shape of the data.
 
     TypeError
         If `peak_resolution` is None and `num_tapers` is not an int.
@@ -470,13 +477,20 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
        negative-frequency counterpart. Consequently, the one-sided spectrum
        of a Poisson process levels off at :math:`2 \lambda` for large
        :math:`f`.
-    5. In contrast to :func:`welch_psd`, this function does not detrend the
-       data. The mean of the signal is therefore retained and appears as a
-       large DC component, which leaks into the lowest few frequency bins.
-       For a `BinnedSpikeTrain` this component is the mean firing rate, and
-       it is large compared to the spectrum itself. Subtract the mean before
-       calling this function if the low-frequency part of the spectrum is of
-       interest.
+    5. In contrast to :func:`welch_psd`, this function does not yet detrend
+       the data by default (see `detrend`). Without detrending, the mean of
+       each channel is retained as a large DC component. Most of its power
+       falls into the frequency bins within the bandwidth of the tapers,
+       :math:`|f| \le W` with :math:`W = nw / T` for a signal of duration
+       :math:`T`, but the remainder leaks into neighboring bins and decays
+       only gradually with frequency. For a `BinnedSpikeTrain`, this
+       component is the mean firing rate, which is large compared to the
+       spectrum itself. With `detrend` = 'constant', the mean
+       is subtracted before tapering, which removes the DC component together
+       with its leakage. The bins within the bandwidth then remain somewhat
+       reduced, as the subtracted mean also contains the power of the signal
+       at frequencies close to zero. With `detrend` = 'linear', a linear
+       trend, whose power leaks in the same manner, is removed as well.
     6. All values given in these notes presuppose actual spike counts. They
        do not hold for a binarized `BinnedSpikeTrain`, in which bins
        containing more than one spike are clipped to one (i.e., all bins are
@@ -488,6 +502,8 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
     if isinstance(signal, elephant.conversion.BinnedSpikeTrain):
         # Convert spike train to an analog signal with units of Hz
         signal = signal.to_analog_signal(scaling="normalized")
+
+    detrend = _resolve_multitaper_detrend(detrend)
 
     data = np.asarray(signal)
     if isinstance(signal, neo.AnalogSignal):
@@ -556,7 +572,7 @@ def multitaper_psd(signal, fs=1, nw=4, num_tapers=None, peak_resolution=None,
 def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
                              frequency_resolution=None, overlap=0.5, fs=1,
                              nw=4, num_tapers=None, peak_resolution=None,
-                             detrend=False):
+                             detrend=None):
     r"""
     Estimates power spectrum density (PSD) of a given `neo.AnalogSignal`
     or `BinnedSpikeTrain` using the Multitaper method.
@@ -622,11 +638,17 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
         High peak resolution --> high numerical value --> high number of tapers
         When given as a `float`, it is taken as frequency in Hz.
         Default: None.
-    detrend : {'constant', False}, optional
+    detrend : {'constant', 'linear'} or function or False or None, optional
         Specifies how to detrend each segment of each channel before it is
         multiplied by the tapers. If 'constant', the mean is subtracted. If
-        False, the data are not detrended. See Notes [4].
-        Default: False
+        'linear', the least-squares linear fit is subtracted (see
+        :func:`scipy.signal.detrend`). If a function, it is called with the
+        data of shape (n_channels, n_samples) and must return the detrended
+        data of the same shape. If False, the data are not detrended. If None,
+        the data are not detrended either, but a FutureWarning is issued, as
+        the default will change to 'constant' in a future version.
+        See Notes [6].
+        Default: None
 
     Returns
     -------
@@ -640,7 +662,8 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
     ValueError
         If `peak_resolution` is None and `num_tapers` is not a positive number.
 
-        If `detrend` is neither 'constant' nor False.
+        If `detrend` is not 'constant', 'linear', a function, False or None,
+        or if a function passed as `detrend` changes the shape of the data.
 
         If `frequency_resolution` is too high for the given data size.
 
@@ -718,13 +741,20 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
        of a Poisson process levels off at :math:`2 \lambda` for large
        :math:`f`.
 
-    6. In contrast to :func:`welch_psd`, this function does not detrend the
-       data. The mean of the signal is therefore retained and appears as a
-       large DC component, which leaks into the lowest few frequency bins.
-       For a `BinnedSpikeTrain` this component is the mean firing rate, and
-       it is large compared to the spectrum itself. Subtract the mean before
-       calling this function if the low-frequency part of the spectrum is of
-       interest.
+    6. In contrast to :func:`welch_psd`, this function does not yet detrend
+       the data by default (see `detrend`). Without detrending, the mean of
+       each segment is retained as a large DC component. Most of its power
+       falls into the frequency bins within the bandwidth of the tapers,
+       :math:`|f| \le W` with :math:`W = nw / T` for a signal of duration
+       :math:`T`, but the remainder leaks into neighboring bins and decays
+       only gradually with frequency. For a `BinnedSpikeTrain`, this
+       component is the mean firing rate, which is large compared to the
+       spectrum itself. With `detrend` = 'constant', the mean
+       is subtracted before tapering, which removes the DC component together
+       with its leakage. The bins within the bandwidth then remain somewhat
+       reduced, as the subtracted mean also contains the power of the signal
+       at frequencies close to zero. With `detrend` = 'linear', a linear
+       trend, whose power leaks in the same manner, is removed as well.
 
     7. All values given in these notes presuppose actual spike counts. They
        do not hold for a binarized `BinnedSpikeTrain`, in which bins
@@ -734,6 +764,8 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
     if isinstance(signal, elephant.conversion.BinnedSpikeTrain):
         # Convert spike train to an analog signal with units of Hz
         signal = signal.to_analog_signal(scaling="normalized")
+
+    detrend = _resolve_multitaper_detrend(detrend)
 
     # When the input is AnalogSignal, the data is added after rolling the axis
     # for time index to the last
@@ -772,7 +804,7 @@ def segmented_multitaper_psd(signal, n_segments=1, len_segment=None,
 
 def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
                               peak_resolution=None, return_onesided=True,
-                              attach_units=True, detrend=False):
+                              attach_units=True, detrend=None):
     r"""
     Estimates the cross spectrum of a given `neo.AnalogSignal` using the
     Multitaper method.
@@ -829,11 +861,17 @@ def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
         If True and signals is instance of pq.Quantity, units are attached to
         the estimated cross spectrum.
         Default: True
-    detrend : {'constant', False}, optional
+    detrend : {'constant', 'linear'} or function or False or None, optional
         Specifies how to detrend each channel of the signals before it is
         multiplied by the tapers. If 'constant', the mean is subtracted. If
-        False, the data are not detrended. See Notes [2].
-        Default: False
+        'linear', the least-squares linear fit is subtracted (see
+        :func:`scipy.signal.detrend`). If a function, it is called with the
+        data of shape (n_channels, n_samples) and must return the detrended
+        data of the same shape. If False, the data are not detrended. If None,
+        the data are not detrended either, but a FutureWarning is issued, as
+        the default will change to 'constant' in a future version.
+        See Notes [2].
+        Default: None
 
     Returns
     -------
@@ -853,7 +891,8 @@ def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
     ValueError
         If `peak_resolution` is None and `num_tapers` is not a positive number.
 
-        If `detrend` is neither 'constant' nor False.
+        If `detrend` is not 'constant', 'linear', a function, False or None,
+        or if a function passed as `detrend` changes the shape of the data.
 
     TypeError
         If `peak_resolution` is None and `num_tapers` is not an int.
@@ -864,17 +903,21 @@ def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
        `peak_resolution`. If peak_resolution is provided, it determines both
        `nw` and the `num_tapers`. Specifying `num_tapers` has an effect only if
        `peak_resolution` is not provided.
-    2. In contrast to :func:`welch_psd`, the data are not detrended by default.
-       The mean of each channel is then retained as a large DC component. Most
-       of its power falls into the frequency bins within the bandwidth of the
-       tapers, :math:`|f| \le W` with :math:`W = nw / T` for a signal of
-       duration :math:`T`, but the remainder leaks into neighboring bins and
-       decays only gradually with frequency. With `detrend` = 'constant', the
-       mean of each channel is subtracted before tapering, which removes the DC
-       component together with its leakage. The bins within the bandwidth then
-       remain somewhat reduced, as the subtracted mean also contains the power
-       of the signal at frequencies close to zero.
+    2. In contrast to :func:`welch_psd`, this function does not yet detrend
+       the data by default (see `detrend`). Without detrending, the mean of
+       each channel is retained as a large DC component. Most of its power
+       falls into the frequency bins within the bandwidth of the tapers,
+       :math:`|f| \le W` with :math:`W = nw / T` for a signal of duration
+       :math:`T`, but the remainder leaks into neighboring bins and decays
+       only gradually with frequency. With `detrend` = 'constant', the mean
+       is subtracted before tapering, which removes the DC component together
+       with its leakage. The bins within the bandwidth then remain somewhat
+       reduced, as the subtracted mean also contains the power of the signal
+       at frequencies close to zero. With `detrend` = 'linear', a linear
+       trend, whose power leaks in the same manner, is removed as well.
     """
+    detrend = _resolve_multitaper_detrend(detrend)
+
     # When the input is AnalogSignal, fetch the underlying numpy array and swap
     # axes from (n_samples, n_channels) to (n_channels, n_samples)
     data = np.asarray(signals)
@@ -946,16 +989,53 @@ def multitaper_cross_spectrum(signals, fs=1.0, nw=4.0, num_tapers=None,
     return freqs, cross_spec
 
 
+def _resolve_multitaper_detrend(detrend):
+    """
+    Resolves the default `detrend` = None of the multitaper functions.
+
+    None currently selects False, i.e., no detrending, and issues a
+    FutureWarning announcing the change of the default to 'constant'. The
+    public multitaper functions resolve the default before passing `detrend`
+    on to other multitaper functions, so that the warning is issued only once
+    per call of a public function, and not once per segment.
+    """
+    if detrend is None:
+        warnings.warn(
+            "The default of the `detrend` parameter of the multitaper "
+            "functions will change from False to 'constant' in a future "
+            "version of Elephant, consistent with welch_psd(). Pass "
+            "`detrend` explicitly to keep the current behavior "
+            "(detrend=False) or to adopt the future one "
+            "(detrend='constant') and silence this warning.",
+            FutureWarning, stacklevel=3)
+        return False
+    return detrend
+
+
 def _detrend_multitaper(data, detrend):
     """
     Detrends data of shape (n_channels, n_samples) along the time axis
     according to the `detrend` parameter of the multitaper functions.
+
+    The accepted values follow those of :func:`scipy.signal.welch`: 'constant'
+    or 'linear' are passed to :func:`scipy.signal.detrend`, and a function is
+    called with `data` and must return an array of the same shape.
     """
     if detrend is False:
         return data
-    if isinstance(detrend, str) and detrend == 'constant':
-        return data - np.mean(data, axis=-1, keepdims=True)
-    raise ValueError("detrend must be 'constant' or False")
+    if isinstance(detrend, str):
+        if detrend not in ('constant', 'linear'):
+            raise ValueError("detrend must be 'constant', 'linear', a "
+                             "function or False")
+        return scipy.signal.detrend(data, axis=-1, type=detrend)
+    if callable(detrend):
+        detrended = np.asarray(detrend(data))
+        if detrended.shape != data.shape:
+            raise ValueError("The function passed as detrend must return an "
+                             "array of the same shape as its input")
+        return detrended
+    raise ValueError("detrend must be 'constant', 'linear', a function or "
+                     "False")
 
 
 def _segmented_apply_func(data, func, fs=1.0, n_segments=1, len_segment=None,
@@ -1144,7 +1224,7 @@ def segmented_multitaper_cross_spectrum(signals, n_segments=1,
                                         fs=1.0, nw=4.0, num_tapers=None,
                                         peak_resolution=None,
                                         return_onesided=True,
-                                        detrend=False):
+                                        detrend=None):
     """
     Estimates the cross spectrum of a given `neo.AnalogSignal` using the
     Multitaper method on segments of the data.
@@ -1228,12 +1308,18 @@ def segmented_multitaper_cross_spectrum(signals, n_segments=1,
         If True, return a one-sided spectrum for real data.
         If False return a two-sided spectrum.
         Default: True
-    detrend : {'constant', False}, optional
+    detrend : {'constant', 'linear'} or function or False or None, optional
         Specifies how to detrend each segment of each channel before it is
         multiplied by the tapers. If 'constant', the mean is subtracted. If
-        False, the data are not detrended. See Notes [2] of
+        'linear', the least-squares linear fit is subtracted (see
+        :func:`scipy.signal.detrend`). If a function, it is called with the
+        data of shape (n_channels, n_samples) and must return the detrended
+        data of the same shape. If False, the data are not detrended. If None,
+        the data are not detrended either, but a FutureWarning is issued, as
+        the default will change to 'constant' in a future version.
+        See Notes [2] of
         :func:`multitaper_cross_spectrum`.
-        Default: False
+        Default: None
 
     Returns
     -------
@@ -1250,6 +1336,8 @@ def segmented_multitaper_cross_spectrum(signals, n_segments=1,
     --------
     :func:`multitaper_cross_spectrum`
     """
+    detrend = _resolve_multitaper_detrend(detrend)
+
     # When the input is AnalogSignal, fetch the underlying numpy array and swap
     # axes from (n_samples, n_channels) to (n_channels, n_samples)
     data = np.asarray(signals)
@@ -1285,7 +1373,7 @@ def segmented_multitaper_cross_spectrum(signals, n_segments=1,
 def multitaper_coherence(signal_i, signal_j, n_segments=1, len_segment=None,
                          frequency_resolution=None, overlap=0.5, fs=1,
                          nw=4, num_tapers=None, peak_resolution=None,
-                         detrend=False):
+                         detrend=None):
     r"""
     Estimates the magnitude-squared coherence and phase-lag of two given
     `neo.AnalogSignal` using the Multitaper method.
@@ -1344,14 +1432,19 @@ def multitaper_coherence(signal_i, signal_j, n_segments=1, len_segment=None,
         High peak resolution --> high numerical value --> high number of tapers
         When given as a `float`, it is taken as frequency in Hz.
         Default: None.
-    detrend : {'constant', False}, optional
+    detrend : {'constant', 'linear'} or function or False or None, optional
         Specifies how to detrend each segment of both signals before it is
         multiplied by the tapers. If 'constant', the mean is subtracted. If
-        False, the data are not detrended. Without detrending, the leakage of
-        the means of the two signals is common to both, and thereby inflates
-        the coherence at low frequencies. See Notes [2] of
-        :func:`multitaper_cross_spectrum`.
-        Default: False
+        'linear', the least-squares linear fit is subtracted (see
+        :func:`scipy.signal.detrend`). If a function, it is called with the
+        data of shape (n_channels, n_samples) and must return the detrended
+        data of the same shape. If False, the data are not detrended. If None,
+        the data are not detrended either, but a FutureWarning is issued, as
+        the default will change to 'constant' in a future version.
+        Without detrending, the leakage of the means of the two signals
+        is common to both, and thereby inflates the coherence at low
+        frequencies. See Notes [2] of :func:`multitaper_cross_spectrum`.
+        Default: None
 
     Returns
     -------
@@ -1362,6 +1455,8 @@ def multitaper_coherence(signal_i, signal_j, n_segments=1, len_segment=None,
     phase_lag : np.ndarray
         Phase lags associated with the magnitude-square coherence estimate.
     """
+    detrend = _resolve_multitaper_detrend(detrend)
+
     if isinstance(signal_i, neo.core.AnalogSignal) and \
             isinstance(signal_j, neo.core.AnalogSignal):
         signals = signal_i.merge(signal_j)
