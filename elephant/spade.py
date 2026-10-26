@@ -38,7 +38,7 @@ implementation of the algorithm by Christian Borgelt
 Elephant.
 
 If the module ``fim.so`` is not available in a precompiled format
-(currently Linux/Windows) or cannot be compiled on a given system during
+(currently Linux/Windows/macOS) or cannot be compiled on a given system during
 install, SPADE will make use of a pure Python implementation of the fast fca
 algorithm contained in `elephant/spade_src/fast_fca.py`, which is
 significantly slower.
