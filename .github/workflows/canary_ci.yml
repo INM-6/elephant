@@ -88,4 +88,8 @@ jobs:
         timeout-minutes: 10
         env:
           ELEPHANT_NETWORK_TESTS: "1"
-        run: pytest -v elephant/test/test_datasets.py::TestGinConnectivity
+        # Warn only: GIN may answer runners with HTTP 403, which is not an
+        # elephant failure. The warning shows on the run summary.
+        run: |
+          pytest -v elephant/test/test_datasets.py::TestGinConnectivity \
+            || echo "::warning title=GIN connectivity::GIN connectivity tests failed (e.g. HTTP 403 from GIN). See the step log."
