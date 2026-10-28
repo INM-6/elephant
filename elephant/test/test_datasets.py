@@ -63,6 +63,7 @@ class TestDownloadDatasets(unittest.TestCase):
         """
         # Mockup a dummy dataset location
         cls._serve_dir = TemporaryDirectory()
+        cls.addClassCleanup(cls._serve_dir.cleanup)
         raw = Path(cls._serve_dir.name) / 'raw'
         cls.repo_data_path = 'dataset-1/dataset-1.h5'
 
@@ -85,17 +86,13 @@ class TestDownloadDatasets(unittest.TestCase):
         # Port 0 lets the OS pick a free port
         handler = partial(_QuietHandler, directory=cls._serve_dir.name)
         cls.server = ThreadingHTTPServer(('127.0.0.1', 0), handler)
+        cls.addClassCleanup(cls.server.server_close)
         cls.root_url = f'http://127.0.0.1:{cls.server.server_port}/'
         cls._server_thread = threading.Thread(target=cls.server.serve_forever,
                                               daemon=True)
         cls._server_thread.start()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.server.shutdown()
-        cls.server.server_close()
-        cls._server_thread.join()
-        cls._serve_dir.cleanup()
+        cls.addClassCleanup(cls._server_thread.join)
+        cls.addClassCleanup(cls.server.shutdown)
 
     def setUp(self):
         # Point the default root URL (used when `ELEPHANT_DATA_LOCATION` is
