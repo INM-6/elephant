@@ -414,6 +414,9 @@ def download_datasets(repo_path, filepath=None, checksum=None,
             urlopen(data_location + '/README.md')
 
         except HTTPError as error:
+            # Only missing version (404) should fall back to master. (PR 721)
+            if error.code != 404:
+                raise
             # If the corresponding `elephant-data` version is not found,
             # use the latest commit of `elephant-data` (`master` branch).
             # This is expected for development versions of Elephant, which may
@@ -434,6 +437,9 @@ def download_datasets(repo_path, filepath=None, checksum=None,
                 ctx.check_hostname = True
                 urlopen(data_location + '/README.md', context=ctx)
             except HTTPError as unverified_ctx_error:  # e.g. 404
+                # Only missing version (404) fall back to master. (PR 721)
+                if unverified_ctx_error.code != 404:
+                    raise
                 # If it still fails, use latest commit of `elephant-data` in
                 # the `master` branch.
                 data_location = url_to_root + "raw/master"

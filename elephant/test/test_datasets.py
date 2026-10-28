@@ -32,11 +32,21 @@ HAS_CACHE_DIR = ("ELEPHANT_DATA_LOCATION" in os.environ
 # To run set env val ELEPHANT_NETWORK_TESTS=1.
 RUN_NETWORK_TESTS = os.environ.get("ELEPHANT_NETWORK_TESTS") == "1"
 
+# Version the mock server answers with HTTP 403, like GIN sometimes
+# answers GitHub runners
+FORBIDDEN_VERSION = '6.6.6'
+
 
 class _QuietHandler(SimpleHTTPRequestHandler):
     # To avoid logging each request to stderr
     def log_message(self, format, *args):
         pass
+
+    def do_GET(self):
+        if self.path.startswith(f'/raw/v{FORBIDDEN_VERSION}/'):
+            self.send_error(403)
+            return
+        super().do_GET()
 
 
 class TestDownloadDatasets(unittest.TestCase):
@@ -271,6 +281,25 @@ class TestDownloadDatasets(unittest.TestCase):
             self.assertEqual(target_file_path, downloaded_file)
             self.assertEqual(self.master_payload,
                              Path(downloaded_file).read_bytes())
+
+    @patch.dict(os.environ, {'ELEPHANT_DATA_LOCATION': ''})
+    def test_valid_data_version_forbidden(self):
+        """
+        Intent: Ensure only a missing version (404) falls back to master
+        Condition: Version probe of `elephant-data` answers 403
+        Expected: HTTPError 403 raised, nothing downloaded from master
+        """
+        with (
+            patch('elephant.datasets._get_version',
+                  return_value=FORBIDDEN_VERSION),
+            TemporaryDirectory() as temp_dir,
+        ):
+            target_file_path = Path(temp_dir) / 'target_forbidden'
+            with self.assertRaises(HTTPError) as error:
+                download_datasets(self.repo_data_path,
+                                  filepath=target_file_path)
+            self.assertEqual(403, error.exception.code)
+            self.assertFalse(target_file_path.exists())
 
     @unittest.skipIf(not HAS_CACHE_DIR,
                      "Not testing since ELEPHANT_DATA_LOCATION is not set to "
