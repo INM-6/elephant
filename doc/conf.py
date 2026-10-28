@@ -266,7 +266,7 @@ numpydoc_show_class_members = False
 # class name excludes its members.
 defaults_ignore = [
     'elephant.statistics.cv',  # re-export of scipy.stats.variation
-    'elephant.trials',         # TODO: addressed in another PR
+    'elephant.trials',         # TODO: addressed in PR 673
 ]
 
 
