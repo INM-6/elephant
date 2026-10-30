@@ -476,9 +476,6 @@ class TestGinConnectivity(unittest.TestCase):
                    and the version probe are used
         Expected: The file is downloaded to the requested path without error
         """
-        # TODO: Discuss with the team what other checks can be done to verify
-        #  the end-to-end download from GIN (e.g. content/checksum, given that
-        #  the downloaded version may differ from any cached copy).
         with TemporaryDirectory() as temp_dir:
             target_file_path = Path(temp_dir) / 'dataset-1.h5'
             downloaded_file = download_datasets(self.repo_data_path,
